@@ -1,0 +1,32 @@
+<resources>
+    <string name="app_name">CodeLingo</string>
+
+    <string name="register">зарегистрироваться</string>
+    <string name="registration_title">Регистрация</string>
+
+    <string name="start">Начать</string>
+    <string name="login">Войти</string>
+    <string name="login_title">Авторизация</string>
+    <string name="already_have_an_account_login">Уже есть аккаунт? Войти</string>
+
+    <string name="name_hint">Имя</string>
+    <string name="email_hint">Почта</string>
+    <string name="password_hint">Пароль</string>
+
+    <string name="learn">изучай</string>
+    <string name="practice">практикуйся</string>
+    <string name="programm">программируй</string>
+    <string name="free">бесплатно</string>
+    <string name="always">постоянно</string>
+    <string name="anywhere">везде</string>
+
+    <string name="something_went_wrong">Что-то пошло не так</string>
+    <string name="username_requirement">Минимум 2 символа</string>
+    <string name="password_requirement">Пароль должен содержать:\n
+        • Минимум 8 символов\n
+        • Хотя бы одну цифру\n
+        • Заглавную и строчную букву\n
+        • Специальный символ (!@#$%^&amp;*)
+    </string>
+    <string name="email_requirement">Введите email в формате: example@domain.com</string>
+</resources>

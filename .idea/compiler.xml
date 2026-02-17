@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <bytecodeTargetLevel target="21">
+      <module name="CodeLingo.data" target="11" />
+      <module name="CodeLingo.data.main" target="11" />
+      <module name="CodeLingo.data.test" target="11" />
+      <module name="CodeLingo.domain" target="11" />
+      <module name="CodeLingo.domain.main" target="11" />
+      <module name="CodeLingo.domain.test" target="11" />
+      <module name="CodeLingo.feature.data" target="11" />
+      <module name="CodeLingo.feature.data.main" target="11" />
+      <module name="CodeLingo.feature.data.test" target="11" />
+      <module name="CodeLingo.feature.domain" target="11" />
+      <module name="CodeLingo.feature.domain.main" target="11" />
+      <module name="CodeLingo.feature.domain.test" target="11" />
+      <module name="CodeLingo.feature.login.main" target="11" />
+      <module name="CodeLingo.feature.login.test" target="11" />
+      <module name="CodeLingo.feature.login.ui" target="21" />
+      <module name="CodeLingo.feature.main" target="11" />
+      <module name="CodeLingo.feature.test" target="11" />
+      <module name="CodeLingo.ui" target="21" />
+      <module name="CodeLingo.uikit" target="21" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

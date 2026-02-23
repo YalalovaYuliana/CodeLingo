@@ -4,10 +4,12 @@ import com.yi.myapplication.data.entity.codelingo.LoginRequest
 import com.yi.myapplication.data.entity.codelingo.RegisterRequest
 import com.yi_555555555.codelingo.data.mappers.toAccessTokenDb
 import com.yi_555555555.codelingo.data.mappers.toAccessTokenDomain
+import com.yi_555555555.codelingo.data.mappers.toCourseDomain
 import com.yi_555555555.codelingo.data.mappers.toUser
 import com.yi_555555555.codelingo.data.retrofit.UserApi
 import com.yi_555555555.codelingo.data.room.UserDataBase
 import com.yi_555555555.codelingo.domain.model.AccessToken
+import com.yi_555555555.codelingo.domain.model.Course
 import com.yi_555555555.codelingo.domain.model.LoginCredentials
 import com.yi_555555555.codelingo.domain.model.RegisterCredentials
 import com.yi_555555555.codelingo.domain.model.User
@@ -76,5 +78,17 @@ class UserRepositoryImpl(
   override suspend fun deleteAccessToken() {
     userDataBase.userDao().deleteToken()
     _cacheFlow.update { Cache() }
+  }
+
+  override suspend fun getCoursers(): List<Course> {
+    val coursers = userApi.getCoursers().coursers.map {
+      it.toCourseDomain()
+    }
+    _cacheFlow.update {
+      it.copy(
+        coursers = coursers
+      )
+    }
+    return coursers
   }
 }

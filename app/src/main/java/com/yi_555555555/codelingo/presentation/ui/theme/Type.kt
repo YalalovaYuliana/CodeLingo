@@ -26,6 +26,12 @@ val Typography = Typography(
     fontSize = 26.sp
   ),
 
+  titleSmall = TextStyle(
+    fontFamily = monserratFamily,
+    fontWeight = FontWeight.Bold,
+    fontSize = 22.sp
+  ),
+
   bodyLarge = TextStyle(
     fontFamily = robotoFamily,
     fontWeight = FontWeight.Medium,
@@ -36,6 +42,12 @@ val Typography = Typography(
   bodyMedium = TextStyle(
     fontFamily = monserratFamily,
     fontWeight = FontWeight.Bold,
+    fontSize = 16.sp
+  ),
+
+  labelSmall = TextStyle(
+    fontFamily = monserratFamily,
+    fontWeight = FontWeight.Normal,
     fontSize = 16.sp
   ),
 

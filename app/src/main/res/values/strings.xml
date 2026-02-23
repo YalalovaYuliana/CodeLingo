@@ -15,6 +15,10 @@
 
     <string name="retry">Перезагрузить</string>
 
+    <string name="streak">Серия</string>
+    <string name="xp">xp</string>
+    <string name="coursers">Курсы:</string>
+
     <string name="learn">изучай</string>
     <string name="practice">практикуйся</string>
     <string name="programm">программируй</string>

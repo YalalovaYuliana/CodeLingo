@@ -3,6 +3,7 @@ package com.yi_555555555.codelingo.data.retrofit
 import com.yi.myapplication.data.entity.codelingo.LoginRequest
 import com.yi.myapplication.data.entity.codelingo.RegisterRequest
 import com.yi_555555555.codelingo.data.retrofit.entity.AccessTokenData
+import com.yi_555555555.codelingo.data.retrofit.entity.CoursersResponse
 import com.yi_555555555.codelingo.data.retrofit.entity.UserResponse
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -18,4 +19,7 @@ interface UserApi {
 
   @GET("users/me")
   suspend fun getUser(@Header("Authorization") authToken: String): UserResponse
+
+  @GET("coursers")
+  suspend fun getCoursers(): CoursersResponse
 }

@@ -4,8 +4,10 @@ import android.content.Context
 import androidx.compose.material3.SnackbarHostState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.yi_555555555.codelingo.domain.model.Course
 import com.yi_555555555.codelingo.domain.model.User
 import com.yi_555555555.codelingo.domain.usecase.DeleteUseCase
+import com.yi_555555555.codelingo.domain.usecase.GetCoursersUseCase
 import com.yi_555555555.codelingo.domain.usecase.GetUserUseCase
 import com.yi_555555555.codelingo.utils.safeFetch
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,6 +23,7 @@ import kotlinx.coroutines.withContext
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
   private val getUserUseCase: GetUserUseCase,
+  private val getCoursersUseCase: GetCoursersUseCase,
   private val deleteUseCase: DeleteUseCase,
   @ApplicationContext private val context: Context
 ) : ViewModel() {
@@ -35,15 +38,18 @@ class ProfileViewModel @Inject constructor(
   }
 
   fun getUser() {
+    _state.update { ViewState.Loading }
     viewModelScope.launch {
       safeFetch(
         context = context,
         onSuccess = {
           val user = getUserUseCase()
+          val coursers = getCoursersUseCase()
           withContext(Dispatchers.Main) {
             _state.update {
               ViewState.Profile(
-                user = user
+                user = user,
+                coursers = coursers
               )
             }
           }
@@ -85,7 +91,8 @@ sealed interface ViewState {
   data object Loading : ViewState
 
   data class Profile(
-    val user: User
+    val user: User,
+    val coursers: List<Course>
   ) : ViewState
 
   data class Error(

@@ -1,19 +1,16 @@
 package com.yi_555555555.codelingo.presentation.navigation
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.yi_555555555.codelingo.presentation.components.LoadingState
 import com.yi_555555555.codelingo.presentation.screens.login.LoginScreen
 import com.yi_555555555.codelingo.presentation.screens.main.MainScreen
 import com.yi_555555555.codelingo.presentation.screens.onboarding.OnboardingScreen
+import com.yi_555555555.codelingo.presentation.screens.profile.ProfileScreen
 import com.yi_555555555.codelingo.presentation.screens.register.RegisterScreen
 import kotlinx.serialization.Serializable
 
@@ -26,17 +23,12 @@ fun NavGraph(
   val hasAccessToken = navViewModel.hasAccessToken.collectAsState().value
 
   if (hasAccessToken == null) {
-    Box(
-      modifier = Modifier.fillMaxSize(),
-      contentAlignment = Alignment.Center
-    ) {
-      CircularProgressIndicator()
-    }
+    LoadingState()
     return
   }
 
   val startDestination = if (hasAccessToken) {
-    Screen.MainScreen
+    Screen.ProfileScreen
   } else Screen.OnboardingScreen
 
   NavHost(
@@ -56,7 +48,7 @@ fun NavGraph(
     composable<Screen.RegisterScreen> {
       RegisterScreen(
         onSuccessRegister = {
-          navController.navigate(Screen.MainScreen) {
+          navController.navigate(Screen.ProfileScreen) {
             popUpTo(0) {
               inclusive = true
             }
@@ -73,7 +65,7 @@ fun NavGraph(
     composable<Screen.LoginScreen> {
       LoginScreen(
         onSuccessLogin = {
-          navController.navigate(Screen.MainScreen) {
+          navController.navigate(Screen.ProfileScreen) {
             popUpTo(0) {
               inclusive = true
             }
@@ -87,6 +79,17 @@ fun NavGraph(
     }
     composable<Screen.MainScreen> {
       MainScreen(
+        onLogout = {
+          navController.navigate(Screen.OnboardingScreen) {
+            popUpTo(0) {
+              inclusive = true
+            }
+          }
+        }
+      )
+    }
+    composable<Screen.ProfileScreen> {
+      ProfileScreen(
         onLogout = {
           navController.navigate(Screen.OnboardingScreen) {
             popUpTo(0) {
@@ -112,4 +115,7 @@ sealed interface Screen {
 
   @Serializable
   data object MainScreen : Screen
+
+  @Serializable
+  data object ProfileScreen : Screen
 }

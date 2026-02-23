@@ -7,16 +7,16 @@ import androidx.lifecycle.viewModelScope
 import com.yi_555555555.codelingo.R
 import com.yi_555555555.codelingo.domain.usecase.LoginUseCase
 import com.yi_555555555.codelingo.presentation.screens.validation.isValidEmail
-import com.yi_555555555.codelingo.presentation.screens.validation.isValidPassword
+import com.yi_555555555.codelingo.utils.safeFetch
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import jakarta.inject.Inject
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import retrofit2.HttpException
-import java.io.IOException
+import kotlinx.coroutines.withContext
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
@@ -63,36 +63,34 @@ class LoginViewModel @Inject constructor(
         if (!validateFields()) return
         _state.update {
           currentState.copy(
-            isLoading = true,
-            errorMessage = null
+            isLoading = true
           )
         }
         viewModelScope.launch {
-          _state.update {
-            var errorMessage: String? = null
-            try {
+          safeFetch(
+            context = context,
+            onSuccess = {
               loginUseCase(
                 email = currentState.email,
                 password = currentState.password
               )
-            } catch (e: HttpException) {
-              errorMessage = when (e.code()) {
-                409 -> "Email уже зарегистрирован"
-                else -> context.getString(R.string.something_went_wrong)
+              withContext(Dispatchers.Main) {
+                _state.update { ViewState.Success }
               }
-            } catch (_: IOException) {
-              errorMessage = "Проверьте подключение к интернету"
-            }
-//            catch (_: Exception) {
-//              errorMessage = context.getString(R.string.something_went_wrong)
-//            }
-            if (errorMessage != null) {
-              currentState.copy(
-                isLoading = false,
-                errorMessage = errorMessage
+            },
+            onFailure = { errorMessage ->
+              snackbarHostState.value.showSnackbar(
+                message = errorMessage
               )
-            } else ViewState.Success
-          }
+              withContext(Dispatchers.Main) {
+                _state.update {
+                  currentState.copy(
+                    isLoading = false
+                  )
+                }
+              }
+            }
+          )
         }
       }
     }
@@ -103,10 +101,10 @@ class LoginViewModel @Inject constructor(
     if (currentState !is ViewState.Input) return false
 
     val emailErrorMessage = if (!currentState.email.isValidEmail()) {
-      context.getString(R.string.email_requirement)
+      context.getString(R.string.required_to_fill)
     } else null
 
-    val passwordErrorMessage = if (!currentState.password.isValidPassword()) {
+    val passwordErrorMessage = if (currentState.password.isBlank()) {
       context.getString(R.string.password_requirement)
     } else null
 
@@ -128,8 +126,7 @@ sealed interface ViewState {
     val password: String = "",
     val passwordErrorMessage: String? = null,
     val isPasswordVisible: Boolean = false,
-    val isLoading: Boolean = false,
-    val errorMessage: String? = null
+    val isLoading: Boolean = false
   ) : ViewState
 
   data object Success : ViewState

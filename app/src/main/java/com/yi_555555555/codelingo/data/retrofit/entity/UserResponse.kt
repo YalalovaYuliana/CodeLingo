@@ -1,21 +1,19 @@
-package com.yi.myapplication.data.entity.codelingo
+package com.yi_555555555.codelingo.data.retrofit.entity
 
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
+import com.google.gson.annotations.SerializedName
 
-@Serializable
 data class UserResponse(
-    @SerialName("email")
-    val email: String,
-    @SerialName("id")
-    val id: Int,
-    @SerialName("picture_link")
-    val pictureLink: String,
-    @SerialName("streak")
-    val streak: Int,
-    @SerialName("username")
-    val username: String,
-    @SerialName("xp")
-    val xp: Int
+  @SerializedName("email")
+  val email: String,
+  @SerializedName("id")
+  val id: Int,
+  @SerializedName("picture_link")
+  val pictureLink: String?,
+  @SerializedName("streak")
+  val streak: Int,
+  @SerializedName("username")
+  val username: String,
+  @SerializedName("xp")
+  val xp: Int
 )

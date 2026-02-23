@@ -72,4 +72,4 @@ class DataModule {
   }
 }
 
-private const val REMOTE_CODE_LINGO_BASE_URL = "https://backend-codelingo.onrender.com/api/"
+private const val REMOTE_CODE_LINGO_BASE_URL = "https://backend-codelingo-rs5o.onrender.com/api/"

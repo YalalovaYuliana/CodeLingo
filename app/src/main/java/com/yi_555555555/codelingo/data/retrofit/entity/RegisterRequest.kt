@@ -1,15 +1,13 @@
 package com.yi.myapplication.data.entity.codelingo
 
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
+import com.google.gson.annotations.SerializedName
 
-@Serializable
 data class RegisterRequest(
-    @SerialName("email")
-    val email: String,
-    @SerialName("password")
-    val password: String,
-    @SerialName("username")
-    val username: String
+  @SerializedName("email")
+  val email: String,
+  @SerializedName("password")
+  val password: String,
+  @SerializedName("username")
+  val username: String
 )

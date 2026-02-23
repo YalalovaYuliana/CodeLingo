@@ -18,8 +18,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -41,6 +39,7 @@ import com.yi_555555555.codelingo.R
 import com.yi_555555555.codelingo.presentation.components.Header
 import com.yi_555555555.codelingo.presentation.components.InputTextField
 import com.yi_555555555.codelingo.presentation.components.PrimaryButton
+import com.yi_555555555.codelingo.presentation.components.ScreenScaffold
 import com.yi_555555555.codelingo.presentation.components.TopAppBar
 import com.yi_555555555.codelingo.presentation.components.VSpacer
 import com.yi_555555555.codelingo.presentation.components.WSpacer
@@ -56,17 +55,14 @@ fun RegisterScreen(
 
   val state by viewModel.state.collectAsState()
   val snackbarHostState by viewModel.snackbarHostState.collectAsState()
-  Scaffold(
-    snackbarHost = {
-      SnackbarHost(
-        hostState = snackbarHostState
-      )
-    },
+
+  ScreenScaffold(
     topBar = {
       TopAppBar(
         onBackClick = onBackClick
       )
-    }
+    },
+    snackbarHostState = snackbarHostState
   ) { innerPadding ->
     Column(
       modifier = Modifier
@@ -85,14 +81,6 @@ fun RegisterScreen(
     ) {
       when (val currentState = state) {
         is ViewState.Input -> {
-          LaunchedEffect(currentState.errorMessage) {
-            if (currentState.errorMessage != null) {
-              snackbarHostState.showSnackbar(
-                message = currentState.errorMessage
-              )
-            }
-          }
-          //VSpacer(40.dp)
           Header(
             text = stringResource(R.string.registration_title)
           )
@@ -189,5 +177,7 @@ fun RegisterScreen(
         }
       }
     }
+
+
   }
 }

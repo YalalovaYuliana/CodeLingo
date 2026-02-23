@@ -13,6 +13,8 @@
     <string name="email_hint">Почта</string>
     <string name="password_hint">Пароль</string>
 
+    <string name="retry">Перезагрузить</string>
+
     <string name="learn">изучай</string>
     <string name="practice">практикуйся</string>
     <string name="programm">программируй</string>
@@ -21,6 +23,8 @@
     <string name="anywhere">везде</string>
 
     <string name="something_went_wrong">Что-то пошло не так</string>
+    <string name="check_internet_connection">Проверьте подключение к интернету</string>
+    <string name="required_to_fill">Обязательно для заполнения</string>
     <string name="username_requirement">Минимум 2 символа</string>
     <string name="password_requirement">Пароль должен содержать:\n
         • Минимум 8 символов\n

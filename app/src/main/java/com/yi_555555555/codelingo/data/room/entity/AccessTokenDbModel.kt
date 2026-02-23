@@ -8,5 +8,6 @@ import androidx.room.PrimaryKey
 data class AccessTokenDbModel(
   @PrimaryKey(autoGenerate = false)
   val id: Int = 1,
-  val accessToken: String
+  val accessToken: String,
+  val tokenType: String
 )

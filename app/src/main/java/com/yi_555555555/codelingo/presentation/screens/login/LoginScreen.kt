@@ -16,8 +16,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -36,6 +34,7 @@ import com.yi_555555555.codelingo.R
 import com.yi_555555555.codelingo.presentation.components.Header
 import com.yi_555555555.codelingo.presentation.components.InputTextField
 import com.yi_555555555.codelingo.presentation.components.PrimaryButton
+import com.yi_555555555.codelingo.presentation.components.ScreenScaffold
 import com.yi_555555555.codelingo.presentation.components.TopAppBar
 import com.yi_555555555.codelingo.presentation.components.VSpacer
 import com.yi_555555555.codelingo.presentation.components.WSpacer
@@ -50,17 +49,13 @@ fun LoginScreen(
   val state by viewModel.state.collectAsState()
   val snackbarHostState by viewModel.snackbarHostState.collectAsState()
 
-  Scaffold(
-    snackbarHost = {
-      SnackbarHost(
-        hostState = snackbarHostState
-      )
-    },
+  ScreenScaffold(
     topBar = {
       TopAppBar(
         onBackClick = onBackClick
       )
-    }
+    },
+    snackbarHostState = snackbarHostState
   ) { innerPadding ->
     Column(
       modifier = Modifier
@@ -79,13 +74,6 @@ fun LoginScreen(
     ) {
       when (val currentState = state) {
         is ViewState.Input -> {
-          LaunchedEffect(currentState.errorMessage) {
-            if (currentState.errorMessage != null) {
-              snackbarHostState.showSnackbar(
-                message = currentState.errorMessage
-              )
-            }
-          }
           Header(
             text = stringResource(R.string.login_title)
           )

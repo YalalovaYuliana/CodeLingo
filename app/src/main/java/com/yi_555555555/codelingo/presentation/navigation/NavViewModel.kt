@@ -28,7 +28,6 @@ class NavViewModel @Inject constructor(
         userRepository.readAccessToken()
       }
       val selectedCourseId = if (token != null) {
-        println("yuliana 3")
         getUserCourseUseCase()
       } else null
       _state.update {

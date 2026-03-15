@@ -34,6 +34,8 @@ fun NavGraph(
     } else Screen.CoursesScreen
   } else Screen.OnboardingScreen
 
+  println("yuliana start destination: $startDestination")
+
   NavHost(
     navController = navController,
     startDestination = startDestination
@@ -68,7 +70,7 @@ fun NavGraph(
     composable<Screen.LoginScreen> {
       LoginScreen(
         onSuccessLogin = {
-          if (state.hasSelectedCourseId != null) {
+          if (state.hasSelectedCourseId == true) {
             navController.navigate(Screen.ProfileScreen) {
               popUpTo(0) {
                 inclusive = true

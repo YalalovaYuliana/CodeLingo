@@ -93,6 +93,7 @@ fun RegisterScreen(
           )
           InputTextField(
             value = currentState.username,
+            readOnly = currentState.isLoading,
             onValueChange = { newValue ->
               viewModel.processCommand(Command.InputName(newValue))
             },
@@ -102,6 +103,7 @@ fun RegisterScreen(
           VSpacer(21.dp)
           InputTextField(
             value = currentState.email,
+            readOnly = currentState.isLoading,
             onValueChange = { newValue ->
               viewModel.processCommand(Command.InputEmail(newValue))
             },
@@ -111,6 +113,7 @@ fun RegisterScreen(
           VSpacer(21.dp)
           InputTextField(
             value = currentState.password,
+            readOnly = currentState.isLoading,
             onValueChange = { newValue ->
               viewModel.processCommand(Command.InputPassword(newValue))
             },

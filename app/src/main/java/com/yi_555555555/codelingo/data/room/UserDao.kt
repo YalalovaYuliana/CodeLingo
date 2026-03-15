@@ -25,6 +25,6 @@ interface UserDao {
   @Query("SELECT * FROM course WHERE id = 1")
   suspend fun getCourseId(): CourseDbModel?
 
-  @Query("DELETE FROM access_token")
+  @Query("DELETE FROM course")
   suspend fun deleteCourseId()
 }

@@ -7,6 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.yi_555555555.codelingo.presentation.components.LoadingState
+import com.yi_555555555.codelingo.presentation.screens.courses.CoursesScreen
 import com.yi_555555555.codelingo.presentation.screens.login.LoginScreen
 import com.yi_555555555.codelingo.presentation.screens.main.MainScreen
 import com.yi_555555555.codelingo.presentation.screens.onboarding.OnboardingScreen
@@ -20,15 +21,17 @@ fun NavGraph(
 ) {
 
   val navController = rememberNavController()
-  val hasAccessToken = navViewModel.hasAccessToken.collectAsState().value
+  val state = navViewModel.state.collectAsState().value
 
-  if (hasAccessToken == null) {
+  if (state == null) {
     LoadingState()
     return
   }
 
-  val startDestination = if (hasAccessToken) {
-    Screen.ProfileScreen
+  val startDestination = if (state.hasAccessToken == true) {
+    if (state.hasSelectedCourseId == true) {
+      Screen.ProfileScreen
+    } else Screen.CoursesScreen
   } else Screen.OnboardingScreen
 
   NavHost(
@@ -48,7 +51,7 @@ fun NavGraph(
     composable<Screen.RegisterScreen> {
       RegisterScreen(
         onSuccessRegister = {
-          navController.navigate(Screen.ProfileScreen) {
+          navController.navigate(Screen.CoursesScreen) {
             popUpTo(0) {
               inclusive = true
             }
@@ -65,11 +68,18 @@ fun NavGraph(
     composable<Screen.LoginScreen> {
       LoginScreen(
         onSuccessLogin = {
-          navController.navigate(Screen.ProfileScreen) {
-            popUpTo(0) {
-              inclusive = true
+          if (state.hasSelectedCourseId != null) {
+            navController.navigate(Screen.ProfileScreen) {
+              popUpTo(0) {
+                inclusive = true
+              }
             }
-            //launchSingleTop = true
+          } else {
+            navController.navigate(Screen.CoursesScreen) {
+              popUpTo(0) {
+                inclusive = true
+              }
+            }
           }
         },
         onBackClick = {
@@ -99,6 +109,17 @@ fun NavGraph(
         }
       )
     }
+    composable<Screen.CoursesScreen> {
+      CoursesScreen(
+        onSuccessStart = {
+          navController.navigate(Screen.ProfileScreen) {
+            popUpTo(0) {
+              inclusive = true
+            }
+          }
+        }
+      )
+    }
   }
 }
 
@@ -118,4 +139,7 @@ sealed interface Screen {
 
   @Serializable
   data object ProfileScreen : Screen
+
+  @Serializable
+  data object CoursesScreen : Screen
 }

@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.yi_555555555.codelingo.domain.model.Course
 import com.yi_555555555.codelingo.domain.model.User
 import com.yi_555555555.codelingo.domain.usecase.DeleteUseCase
-import com.yi_555555555.codelingo.domain.usecase.GetCoursersUseCase
+import com.yi_555555555.codelingo.domain.usecase.GetCoursesUseCase
 import com.yi_555555555.codelingo.domain.usecase.GetUserUseCase
 import com.yi_555555555.codelingo.utils.safeFetch
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,7 +23,7 @@ import kotlinx.coroutines.withContext
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
   private val getUserUseCase: GetUserUseCase,
-  private val getCoursersUseCase: GetCoursersUseCase,
+  private val getCoursesUseCase: GetCoursesUseCase,
   private val deleteUseCase: DeleteUseCase,
   @ApplicationContext private val context: Context
 ) : ViewModel() {
@@ -44,12 +44,12 @@ class ProfileViewModel @Inject constructor(
         context = context,
         onSuccess = {
           val user = getUserUseCase()
-          val coursers = getCoursersUseCase()
+          val courses = getCoursesUseCase()
           withContext(Dispatchers.Main) {
             _state.update {
               ViewState.Profile(
                 user = user,
-                coursers = coursers
+                courses = courses
               )
             }
           }
@@ -92,7 +92,7 @@ sealed interface ViewState {
 
   data class Profile(
     val user: User,
-    val coursers: List<Course>
+    val courses: List<Course>
   ) : ViewState
 
   data class Error(

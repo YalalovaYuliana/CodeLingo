@@ -10,13 +10,6 @@ class GetUserUseCase @Inject constructor(
   suspend operator fun invoke(): User {
     val cache = userRepository.cacheFlow.value
     val user = cache.user
-    return if (user != null) {
-      user
-    } else {
-      val accessToken = cache.accessToken
-      accessToken?.let {
-        userRepository.getUser(authToken = accessToken.accessTokenWithType)
-      } ?: throw Exception("missing access token")
-    }
+    return user ?: userRepository.getUser()
   }
 }

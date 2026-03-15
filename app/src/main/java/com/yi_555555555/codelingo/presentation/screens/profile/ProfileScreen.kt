@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -33,12 +35,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.yi_555555555.codelingo.R
+import com.yi_555555555.codelingo.presentation.components.CourseCard
 import com.yi_555555555.codelingo.presentation.components.ErrorState
 import com.yi_555555555.codelingo.presentation.components.Header
 import com.yi_555555555.codelingo.presentation.components.LoadingState
 import com.yi_555555555.codelingo.presentation.components.ScreenScaffold
 import com.yi_555555555.codelingo.presentation.components.VSpacer
 import com.yi_555555555.codelingo.presentation.components.WSpacer
+import com.yi_555555555.codelingo.presentation.screens.courses.Command
 import com.yi_555555555.codelingo.presentation.ui.theme.CodeLingoTheme
 import com.yi_555555555.codelingo.presentation.ui.theme.White
 
@@ -115,10 +119,20 @@ fun ProfileScreen(
           VSpacer(64.dp)
           Text(
             modifier = Modifier.padding(start = 8.dp),
-            text = stringResource(R.string.coursers),
+            text = stringResource(R.string.courses),
             style = MaterialTheme.typography.titleSmall,
             color = MaterialTheme.colorScheme.secondary
           )
+          VSpacer(16.dp)
+          LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+          ) {
+            items(currentState.courses) { course ->
+              CourseCard(
+                course = course
+              )
+            }
+          }
           WSpacer()
           Button(
             onClick = {
@@ -147,7 +161,6 @@ private fun StatsCard(
   text: String,
   modifier: Modifier = Modifier
 ) {
-  CodeLingoTheme {
     Box(
       modifier = modifier
         .border(
@@ -187,16 +200,17 @@ private fun StatsCard(
       }
 
     }
-  }
 }
 
 
 @Composable
 @Preview(showSystemUi = true)
 private fun StatsCardPreview() {
-  StatsCard(
-    icon = painterResource(R.drawable.ic_streak_fire),
-    value = 12.toString(),
-    text = "Серия"
-  )
+  CodeLingoTheme {
+    StatsCard(
+      icon = painterResource(R.drawable.ic_streak_fire),
+      value = 12.toString(),
+      text = "Серия"
+    )
+  }
 }

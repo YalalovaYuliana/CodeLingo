@@ -3,12 +3,14 @@ package com.yi_555555555.codelingo.data.retrofit
 import com.yi.myapplication.data.entity.codelingo.LoginRequest
 import com.yi.myapplication.data.entity.codelingo.RegisterRequest
 import com.yi_555555555.codelingo.data.retrofit.entity.AccessTokenData
-import com.yi_555555555.codelingo.data.retrofit.entity.CoursersResponse
+import com.yi_555555555.codelingo.data.retrofit.entity.CourseResponse
+import com.yi_555555555.codelingo.data.retrofit.entity.UserCourseResponse
 import com.yi_555555555.codelingo.data.retrofit.entity.UserResponse
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.Path
 
 interface UserApi {
   @POST("auth/register")
@@ -20,6 +22,15 @@ interface UserApi {
   @GET("users/me")
   suspend fun getUser(@Header("Authorization") authToken: String): UserResponse
 
-  @GET("coursers")
-  suspend fun getCoursers(): CoursersResponse
+  @GET("users/course")
+  suspend fun getUserCourseId(@Header("Authorization") authToken: String): UserCourseResponse
+
+  @GET("courses")
+  suspend fun getCourses(): List<CourseResponse>
+
+  @POST("courses/{course_id}/start")
+  suspend fun startCourse(
+    @Header("Authorization") authToken: String,
+    @Path("course_id") courseId: Int
+  )
 }

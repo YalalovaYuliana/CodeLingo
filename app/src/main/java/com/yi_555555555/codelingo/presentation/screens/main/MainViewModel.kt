@@ -29,7 +29,7 @@ class MainViewModel @Inject constructor(
         _state.update {
           viewModelScope.launch {
             withContext(Dispatchers.IO) {
-              userRepository.deleteAccessToken()
+              userRepository.logout()
             }
           }
           ViewState.Logout

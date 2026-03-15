@@ -9,6 +9,8 @@
     <string name="login_title">Авторизация</string>
     <string name="already_have_an_account_login">Уже есть аккаунт? Войти</string>
 
+    <string name="select_course">Выберите курс</string>
+
     <string name="name_hint">Имя</string>
     <string name="email_hint">Почта</string>
     <string name="password_hint">Пароль</string>
@@ -17,7 +19,7 @@
 
     <string name="streak">Серия</string>
     <string name="xp">xp</string>
-    <string name="coursers">Курсы:</string>
+    <string name="courses">Курсы</string>
 
     <string name="learn">изучай</string>
     <string name="practice">практикуйся</string>

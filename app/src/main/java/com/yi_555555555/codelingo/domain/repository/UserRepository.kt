@@ -11,16 +11,20 @@ interface UserRepository {
   val cacheFlow: StateFlow<Cache>
   suspend fun register(registerCredentials: RegisterCredentials): AccessToken
   suspend fun login(loginCredentials: LoginCredentials): AccessToken
-  suspend fun getUser(authToken: String): User
+  suspend fun getUser(): User
+  suspend fun getUserCourseId(): Int?
   suspend fun readAccessToken(): AccessToken?
   suspend fun writeAccessToken(accessToken: AccessToken)
-  suspend fun deleteAccessToken()
-
-  suspend fun getCoursers(): List<Course>
+  suspend fun logout()
+  suspend fun readCourseId(): Int?
+  suspend fun writeCourseId(courseId: Int)
+  suspend fun getCourses(): List<Course>
+  suspend fun startCourse(courseId: Int)
 }
 
 data class Cache(
   val accessToken: AccessToken? = null,
   val user: User? = null,
-  val coursers: List<Course>? = null
+  val selectedCourseId: Int? = null,
+  val courses: List<Course>? = null
 )

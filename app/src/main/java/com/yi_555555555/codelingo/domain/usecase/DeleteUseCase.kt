@@ -7,6 +7,6 @@ class DeleteUseCase @Inject constructor(
   private val userRepository: UserRepository
 ) {
   suspend operator fun invoke() {
-    userRepository.deleteAccessToken()
+    userRepository.logout()
   }
 }

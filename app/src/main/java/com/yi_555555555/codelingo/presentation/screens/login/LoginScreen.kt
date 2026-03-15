@@ -86,6 +86,7 @@ fun LoginScreen(
           )
           InputTextField(
             value = currentState.email,
+            readOnly = currentState.isLoading,
             onValueChange = { newValue ->
               viewModel.processCommand(Command.InputEmail(newValue))
             },
@@ -95,6 +96,7 @@ fun LoginScreen(
           VSpacer(21.dp)
           InputTextField(
             value = currentState.password,
+            readOnly = currentState.isLoading,
             onValueChange = { newValue ->
               viewModel.processCommand(Command.InputPassword(newValue))
             },

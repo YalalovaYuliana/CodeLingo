@@ -1,7 +1,7 @@
 package com.yi_555555555.codelingo.data.mappers
 
 import com.yi_555555555.codelingo.data.retrofit.entity.AccessTokenData
-import com.yi_555555555.codelingo.data.retrofit.entity.CoursersResponse
+import com.yi_555555555.codelingo.data.retrofit.entity.CourseResponse
 import com.yi_555555555.codelingo.data.retrofit.entity.UserResponse
 import com.yi_555555555.codelingo.data.room.entity.AccessTokenDbModel
 import com.yi_555555555.codelingo.domain.model.AccessToken
@@ -40,7 +40,7 @@ fun AccessToken.toAccessTokenDb(): AccessTokenDbModel {
   )
 }
 
-fun CoursersResponse.CourseData.toCourseDomain(): Course {
+fun CourseResponse.toCourseDomain(): Course {
   return Course(
     id = id,
     title = title,

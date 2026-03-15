@@ -22,6 +22,7 @@ fun InputTextField(
   modifier: Modifier = Modifier,
   errorMessage: String? = null,
   singleLine: Boolean = true,
+  readOnly: Boolean = false,
   keyboardOptions: KeyboardOptions = KeyboardOptions(),
   visualTransformation: VisualTransformation = VisualTransformation.None,
   trailingIcon: (@Composable () -> Unit)? = null
@@ -40,6 +41,7 @@ fun InputTextField(
           shape = RoundedCornerShape(13.dp)
         ),
       singleLine = singleLine,
+      readOnly = readOnly,
       keyboardOptions = keyboardOptions,
       visualTransformation = visualTransformation,
       value = value,

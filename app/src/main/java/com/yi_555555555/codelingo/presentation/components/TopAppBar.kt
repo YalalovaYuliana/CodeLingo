@@ -27,7 +27,7 @@ fun TopAppBar(
       ) {
         Icon(
           modifier = Modifier.widthIn(max = 32.dp),
-          painter = painterResource(R.drawable.arrow_back),
+          painter = painterResource(R.drawable.arrow_left),
           contentDescription = "Back"
         )
       }

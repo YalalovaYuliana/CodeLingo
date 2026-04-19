@@ -4,7 +4,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -41,7 +40,7 @@ fun CourseCard(
         width = 3.dp,
         color = if (selected) {
           MaterialTheme.colorScheme.primaryContainer
-        } else MaterialTheme.colorScheme.secondaryContainer,
+        } else MaterialTheme.colorScheme.outlineVariant,
         shape = RoundedCornerShape(13.dp)
       )
       .background(

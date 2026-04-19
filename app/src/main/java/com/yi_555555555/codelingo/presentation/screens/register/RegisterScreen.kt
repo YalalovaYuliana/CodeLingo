@@ -74,7 +74,7 @@ fun RegisterScreen(
         .padding(
           start = 24.dp,
           end = 24.dp,
-          bottom = 8.dp
+          bottom = 32.dp
         ),
       verticalArrangement = Arrangement.Center,
       horizontalAlignment = Alignment.CenterHorizontally
@@ -148,7 +148,7 @@ fun RegisterScreen(
             errorMessage = currentState.passwordErrorMessage
           )
           WSpacer()
-          VSpacer(40.dp)
+          //VSpacer(40.dp)
           PrimaryButton(
             modifier = Modifier
               .fillMaxWidth()

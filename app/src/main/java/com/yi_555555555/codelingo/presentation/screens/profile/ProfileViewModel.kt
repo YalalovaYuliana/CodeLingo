@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.yi_555555555.codelingo.domain.model.Course
 import com.yi_555555555.codelingo.domain.model.User
-import com.yi_555555555.codelingo.domain.usecase.DeleteUseCase
 import com.yi_555555555.codelingo.domain.usecase.GetCoursesUseCase
 import com.yi_555555555.codelingo.domain.usecase.GetUserUseCase
 import com.yi_555555555.codelingo.utils.safeFetch
@@ -24,7 +23,6 @@ import kotlinx.coroutines.withContext
 class ProfileViewModel @Inject constructor(
   private val getUserUseCase: GetUserUseCase,
   private val getCoursesUseCase: GetCoursesUseCase,
-  private val deleteUseCase: DeleteUseCase,
   @ApplicationContext private val context: Context
 ) : ViewModel() {
 

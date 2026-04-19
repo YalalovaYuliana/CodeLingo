@@ -26,6 +26,7 @@ import com.yi_555555555.codelingo.presentation.screens.main.MainScreen
 import com.yi_555555555.codelingo.presentation.screens.onboarding.OnboardingScreen
 import com.yi_555555555.codelingo.presentation.screens.profile.ProfileScreen
 import com.yi_555555555.codelingo.presentation.screens.register.RegisterScreen
+import com.yi_555555555.codelingo.presentation.screens.settings.SettingsScreen
 import kotlinx.serialization.Serializable
 
 @Composable
@@ -120,19 +121,15 @@ fun NavGraph(
           HomeScreenContent.Main -> {
             MainScreen(
               modifier = Modifier.padding(innerPadding),
-              onLogout = {
-                navController.navigate(Screen.OnboardingScreen) {
-                  popUpTo(0) {
-                    inclusive = true
-                  }
-                }
-              }
             )
           }
 
           HomeScreenContent.Profile -> {
             ProfileScreen(
-              modifier = Modifier.padding(innerPadding)
+              modifier = Modifier.padding(innerPadding),
+              onSettingsClick = {
+                navController.navigate(Screen.SettingsScreen)
+              }
             )
           }
 
@@ -220,6 +217,20 @@ fun NavGraph(
         }
       )
     }
+    composable<Screen.SettingsScreen> {
+      SettingsScreen(
+        onLogout = {
+          navController.navigate(Screen.OnboardingScreen) {
+            popUpTo(0) {
+              inclusive = true
+            }
+          }
+        },
+        onBackClick = {
+          navController.navigateUp()
+        }
+      )
+    }
   }
 }
 
@@ -239,6 +250,9 @@ sealed interface Screen {
 
   @Serializable
   data object HomeScreen : Screen
+
+  @Serializable
+  data object SettingsScreen : Screen
 }
 
 enum class HomeScreenContent {

@@ -5,6 +5,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.yi_555555555.codelingo.R
+import com.yi_555555555.codelingo.domain.usecase.GetUserCourseUseCase
 import com.yi_555555555.codelingo.domain.usecase.LoginUseCase
 import com.yi_555555555.codelingo.presentation.screens.validation.isValidEmail
 import com.yi_555555555.codelingo.utils.safeFetch
@@ -21,6 +22,7 @@ import kotlinx.coroutines.withContext
 @HiltViewModel
 class LoginViewModel @Inject constructor(
   private val loginUseCase: LoginUseCase,
+  private val getUserCourseUseCase: GetUserCourseUseCase,
   @ApplicationContext private val context: Context
 ) : ViewModel() {
 
@@ -74,6 +76,7 @@ class LoginViewModel @Inject constructor(
                 email = currentState.email,
                 password = currentState.password
               )
+              getUserCourseUseCase()
               withContext(Dispatchers.Main) {
                 _state.update { ViewState.Success }
               }

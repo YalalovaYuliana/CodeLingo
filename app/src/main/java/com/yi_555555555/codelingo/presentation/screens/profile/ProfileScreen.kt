@@ -16,6 +16,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -42,6 +43,7 @@ import com.yi_555555555.codelingo.presentation.ui.theme.CodeLingoTheme
 
 @Composable
 fun ProfileScreen(
+  onSettingsClick: () -> Unit,
   modifier: Modifier = Modifier,
   viewModel: ProfileViewModel = hiltViewModel()
 ) {
@@ -75,6 +77,15 @@ fun ProfileScreen(
 
       is ViewState.Profile -> {
         val user = currentState.user
+        IconButton(
+          modifier = Modifier.align(Alignment.End),
+          onClick = onSettingsClick
+        ) {
+          Image(
+            painter = painterResource(R.drawable.ic_settings),
+            contentDescription = "settings"
+          )
+        }
         Image(
           painter = painterResource(R.drawable.cat_temp),
           modifier = Modifier
@@ -140,7 +151,7 @@ private fun StatsCard(
     modifier = modifier
       .border(
         width = 3.dp,
-        color = MaterialTheme.colorScheme.secondaryContainer,
+        color = MaterialTheme.colorScheme.outlineVariant,
         shape = RoundedCornerShape(24.dp)
       )
       .background(

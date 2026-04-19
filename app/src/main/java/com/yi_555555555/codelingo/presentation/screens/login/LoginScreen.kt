@@ -67,7 +67,7 @@ fun LoginScreen(
         .padding(
           start = 24.dp,
           end = 24.dp,
-          bottom = 8.dp
+          bottom = 64.dp
         ),
       verticalArrangement = Arrangement.Center,
       horizontalAlignment = Alignment.CenterHorizontally
@@ -131,7 +131,7 @@ fun LoginScreen(
             errorMessage = currentState.passwordErrorMessage
           )
           WSpacer()
-          VSpacer(40.dp)
+          //VSpacer(40.dp)
           PrimaryButton(
             modifier = Modifier
               .fillMaxWidth()
@@ -140,7 +140,6 @@ fun LoginScreen(
             onClick = { viewModel.processCommand(Command.Login) },
             isLoading = currentState.isLoading
           )
-          VSpacer(16.dp)
         }
 
         ViewState.Success -> {

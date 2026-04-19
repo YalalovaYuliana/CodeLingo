@@ -6,7 +6,9 @@
 
     <string name="start">Начать</string>
     <string name="login">Войти</string>
+    <string name="logout">Выйти из аккаунта</string>
     <string name="login_title">Авторизация</string>
+    <string name="account_title">Аккаунт</string>
     <string name="already_have_an_account_login">Уже есть аккаунт? Войти</string>
 
     <string name="select_course">Выберите курс</string>

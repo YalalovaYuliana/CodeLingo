@@ -1,20 +1,14 @@
 package com.yi_555555555.codelingo.presentation.screens.main
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.yi_555555555.codelingo.domain.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-  private val userRepository: UserRepository
+
 ) : ViewModel() {
 
   private val _state = MutableStateFlow<ViewState>(ViewState.Initial)
@@ -25,15 +19,8 @@ class MainViewModel @Inject constructor(
     if (currentState !is ViewState.Initial) return
 
     when (command) {
-      is Command.Logout -> {
-        _state.update {
-          viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-              userRepository.logout()
-            }
-          }
-          ViewState.Logout
-        }
+      is Command.StartLevel -> {
+
       }
     }
   }
@@ -42,10 +29,8 @@ class MainViewModel @Inject constructor(
 
 sealed interface ViewState {
   data object Initial : ViewState
-
-  data object Logout : ViewState
 }
 
 sealed interface Command {
-  data object Logout : Command
+  data object StartLevel : Command
 }

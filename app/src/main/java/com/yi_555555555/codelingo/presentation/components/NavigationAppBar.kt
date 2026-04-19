@@ -24,39 +24,45 @@ fun NavigationAppBar(
   selectedBottomBarDestination: BottomBarDestination,
   onClick: (BottomBarDestination) -> Unit
 ) {
-  NavigationBar(
-    windowInsets = NavigationBarDefaults.windowInsets,
-    containerColor = Color.Transparent
-  ) {
-    BottomBarDestination.entries.forEach { destination ->
-      val selected = selectedBottomBarDestination == destination
-      NavigationBarItem(
-        selected = selected,
-        onClick = {
-          onClick(destination)
-        },
-        icon = {
-          Column {
-            Icon(
-              modifier = Modifier.size(49.dp),
-              painter = painterResource(destination.icon),
-              contentDescription = destination.contentDescription,
-              tint = Color.Unspecified
-            )
-            if (selected) {
-              VSpacer(4.dp)
-              HorizontalDivider(
-                modifier = Modifier.width(49.dp),
-                thickness = 3.dp,
-                color = MaterialTheme.colorScheme.outline
+  Column {
+    HorizontalDivider(
+      thickness = 3.dp,
+      color = MaterialTheme.colorScheme.outlineVariant
+    )
+    NavigationBar(
+      windowInsets = NavigationBarDefaults.windowInsets,
+      containerColor = Color.Transparent
+    ) {
+      BottomBarDestination.entries.forEach { destination ->
+        val selected = selectedBottomBarDestination == destination
+        NavigationBarItem(
+          selected = selected,
+          onClick = {
+            onClick(destination)
+          },
+          icon = {
+            Column {
+              Icon(
+                modifier = Modifier.size(49.dp),
+                painter = painterResource(destination.icon),
+                contentDescription = destination.contentDescription,
+                tint = Color.Unspecified
               )
+              if (selected) {
+                VSpacer(4.dp)
+                HorizontalDivider(
+                  modifier = Modifier.width(49.dp),
+                  thickness = 3.dp,
+                  color = MaterialTheme.colorScheme.outline
+                )
+              }
             }
-          }
-        },
-        colors = NavigationBarItemDefaults.colors(
-          indicatorColor = Color.Transparent
+          },
+          colors = NavigationBarItemDefaults.colors(
+            indicatorColor = Color.Transparent
+          )
         )
-      )
+      }
     }
   }
 }

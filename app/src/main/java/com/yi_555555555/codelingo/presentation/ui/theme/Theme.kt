@@ -10,28 +10,30 @@ private val DarkColorScheme = darkColorScheme(
   primaryContainer = LightViolet,
   onPrimaryContainer = White,
   secondary = DarkGrey,
-  secondaryContainer = LightGrey,
+  secondaryContainer = LightGrey1,
   tertiaryContainer = Grey,
   tertiary = DarkViolet,
   errorContainer = LightRed,
   error = Red,
   surface = White,
   background = White,
-  outline = Yellow
+  outline = Yellow,
+  outlineVariant = LightGrey2
 )
 
 private val LightColorScheme = lightColorScheme(
   primaryContainer = LightViolet,
   onPrimaryContainer = White,
   secondary = DarkGrey,
-  secondaryContainer = LightGrey,
+  secondaryContainer = LightGrey1,
   tertiaryContainer = Grey,
   tertiary = DarkViolet,
   errorContainer = LightRed,
   error = Red,
   surface = White,
   background = White,
-  outline = Yellow
+  outline = Yellow,
+  outlineVariant = LightGrey2
 )
 
 @Composable

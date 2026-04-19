@@ -100,8 +100,10 @@ class LoginViewModel @Inject constructor(
     val currentState = _state.value
     if (currentState !is ViewState.Input) return false
 
-    val emailErrorMessage = if (!currentState.email.isValidEmail()) {
+    val emailErrorMessage = if (currentState.email.isBlank()) {
       context.getString(R.string.required_to_fill)
+    } else if (!currentState.email.isValidEmail()) {
+      context.getString(R.string.incorrect_format)
     } else null
 
     val passwordErrorMessage = if (currentState.password.isBlank()) {

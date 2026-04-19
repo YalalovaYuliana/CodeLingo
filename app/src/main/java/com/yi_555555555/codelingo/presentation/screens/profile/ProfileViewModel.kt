@@ -64,27 +64,6 @@ class ProfileViewModel @Inject constructor(
       )
     }
   }
-
-  fun logout() {
-    viewModelScope.launch {
-      safeFetch(
-        context = context,
-        onSuccess = {
-          withContext(Dispatchers.IO) {
-            deleteUseCase()
-          }
-          withContext(Dispatchers.Main) {
-            _state.update { ViewState.Logout }
-          }
-        },
-        onFailure = { errorMessage ->
-          snackbarHostState.value.showSnackbar(
-            message = errorMessage
-          )
-        }
-      )
-    }
-  }
 }
 
 sealed interface ViewState {
@@ -98,8 +77,6 @@ sealed interface ViewState {
   data class Error(
     val errorMessage: String
   ) : ViewState
-
-  data object Logout : ViewState
 }
 
 

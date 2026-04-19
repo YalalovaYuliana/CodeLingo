@@ -1,12 +1,25 @@
 package com.yi_555555555.codelingo.presentation.navigation
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.yi_555555555.codelingo.presentation.components.BottomBarDestination
 import com.yi_555555555.codelingo.presentation.components.LoadingState
+import com.yi_555555555.codelingo.presentation.components.NavigationAppBar
+import com.yi_555555555.codelingo.presentation.components.ScreenScaffold
 import com.yi_555555555.codelingo.presentation.screens.courses.CoursesScreen
 import com.yi_555555555.codelingo.presentation.screens.login.LoginScreen
 import com.yi_555555555.codelingo.presentation.screens.main.MainScreen
@@ -30,11 +43,13 @@ fun NavGraph(
 
   val startDestination = if (state.hasAccessToken == true) {
     if (state.hasSelectedCourseId == true) {
-      Screen.ProfileScreen
+      Screen.HomeScreen
     } else Screen.CoursesScreen
   } else Screen.OnboardingScreen
 
   println("yuliana start destination: $startDestination")
+
+  var selectedBottomBarDestination by rememberSaveable { mutableStateOf(BottomBarDestination.Main) }
 
   NavHost(
     navController = navController,
@@ -71,7 +86,7 @@ fun NavGraph(
       LoginScreen(
         onSuccessLogin = {
           if (state.hasSelectedCourseId == true) {
-            navController.navigate(Screen.ProfileScreen) {
+            navController.navigate(Screen.HomeScreen) {
               popUpTo(0) {
                 inclusive = true
               }
@@ -89,32 +104,115 @@ fun NavGraph(
         }
       )
     }
-    composable<Screen.MainScreen> {
-      MainScreen(
-        onLogout = {
-          navController.navigate(Screen.OnboardingScreen) {
-            popUpTo(0) {
-              inclusive = true
+    composable<Screen.HomeScreen> {
+      ScreenScaffold(
+        bottomBar = {
+          NavigationAppBar(
+            selectedBottomBarDestination = selectedBottomBarDestination,
+            onClick = { destination ->
+              //navController.navigate(destination.content) // todo fix bottom bar navigation add another nav graph
+              selectedBottomBarDestination = destination
+            }
+          )
+        }
+      ) { innerPadding ->
+        when (selectedBottomBarDestination.content) {
+          HomeScreenContent.Main -> {
+            MainScreen(
+              modifier = Modifier.padding(innerPadding),
+              onLogout = {
+                navController.navigate(Screen.OnboardingScreen) {
+                  popUpTo(0) {
+                    inclusive = true
+                  }
+                }
+              }
+            )
+          }
+
+          HomeScreenContent.Profile -> {
+            ProfileScreen(
+              modifier = Modifier.padding(innerPadding)
+            )
+          }
+
+          HomeScreenContent.Achievements -> {
+            Box(
+              modifier = Modifier.fillMaxSize(),
+              contentAlignment = Alignment.Center
+            ) {
+              Text(
+                text = "Achievements"
+              )
             }
           }
         }
-      )
+      }
     }
-    composable<Screen.ProfileScreen> {
-      ProfileScreen(
-        onLogout = {
-          navController.navigate(Screen.OnboardingScreen) {
-            popUpTo(0) {
-              inclusive = true
-            }
-          }
-        }
-      )
-    }
+//    composable<Screen.MainScreen> {
+//      MainScreen(
+//        bottomBar = {
+//          NavigationAppBar(
+//            selectedBottomBarDestination = selectedBottomBarDestination,
+//            onClick = { destination ->
+//              navController.navigate(destination.content)
+//              selectedBottomBarDestination = destination
+//            }
+//          )
+//        },
+//        onLogout = {
+//          navController.navigate(Screen.OnboardingScreen) {
+//            popUpTo(0) {
+//              inclusive = true
+//            }
+//          }
+//        }
+//      )
+//    }
+//    composable<Screen.ProfileScreen> {
+//      ProfileScreen(
+//        bottomBar = {
+//          NavigationAppBar(
+//            selectedBottomBarDestination = selectedBottomBarDestination,
+//            onClick = { destination ->
+//              navController.navigate(destination.content)
+//              selectedBottomBarDestination = destination
+//            }
+//          )
+//        },
+//        onLogout = {
+//          navController.navigate(Screen.OnboardingScreen) {
+//            popUpTo(0) {
+//              inclusive = true
+//            }
+//          }
+//        }
+//      )
+//    }
+//    composable<Screen.AchievementsScreen> {
+//      ProfileScreen(
+//        bottomBar = {
+//          NavigationAppBar(
+//            selectedBottomBarDestination = selectedBottomBarDestination,
+//            onClick = { destination ->
+//              navController.navigate(destination.content)
+//              selectedBottomBarDestination = destination
+//            }
+//          )
+//        },
+//        onLogout = {
+//          navController.navigate(Screen.OnboardingScreen) {
+//            popUpTo(0) {
+//              inclusive = true
+//            }
+//          }
+//        }
+//      )
+//    }
     composable<Screen.CoursesScreen> {
       CoursesScreen(
         onSuccessStart = {
-          navController.navigate(Screen.ProfileScreen) {
+          navController.navigate(Screen.HomeScreen) {
             popUpTo(0) {
               inclusive = true
             }
@@ -137,11 +235,14 @@ sealed interface Screen {
   data object LoginScreen : Screen
 
   @Serializable
-  data object MainScreen : Screen
-
-  @Serializable
-  data object ProfileScreen : Screen
-
-  @Serializable
   data object CoursesScreen : Screen
+
+  @Serializable
+  data object HomeScreen : Screen
+}
+
+enum class HomeScreenContent {
+  Main,
+  Profile,
+  Achievements
 }

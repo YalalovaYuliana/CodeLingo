@@ -14,7 +14,10 @@ private val DarkColorScheme = darkColorScheme(
   tertiaryContainer = Grey,
   tertiary = DarkViolet,
   errorContainer = LightRed,
-  error = Red
+  error = Red,
+  surface = White,
+  background = White,
+  outline = Yellow
 )
 
 private val LightColorScheme = lightColorScheme(
@@ -25,7 +28,10 @@ private val LightColorScheme = lightColorScheme(
   tertiaryContainer = Grey,
   tertiary = DarkViolet,
   errorContainer = LightRed,
-  error = Red
+  error = Red,
+  surface = White,
+  background = White,
+  outline = Yellow
 )
 
 @Composable

@@ -15,12 +15,10 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -39,115 +37,92 @@ import com.yi_555555555.codelingo.presentation.components.CourseCard
 import com.yi_555555555.codelingo.presentation.components.ErrorState
 import com.yi_555555555.codelingo.presentation.components.Header
 import com.yi_555555555.codelingo.presentation.components.LoadingState
-import com.yi_555555555.codelingo.presentation.components.ScreenScaffold
 import com.yi_555555555.codelingo.presentation.components.VSpacer
-import com.yi_555555555.codelingo.presentation.components.WSpacer
-import com.yi_555555555.codelingo.presentation.screens.courses.Command
 import com.yi_555555555.codelingo.presentation.ui.theme.CodeLingoTheme
-import com.yi_555555555.codelingo.presentation.ui.theme.White
 
 @Composable
 fun ProfileScreen(
-  onLogout: () -> Unit,
+  modifier: Modifier = Modifier,
   viewModel: ProfileViewModel = hiltViewModel()
 ) {
 
   val state by viewModel.state.collectAsState()
 
-  ScreenScaffold { innerPadding ->
-    Column(
-      modifier = Modifier
-        .fillMaxSize()
-        .background(MaterialTheme.colorScheme.onPrimaryContainer)
-        .padding(innerPadding)
-        .padding(
-          start = 24.dp,
-          end = 24.dp,
-          top = 16.dp,
-          bottom = 8.dp
-        ),
-      verticalArrangement = Arrangement.Center
-    ) {
-      when (val currentState = state) {
-        ViewState.Loading -> {
-          LoadingState()
-        }
+  Column(
+    modifier = modifier
+      .fillMaxSize()
+      .padding(
+        start = 24.dp,
+        end = 24.dp,
+        top = 16.dp,
+        bottom = 16.dp
+      ),
+    verticalArrangement = Arrangement.Top
+  ) {
+    when (val currentState = state) {
+      ViewState.Loading -> {
+        LoadingState()
+      }
 
-        is ViewState.Error -> {
-          ErrorState(
-            errorMessage = currentState.errorMessage,
-            onRetryClick = {
-              viewModel.getUser()
-            }
+      is ViewState.Error -> {
+        ErrorState(
+          errorMessage = currentState.errorMessage,
+          onRetryClick = {
+            viewModel.getUser()
+          }
+        )
+      }
+
+      is ViewState.Profile -> {
+        val user = currentState.user
+        Image(
+          painter = painterResource(R.drawable.cat_temp),
+          modifier = Modifier
+            .size(130.dp)
+            .clip(CircleShape)
+            .align(Alignment.CenterHorizontally),
+          contentScale = ContentScale.Crop,
+          contentDescription = "profile photo"
+        )
+        VSpacer(16.dp)
+        Header(
+          modifier = Modifier.fillMaxWidth(),
+          text = user.username
+        )
+        VSpacer(40.dp)
+        Row(
+          modifier = Modifier.padding(horizontal = 8.dp),
+          horizontalArrangement = Arrangement.spacedBy(40.dp)
+        ) {
+          StatsCard(
+            modifier = Modifier.weight(1f),
+            icon = painterResource(R.drawable.ic_streak_fire),
+            value = user.streak.toString(),
+            text = stringResource(R.string.streak)
+          )
+          StatsCard(
+            modifier = Modifier.weight(1f),
+            icon = painterResource(R.drawable.ic_lightning),
+            value = user.xp.toString(),
+            text = stringResource(R.string.xp)
           )
         }
-
-        is ViewState.Profile -> {
-          val user = currentState.user
-          Image(
-            painter = painterResource(R.drawable.cat_temp),
-            modifier = Modifier
-              .size(130.dp)
-              .clip(CircleShape)
-              .align(Alignment.CenterHorizontally),
-            contentScale = ContentScale.Crop,
-            contentDescription = "profile photo"
-          )
-          VSpacer(16.dp)
-          Header(
-            modifier = Modifier.fillMaxWidth(),
-            text = user.username
-          )
-          VSpacer(40.dp)
-          Row(
-            modifier = Modifier.padding(horizontal = 8.dp),
-            horizontalArrangement = Arrangement.spacedBy(40.dp)
-          ) {
-            StatsCard(
-              modifier = Modifier.weight(1f),
-              icon = painterResource(R.drawable.ic_streak_fire),
-              value = user.streak.toString(),
-              text = stringResource(R.string.streak)
-            )
-            StatsCard(
-              modifier = Modifier.weight(1f),
-              icon = painterResource(R.drawable.ic_lightning),
-              value = user.xp.toString(),
-              text = stringResource(R.string.xp)
-            )
-          }
-          VSpacer(64.dp)
-          Text(
-            modifier = Modifier.padding(start = 8.dp),
-            text = stringResource(R.string.courses),
-            style = MaterialTheme.typography.titleSmall,
-            color = MaterialTheme.colorScheme.secondary
-          )
-          VSpacer(16.dp)
-          LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-          ) {
-            items(currentState.courses) { course ->
-              CourseCard(
-                course = course
-              )
-            }
-          }
-          WSpacer()
-          Button(
-            onClick = {
-              viewModel.logout()
-            }
-          ) {
-            Header(
-              modifier = Modifier.background(White),
-              text = "Выйти"
+        VSpacer(40.dp)
+        Text(
+          modifier = Modifier.padding(start = 8.dp),
+          text = stringResource(R.string.courses),
+          style = MaterialTheme.typography.titleSmall,
+          color = MaterialTheme.colorScheme.secondary
+        )
+        VSpacer(16.dp)
+        LazyColumn(
+          verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+          items(currentState.courses) { course ->
+            CourseCard(
+              course = course
             )
           }
-        }
-
-        ViewState.Logout -> {
-          LaunchedEffect(Unit) { onLogout() }
         }
       }
     }
@@ -161,45 +136,45 @@ private fun StatsCard(
   text: String,
   modifier: Modifier = Modifier
 ) {
-    Box(
-      modifier = modifier
-        .border(
-          width = 3.dp,
-          color = MaterialTheme.colorScheme.secondaryContainer,
-          shape = RoundedCornerShape(24.dp)
-        )
-        .background(
-          shape = RoundedCornerShape(24.dp),
-          color = Color.Transparent
+  Box(
+    modifier = modifier
+      .border(
+        width = 3.dp,
+        color = MaterialTheme.colorScheme.secondaryContainer,
+        shape = RoundedCornerShape(24.dp)
+      )
+      .background(
+        shape = RoundedCornerShape(24.dp),
+        color = Color.Transparent
+      ),
+    contentAlignment = Alignment.Center
+  ) {
+    Column(
+      modifier = Modifier
+        .padding(
+          vertical = 16.dp
         ),
-      contentAlignment = Alignment.Center
+      horizontalAlignment = Alignment.CenterHorizontally,
+      verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
-      Column(
-        modifier = Modifier
-          .padding(
-            vertical = 16.dp
-          ),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(4.dp)
-      ) {
-        Icon(
-          painter = icon,
-          contentDescription = "Strike",
-          tint = Color.Unspecified
-        )
-        Text(
-          text = value,
-          style = MaterialTheme.typography.bodyMedium,
-          color = MaterialTheme.colorScheme.secondary
-        )
-        Text(
-          text = text.lowercase(),
-          style = MaterialTheme.typography.labelSmall,
-          color = MaterialTheme.colorScheme.secondaryContainer
-        )
-      }
-
+      Icon(
+        painter = icon,
+        contentDescription = "Strike",
+        tint = Color.Unspecified
+      )
+      Text(
+        text = value,
+        style = MaterialTheme.typography.bodyMedium,
+        color = MaterialTheme.colorScheme.secondary
+      )
+      Text(
+        text = text.lowercase(),
+        style = MaterialTheme.typography.labelSmall,
+        color = MaterialTheme.colorScheme.secondaryContainer
+      )
     }
+
+  }
 }
 
 

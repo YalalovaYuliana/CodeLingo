@@ -20,17 +20,20 @@ import com.yi_555555555.codelingo.presentation.ui.theme.White
 @Composable
 fun MainScreen(
   onLogout: () -> Unit,
+  modifier: Modifier = Modifier,
   viewModel: MainViewModel = hiltViewModel()
 ) {
   val state by viewModel.state.collectAsState()
 
-  when (state) {
-    ViewState.Initial -> {
-      Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-      ) {
+  Column(
+    modifier = modifier
+      .fillMaxSize(),
+    verticalArrangement = Arrangement.Center,
+    horizontalAlignment = Alignment.CenterHorizontally
+  ) {
+    when (state) {
+      ViewState.Initial -> {
+
         Header(
           text = "Тут что-то будет"
         )
@@ -46,11 +49,11 @@ fun MainScreen(
           )
         }
       }
-    }
 
-    ViewState.Logout -> {
-      LaunchedEffect(Unit) {
-        onLogout()
+      ViewState.Logout -> {
+        LaunchedEffect(Unit) {
+          onLogout()
+        }
       }
     }
   }

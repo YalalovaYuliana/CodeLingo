@@ -31,6 +31,7 @@
     <string name="something_went_wrong">Что-то пошло не так</string>
     <string name="check_internet_connection">Проверьте подключение к интернету</string>
     <string name="required_to_fill">Обязательно для заполнения</string>
+    <string name="incorrect_format">Неправильный формат</string>
     <string name="username_requirement">Минимум 2 символа</string>
     <string name="password_requirement">Пароль должен содержать:\n
         • Минимум 8 символов\n

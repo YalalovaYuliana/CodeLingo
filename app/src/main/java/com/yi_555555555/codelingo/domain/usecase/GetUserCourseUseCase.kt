@@ -13,9 +13,7 @@ class GetUserCourseUseCase @Inject constructor(
     val courseId = cache.selectedCourseId ?: userRepository.readCourseId()
 
     return if (courseId == null) {
-      println("yuliana from cache courseId is null")
       userRepository.getUserCourseId()?.also {
-        println("yuliana also")
         withContext(Dispatchers.IO) {
           userRepository.writeCourseId(it)
         }

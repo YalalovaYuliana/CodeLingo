@@ -4,16 +4,18 @@ import com.yi.myapplication.data.entity.codelingo.LoginRequest
 import com.yi.myapplication.data.entity.codelingo.RegisterRequest
 import com.yi_555555555.codelingo.data.mappers.toAccessTokenDb
 import com.yi_555555555.codelingo.data.mappers.toAccessTokenDomain
-import com.yi_555555555.codelingo.data.mappers.toCourseDomain
+import com.yi_555555555.codelingo.data.mappers.toDomainModel
 import com.yi_555555555.codelingo.data.mappers.toUser
 import com.yi_555555555.codelingo.data.retrofit.UserApi
 import com.yi_555555555.codelingo.data.room.UserDataBase
 import com.yi_555555555.codelingo.data.room.entity.CourseDbModel
 import com.yi_555555555.codelingo.domain.model.AccessToken
 import com.yi_555555555.codelingo.domain.model.Course
+import com.yi_555555555.codelingo.domain.model.CourseDetails
 import com.yi_555555555.codelingo.domain.model.LoginCredentials
 import com.yi_555555555.codelingo.domain.model.RegisterCredentials
 import com.yi_555555555.codelingo.domain.model.User
+import com.yi_555555555.codelingo.domain.model.UserLevel
 import com.yi_555555555.codelingo.domain.repository.Cache
 import com.yi_555555555.codelingo.domain.repository.UserRepository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -122,20 +124,20 @@ class UserRepositoryImpl(
   }
 
   override suspend fun getCourses(): List<Course> {
-    val courses = userApi.getCourses().map {
-      it.toCourseDomain()
+    return userApi.getCourses().map {
+      it.toDomainModel()
+    }.also {
+      _cacheFlow.update { cache ->
+        cache.copy(
+          courses = it
+        )
+      }
     }
-    _cacheFlow.update {
-      it.copy(
-        courses = courses
-      )
-    }
-    return courses
   }
 
   override suspend fun startCourse(courseId: Int) {
     val accessToken = _cacheFlow.value.accessToken?.accessTokenWithType
-    return accessToken?.let {
+    accessToken?.let {
       userApi.startCourse(
         authToken = accessToken,
         courseId = courseId
@@ -144,6 +146,32 @@ class UserRepositoryImpl(
         it.copy(
           selectedCourseId = courseId
         )
+      }
+    } ?: throw Exception("missing access token")
+  }
+
+  override suspend fun getCourseDetails(courseId: Int): CourseDetails {
+    return userApi.getCourseDetails(courseId).toDomainModel().also {
+      _cacheFlow.update { cache ->
+        cache.copy(
+          courseDetails = it
+        )
+      }
+    }
+  }
+
+  override suspend fun getUserCourseLevels(courseId: Int): List<UserLevel> {
+    val accessToken = _cacheFlow.value.accessToken?.accessTokenWithType
+    return accessToken?.let {
+      userApi.getLevels(
+        authToken = accessToken,
+        courseId = courseId
+      ).map { it.toDomainModel() }.also {
+        _cacheFlow.update { cache ->
+          cache.copy(
+            levels = it
+          )
+        }
       }
     } ?: throw Exception("missing access token")
   }

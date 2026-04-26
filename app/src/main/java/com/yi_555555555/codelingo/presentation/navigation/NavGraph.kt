@@ -42,6 +42,8 @@ fun NavGraph(
     return
   }
 
+  //val startDestination = Screen.HomeScreen
+
   val startDestination = if (state.hasAccessToken == true) {
     if (state.hasSelectedCourseId == true) {
       Screen.HomeScreen

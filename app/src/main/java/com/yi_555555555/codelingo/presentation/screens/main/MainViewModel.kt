@@ -1,26 +1,71 @@
 package com.yi_555555555.codelingo.presentation.screens.main
 
+import android.content.Context
+import androidx.compose.material3.SnackbarHostState
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.yi_555555555.codelingo.domain.model.UserLevel
+import com.yi_555555555.codelingo.domain.usecase.GetCourseDetailsUseCase
+import com.yi_555555555.codelingo.domain.usecase.GetLevelsUseCase
+import com.yi_555555555.codelingo.domain.usecase.GetUserCourseUseCase
+import com.yi_555555555.codelingo.utils.safeFetch
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import jakarta.inject.Inject
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-
+  private val getLevelsUseCase: GetLevelsUseCase,
+  private val getUserCourseUseCase: GetUserCourseUseCase,
+  private val getCourseDetailsUseCase: GetCourseDetailsUseCase,
+  @ApplicationContext private val context: Context
 ) : ViewModel() {
 
-  private val _state = MutableStateFlow<ViewState>(ViewState.Initial)
+  private val _state = MutableStateFlow<ViewState>(ViewState.Input())
   val state = _state.asStateFlow()
+  val snackbarHostState = MutableStateFlow(SnackbarHostState())
+
+  init {
+    getLevels()
+  }
 
   fun processCommand(command: Command) {
-    val currentState = _state.value
-    if (currentState !is ViewState.Initial) return
 
-    when (command) {
-      is Command.StartLevel -> {
+  }
 
+  fun getLevels() {
+    viewModelScope.launch {
+      _state.update { ViewState.Loading }
+      viewModelScope.launch {
+        safeFetch(
+          context = context,
+          onSuccess = {
+            val courseId = getUserCourseUseCase() ?: error("missing user course")
+            val levels = getLevelsUseCase(courseId)
+            val courseDetails = getCourseDetailsUseCase(courseId)
+            withContext(Dispatchers.Main) {
+              _state.update {
+                ViewState.Input(
+                  courseName = courseDetails.course.title,
+                  levels = levels
+                )
+              }
+            }
+          },
+          onFailure = { errorMessage ->
+            _state.update {
+              ViewState.Error(
+                errorMessage = errorMessage
+              )
+            }
+          }
+        )
       }
     }
   }
@@ -28,7 +73,17 @@ class MainViewModel @Inject constructor(
 
 
 sealed interface ViewState {
-  data object Initial : ViewState
+  data class Input(
+    val courseName: String = "",
+    val levels: List<UserLevel> = emptyList(),
+    val isLoading: Boolean = false
+  ) : ViewState
+
+  data object Success : ViewState
+  data object Loading : ViewState
+  data class Error(
+    val errorMessage: String
+  ) : ViewState
 }
 
 sealed interface Command {

@@ -45,7 +45,6 @@ class NavViewModel @Inject constructor(
           }
           userRepository.cacheFlow.collect { cache ->
             _state.update { currentState ->
-              println("YULIANA ${cache.selectedCourseId}")
               currentState?.copy(
                 hasAccessToken = cache.accessToken != null,
                 hasSelectedCourseId = cache.selectedCourseId != null

@@ -3,12 +3,17 @@ package com.yi_555555555.codelingo.data.mappers
 import com.yi_555555555.codelingo.data.retrofit.entity.AccessTokenData
 import com.yi_555555555.codelingo.data.retrofit.entity.CourseDetailsResponse
 import com.yi_555555555.codelingo.data.retrofit.entity.CourseResponse
+import com.yi_555555555.codelingo.data.retrofit.entity.LevelTasksResponse
+import com.yi_555555555.codelingo.data.retrofit.entity.SubmitResponse
 import com.yi_555555555.codelingo.data.retrofit.entity.UserLevelResponse
 import com.yi_555555555.codelingo.data.retrofit.entity.UserResponse
 import com.yi_555555555.codelingo.data.room.entity.AccessTokenDbModel
 import com.yi_555555555.codelingo.domain.model.AccessToken
 import com.yi_555555555.codelingo.domain.model.Course
 import com.yi_555555555.codelingo.domain.model.CourseDetails
+import com.yi_555555555.codelingo.domain.model.Level
+import com.yi_555555555.codelingo.domain.model.SubmitAnswer
+import com.yi_555555555.codelingo.domain.model.TaskType
 import com.yi_555555555.codelingo.domain.model.User
 import com.yi_555555555.codelingo.domain.model.UserLevel
 
@@ -78,3 +83,29 @@ fun CourseDetailsResponse.toDomainModel(): CourseDetails {
     levels = levels.map { it.toDomainModel() }
   )
 }
+
+fun LevelTasksResponse.toDomainModel(): Level {
+  return Level(
+    levelId = levelId,
+    tasks = tasks.map { it.toDomainModel() }
+  )
+}
+
+fun LevelTasksResponse.TaskResponse.toDomainModel(): Level.Task {
+  return Level.Task(
+    id = id,
+    title = title,
+    description = description,
+    type = TaskType.fromValue(type) ?: error("missing task type"),
+    hint = hint
+  )
+}
+
+fun SubmitResponse.toDomainModel(): SubmitAnswer {
+  return SubmitAnswer(
+    isCorrect = isCorrect,
+    correctOptions = correctOptions,
+    correctAnswers = correctAnswers
+  )
+}
+

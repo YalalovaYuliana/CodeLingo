@@ -2,9 +2,12 @@ package com.yi_555555555.codelingo.data.retrofit
 
 import com.yi.myapplication.data.entity.codelingo.LoginRequest
 import com.yi.myapplication.data.entity.codelingo.RegisterRequest
+import com.yi.myapplication.data.entity.codelingo.SubmitRequest
 import com.yi_555555555.codelingo.data.retrofit.entity.AccessTokenData
 import com.yi_555555555.codelingo.data.retrofit.entity.CourseDetailsResponse
 import com.yi_555555555.codelingo.data.retrofit.entity.CourseResponse
+import com.yi_555555555.codelingo.data.retrofit.entity.LevelTasksResponse
+import com.yi_555555555.codelingo.data.retrofit.entity.SubmitResponse
 import com.yi_555555555.codelingo.data.retrofit.entity.UserCourseResponse
 import com.yi_555555555.codelingo.data.retrofit.entity.UserLevelResponse
 import com.yi_555555555.codelingo.data.retrofit.entity.UserResponse
@@ -46,4 +49,21 @@ interface UserApi {
     @Header("Authorization") authToken: String,
     @Path("course_id") courseId: Int
   ): List<UserLevelResponse>
+
+  @GET("levels/{level_id}/theory")
+  suspend fun getLevelTheory(
+    @Path("level_id") levelId: Int
+  ): String
+
+  @GET("levels/{level_id}/tasks")
+  suspend fun getTasks(
+    @Path("level_id") levelId: Int
+  ): LevelTasksResponse
+
+  @POST("tasks/{task_id}/submit")
+  suspend fun submitTask(
+    @Header("Authorization") authToken: String,
+    @Path("task_id") taskId: Int,
+    @Body submitRequest: SubmitRequest
+  ): SubmitResponse
 }

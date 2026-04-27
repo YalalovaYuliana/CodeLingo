@@ -2,6 +2,7 @@ package com.yi_555555555.codelingo.data.repository
 
 import com.yi.myapplication.data.entity.codelingo.LoginRequest
 import com.yi.myapplication.data.entity.codelingo.RegisterRequest
+import com.yi.myapplication.data.entity.codelingo.SubmitRequest
 import com.yi_555555555.codelingo.data.mappers.toAccessTokenDb
 import com.yi_555555555.codelingo.data.mappers.toAccessTokenDomain
 import com.yi_555555555.codelingo.data.mappers.toDomainModel
@@ -12,8 +13,10 @@ import com.yi_555555555.codelingo.data.room.entity.CourseDbModel
 import com.yi_555555555.codelingo.domain.model.AccessToken
 import com.yi_555555555.codelingo.domain.model.Course
 import com.yi_555555555.codelingo.domain.model.CourseDetails
+import com.yi_555555555.codelingo.domain.model.Level
 import com.yi_555555555.codelingo.domain.model.LoginCredentials
 import com.yi_555555555.codelingo.domain.model.RegisterCredentials
+import com.yi_555555555.codelingo.domain.model.SubmitAnswer
 import com.yi_555555555.codelingo.domain.model.User
 import com.yi_555555555.codelingo.domain.model.UserLevel
 import com.yi_555555555.codelingo.domain.repository.Cache
@@ -158,6 +161,28 @@ class UserRepositoryImpl(
         )
       }
     }
+  }
+
+  override suspend fun getLevelTheory(levelId: Int): String {
+    return userApi.getLevelTheory(levelId)
+  }
+
+  override suspend fun getLevelTasks(levelId: Int): Level {
+    return userApi.getTasks(levelId).toDomainModel()
+  }
+
+  override suspend fun submitTask(
+    taskId: Int,
+    answers: List<Any>
+  ): SubmitAnswer {
+    val accessToken = _cacheFlow.value.accessToken?.accessTokenWithType
+    return accessToken?.let {
+      userApi.submitTask(
+        authToken = accessToken,
+        taskId = taskId,
+        submitRequest = SubmitRequest(answers = answers)
+      ).toDomainModel()
+    } ?: throw Exception("missing access token")
   }
 
   override suspend fun getUserCourseLevels(courseId: Int): List<UserLevel> {

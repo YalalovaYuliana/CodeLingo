@@ -97,7 +97,25 @@ fun LevelTasksResponse.TaskResponse.toDomainModel(): Level.Task {
     title = title,
     description = description,
     type = TaskType.fromValue(type) ?: error("missing task type"),
+    numInOrder = numInOrder,
+    options = options?.map { it.toDomainModel() },
+    gaps = gaps?.map { it.toDomainModel() },
     hint = hint
+  )
+}
+
+private fun LevelTasksResponse.TaskResponse.OptionResponse.toDomainModel(): Level.Task.Option {
+  return Level.Task.Option(
+    id = id,
+    text = text,
+    isCorrect = isCorrect
+  )
+}
+
+private fun LevelTasksResponse.TaskResponse.GapResponse.toDomainModel(): Level.Task.Gap {
+  return Level.Task.Gap(
+    template = template,
+    answer = answer
   )
 }
 

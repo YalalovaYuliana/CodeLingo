@@ -18,7 +18,29 @@ data class LevelTasksResponse(
     val description: String,
     @SerializedName("task_type")
     val type: String,
+    @SerializedName("num_in_order")
+    val numInOrder: Int,
+    @SerializedName("options")
+    val options: List<OptionResponse>? = null,
+    @SerializedName("gaps")
+    val gaps: List<GapResponse>? = null,
     @SerializedName("hint")
-    val hint: String?
-  )
+    val hint: String? = null
+  ) {
+    data class OptionResponse(
+      @SerializedName("id")
+      val id: Int,
+      @SerializedName("text")
+      val text: String,
+      @SerializedName("is_correct")
+      val isCorrect: String
+    )
+
+    data class GapResponse(
+      @SerializedName("template")
+      val template: String,
+      @SerializedName("answer")
+      val answer: String
+    )
+  }
 }

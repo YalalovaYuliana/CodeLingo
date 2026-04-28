@@ -10,8 +10,22 @@ data class Level(
     val title: String,
     val description: String,
     val type: TaskType,
+    val numInOrder: Int,
+    val options: List<Option>?,
+    val gaps: List<Gap>?,
     val hint: String?
-  )
+  ) {
+    data class Option(
+      val id: Int,
+      val text: String,
+      val isCorrect: String
+    )
+
+    data class Gap(
+      val template: String,
+      val answer: String
+    )
+  }
 }
 
 enum class TaskType(val value: String) {

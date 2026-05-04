@@ -5,8 +5,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Icon
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -14,35 +14,51 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.yi_555555555.codelingo.R
-import com.yi_555555555.codelingo.domain.model.UserLevel
+import com.yi_555555555.codelingo.domain.model.Level
 import com.yi_555555555.codelingo.presentation.mappers.getBackgroundColor
 
 @Composable
 fun LevelCard(
-  level: UserLevel,
+  index: Int,
+  level: Level,
   onClick: () -> Unit,
   modifier: Modifier = Modifier
 ) {
-  Column {
-    Text(text = level.title)
+  Column(
+    modifier = modifier,
+    horizontalAlignment = Alignment.CenterHorizontally
+  ) {
+    Text(
+      modifier = Modifier.widthIn(max = 200.dp),
+      text = level.title,
+      textAlign = TextAlign.Center,
+      style = MaterialTheme.typography.labelMedium,
+      color = MaterialTheme.colorScheme.secondary
+    )
+    VSpacer(8.dp)
     Box(
-      modifier = modifier
+      modifier = Modifier
         .size(120.dp)
-        .clip(CircleShape)
+        .clip(RoundedCornerShape(24.dp))
         .clickable(
           onClick = onClick
         )
         .background(level.getBackgroundColor()),
       contentAlignment = Alignment.Center
     ) {
-      Icon(
-        painter = painterResource(R.drawable.ic_education_cap),
-        contentDescription = "level",
-        tint = if (level.isComplete) Color.Unspecified else MaterialTheme.colorScheme.tertiary
+      Text(
+        text = index.toString(),
+        textAlign = TextAlign.Center,
+        style = MaterialTheme.typography.titleLarge,
+        color = if (level.isComplete) Color.Unspecified else MaterialTheme.colorScheme.tertiary
       )
+//      Icon(
+//        painter = painterResource(R.drawable.ic_education_cap),
+//        contentDescription = "level",
+//        tint = if (level.isComplete) Color.Unspecified else MaterialTheme.colorScheme.tertiary
+//      )
     }
   }
 

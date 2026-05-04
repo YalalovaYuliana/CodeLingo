@@ -7,8 +7,8 @@ import com.yi_555555555.codelingo.domain.model.Level
 import com.yi_555555555.codelingo.domain.model.LoginCredentials
 import com.yi_555555555.codelingo.domain.model.RegisterCredentials
 import com.yi_555555555.codelingo.domain.model.SubmitAnswer
+import com.yi_555555555.codelingo.domain.model.Task
 import com.yi_555555555.codelingo.domain.model.User
-import com.yi_555555555.codelingo.domain.model.UserLevel
 import kotlinx.coroutines.flow.StateFlow
 
 interface UserRepository {
@@ -24,10 +24,10 @@ interface UserRepository {
   suspend fun writeCourseId(courseId: Int)
   suspend fun getCourses(): List<Course>
   suspend fun startCourse(courseId: Int)
-  suspend fun getUserCourseLevels(courseId: Int): List<UserLevel>
+  suspend fun getUserCourseLevels(courseId: Int): List<Level>
   suspend fun getCourseDetails(courseId: Int): CourseDetails
   suspend fun getLevelTheory(levelId: Int): String
-  suspend fun getLevelTasks(levelId: Int): Level
+  suspend fun getLevelTasks(levelId: Int): List<Task>
   suspend fun submitTask(
     taskId: Int,
     answers: List<Any>
@@ -40,5 +40,5 @@ data class Cache(
   val selectedCourseId: Int? = null,
   val courseDetails: CourseDetails? = null,
   val courses: List<Course>? = null,
-  val levels: List<UserLevel>? = null
+  val levels: List<Level>? = null
 )

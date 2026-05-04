@@ -27,6 +27,7 @@ import com.yi_555555555.codelingo.presentation.screens.onboarding.OnboardingScre
 import com.yi_555555555.codelingo.presentation.screens.profile.ProfileScreen
 import com.yi_555555555.codelingo.presentation.screens.register.RegisterScreen
 import com.yi_555555555.codelingo.presentation.screens.settings.SettingsScreen
+import com.yi_555555555.codelingo.presentation.screens.tasks.LevelScreen
 import kotlinx.serialization.Serializable
 
 @Composable
@@ -123,6 +124,9 @@ fun NavGraph(
           HomeScreenContent.Main -> {
             MainScreen(
               modifier = Modifier.padding(innerPadding),
+              onLevelClick = { level ->
+                navController.navigate(Screen.LevelScreen(level.id, level.title))
+              }
             )
           }
 
@@ -148,66 +152,6 @@ fun NavGraph(
         }
       }
     }
-//    composable<Screen.MainScreen> {
-//      MainScreen(
-//        bottomBar = {
-//          NavigationAppBar(
-//            selectedBottomBarDestination = selectedBottomBarDestination,
-//            onClick = { destination ->
-//              navController.navigate(destination.content)
-//              selectedBottomBarDestination = destination
-//            }
-//          )
-//        },
-//        onLogout = {
-//          navController.navigate(Screen.OnboardingScreen) {
-//            popUpTo(0) {
-//              inclusive = true
-//            }
-//          }
-//        }
-//      )
-//    }
-//    composable<Screen.ProfileScreen> {
-//      ProfileScreen(
-//        bottomBar = {
-//          NavigationAppBar(
-//            selectedBottomBarDestination = selectedBottomBarDestination,
-//            onClick = { destination ->
-//              navController.navigate(destination.content)
-//              selectedBottomBarDestination = destination
-//            }
-//          )
-//        },
-//        onLogout = {
-//          navController.navigate(Screen.OnboardingScreen) {
-//            popUpTo(0) {
-//              inclusive = true
-//            }
-//          }
-//        }
-//      )
-//    }
-//    composable<Screen.AchievementsScreen> {
-//      ProfileScreen(
-//        bottomBar = {
-//          NavigationAppBar(
-//            selectedBottomBarDestination = selectedBottomBarDestination,
-//            onClick = { destination ->
-//              navController.navigate(destination.content)
-//              selectedBottomBarDestination = destination
-//            }
-//          )
-//        },
-//        onLogout = {
-//          navController.navigate(Screen.OnboardingScreen) {
-//            popUpTo(0) {
-//              inclusive = true
-//            }
-//          }
-//        }
-//      )
-//    }
     composable<Screen.CoursesScreen> {
       CoursesScreen(
         onSuccessStart = {
@@ -216,6 +160,14 @@ fun NavGraph(
               inclusive = true
             }
           }
+        }
+      )
+    }
+    composable<Screen.LevelScreen> {
+      LevelScreen(
+        onSuccessSubmit = {},
+        onBackClick = {
+          navController.navigateUp()
         }
       )
     }
@@ -255,6 +207,12 @@ sealed interface Screen {
 
   @Serializable
   data object SettingsScreen : Screen
+
+  @Serializable
+  data class LevelScreen(
+    val levelId: Int,
+    val title: String,
+  ) : Screen
 }
 
 enum class HomeScreenContent {

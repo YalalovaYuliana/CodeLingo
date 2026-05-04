@@ -20,6 +20,13 @@ val robotoFamily = FontFamily(
 )
 
 val Typography = Typography(
+  titleLarge = TextStyle(
+    fontFamily = monserratFamily,
+    fontWeight = FontWeight.Bold,
+    fontSize = 40.sp
+  ),
+
+
   titleMedium = TextStyle(
     fontFamily = monserratFamily,
     fontWeight = FontWeight.Bold,

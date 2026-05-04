@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.compose.material3.SnackbarHostState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.yi_555555555.codelingo.domain.model.UserLevel
+import com.yi_555555555.codelingo.domain.model.Level
 import com.yi_555555555.codelingo.domain.usecase.GetCourseDetailsUseCase
 import com.yi_555555555.codelingo.domain.usecase.GetLevelsUseCase
 import com.yi_555555555.codelingo.domain.usecase.GetUserCourseUseCase
@@ -35,38 +35,32 @@ class MainViewModel @Inject constructor(
     getLevels()
   }
 
-  fun processCommand(command: Command) {
-
-  }
-
   fun getLevels() {
+    _state.update { ViewState.Loading }
     viewModelScope.launch {
-      _state.update { ViewState.Loading }
-      viewModelScope.launch {
-        safeFetch(
-          context = context,
-          onSuccess = {
-            val courseId = getUserCourseUseCase() ?: error("missing user course")
-            val levels = getLevelsUseCase(courseId)
-            val courseDetails = getCourseDetailsUseCase(courseId)
-            withContext(Dispatchers.Main) {
-              _state.update {
-                ViewState.Input(
-                  courseName = courseDetails.course.title,
-                  levels = levels
-                )
-              }
-            }
-          },
-          onFailure = { errorMessage ->
+      safeFetch(
+        context = context,
+        onSuccess = {
+          val courseId = getUserCourseUseCase() ?: error("missing user course")
+          val levels = getLevelsUseCase(courseId)
+          val courseDetails = getCourseDetailsUseCase(courseId)
+          withContext(Dispatchers.Main) {
             _state.update {
-              ViewState.Error(
-                errorMessage = errorMessage
+              ViewState.Input(
+                courseName = courseDetails.course.title,
+                levels = levels
               )
             }
           }
-        )
-      }
+        },
+        onFailure = { errorMessage ->
+          _state.update {
+            ViewState.Error(
+              errorMessage = errorMessage
+            )
+          }
+        }
+      )
     }
   }
 }
@@ -75,17 +69,12 @@ class MainViewModel @Inject constructor(
 sealed interface ViewState {
   data class Input(
     val courseName: String = "",
-    val levels: List<UserLevel> = emptyList(),
+    val levels: List<Level> = emptyList(),
     val isLoading: Boolean = false
   ) : ViewState
 
-  data object Success : ViewState
   data object Loading : ViewState
   data class Error(
     val errorMessage: String
   ) : ViewState
-}
-
-sealed interface Command {
-  data object StartLevel : Command
 }

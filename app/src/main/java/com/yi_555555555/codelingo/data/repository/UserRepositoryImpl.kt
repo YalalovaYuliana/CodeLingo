@@ -17,8 +17,8 @@ import com.yi_555555555.codelingo.domain.model.Level
 import com.yi_555555555.codelingo.domain.model.LoginCredentials
 import com.yi_555555555.codelingo.domain.model.RegisterCredentials
 import com.yi_555555555.codelingo.domain.model.SubmitAnswer
+import com.yi_555555555.codelingo.domain.model.Task
 import com.yi_555555555.codelingo.domain.model.User
-import com.yi_555555555.codelingo.domain.model.UserLevel
 import com.yi_555555555.codelingo.domain.repository.Cache
 import com.yi_555555555.codelingo.domain.repository.UserRepository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -164,11 +164,11 @@ class UserRepositoryImpl(
   }
 
   override suspend fun getLevelTheory(levelId: Int): String {
-    return userApi.getLevelTheory(levelId)
+    return userApi.getLevelTheory(levelId).theory
   }
 
-  override suspend fun getLevelTasks(levelId: Int): Level {
-    return userApi.getTasks(levelId).toDomainModel()
+  override suspend fun getLevelTasks(levelId: Int): List<Task> {
+    return userApi.getTasks(levelId).map { it.toDomainModel() }
   }
 
   override suspend fun submitTask(
@@ -185,7 +185,7 @@ class UserRepositoryImpl(
     } ?: throw Exception("missing access token")
   }
 
-  override suspend fun getUserCourseLevels(courseId: Int): List<UserLevel> {
+  override suspend fun getUserCourseLevels(courseId: Int): List<Level> {
     val accessToken = _cacheFlow.value.accessToken?.accessTokenWithType
     return accessToken?.let {
       userApi.getLevels(

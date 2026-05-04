@@ -6,8 +6,9 @@ import com.yi.myapplication.data.entity.codelingo.SubmitRequest
 import com.yi_555555555.codelingo.data.retrofit.entity.AccessTokenData
 import com.yi_555555555.codelingo.data.retrofit.entity.CourseDetailsResponse
 import com.yi_555555555.codelingo.data.retrofit.entity.CourseResponse
-import com.yi_555555555.codelingo.data.retrofit.entity.LevelTasksResponse
 import com.yi_555555555.codelingo.data.retrofit.entity.SubmitResponse
+import com.yi_555555555.codelingo.data.retrofit.entity.TaskResponse
+import com.yi_555555555.codelingo.data.retrofit.entity.TheoryResponse
 import com.yi_555555555.codelingo.data.retrofit.entity.UserCourseResponse
 import com.yi_555555555.codelingo.data.retrofit.entity.UserLevelResponse
 import com.yi_555555555.codelingo.data.retrofit.entity.UserResponse
@@ -53,12 +54,12 @@ interface UserApi {
   @GET("levels/{level_id}/theory")
   suspend fun getLevelTheory(
     @Path("level_id") levelId: Int
-  ): String
+  ): TheoryResponse
 
   @GET("levels/{level_id}/tasks")
   suspend fun getTasks(
     @Path("level_id") levelId: Int
-  ): LevelTasksResponse
+  ): List<TaskResponse>
 
   @POST("tasks/{task_id}/submit")
   suspend fun submitTask(

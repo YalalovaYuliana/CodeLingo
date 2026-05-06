@@ -12,14 +12,16 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.yi_555555555.codelingo.presentation.ui.theme.CodeLingoTheme
 
 @Composable
 fun InputTextField(
   value: String,
   onValueChange: (String) -> Unit,
-  placeholder: String,
   modifier: Modifier = Modifier,
+  placeholder: String? = null,
   errorMessage: String? = null,
   singleLine: Boolean = true,
   readOnly: Boolean = false,
@@ -47,10 +49,12 @@ fun InputTextField(
       value = value,
       onValueChange = onValueChange,
       placeholder = {
-        Text(
-          text = placeholder,
-          style = MaterialTheme.typography.labelMedium
-        )
+        placeholder?.let {
+          Text(
+            text = placeholder,
+            style = MaterialTheme.typography.labelMedium
+          )
+        }
       },
       isError = errorMessage != null,
       textStyle = MaterialTheme.typography.labelMedium,
@@ -83,3 +87,15 @@ fun InputTextField(
     }
   }
 }
+
+@Preview
+@Composable
+private fun TextFieldPreview() {
+  CodeLingoTheme {
+    InputTextField(
+      value = "Текст в текстовом поле",
+      onValueChange = {}
+    )
+  }
+}
+

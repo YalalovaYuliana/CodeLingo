@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -27,12 +28,13 @@ fun ErrorState(
     horizontalAlignment = Alignment.CenterHorizontally
   ) {
     Image(
-      painter = painterResource(R.drawable.cat_error_temp),
+      painter = painterResource(R.drawable.sad_cat),
       modifier = Modifier
+        .size(240.dp)
         .padding(horizontal = 16.dp),
-      contentDescription = "profile photo"
+      contentDescription = "sad cat"
     )
-    VSpacer(8.dp)
+    VSpacer(16.dp)
     Header(text = errorMessage)
     VSpacer(16.dp)
     PrimaryButton(

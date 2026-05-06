@@ -7,3 +7,8 @@ data class SubmitRequest(
   @SerializedName("answers")
   val answers: List<Any>
 )
+
+data class SubmitCodeRequest(
+  @SerializedName("answers")
+  val answers: String
+)

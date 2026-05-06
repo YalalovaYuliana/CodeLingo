@@ -9,16 +9,27 @@ data class Task(
   val numInOrder: Int,
   val options: List<Option>?,
   val gaps: List<Gap>?,
-  val hint: String?
+  val code: Code?,
+  val hint: String?,
 ) {
   data class Option(
     val id: Int,
-    val text: String
+    val text: String,
+    val isChosen: Boolean = false,
+    val isError: Boolean = false
   )
 
   data class Gap(
     val template: String,
-    val answer: String
+    val userAnswer: String = "",
+    val isError: Boolean = false
+  )
+
+  data class Code(
+    val id: Int,
+    val userAnswer: String = "",
+    val language: String,
+    val isError: Boolean = false
   )
 }
 

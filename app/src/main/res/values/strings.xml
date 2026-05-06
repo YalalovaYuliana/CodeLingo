@@ -13,6 +13,9 @@
 
     <string name="select_course">Выберите курс</string>
 
+    <string name="next">Далее</string>
+    <string name="check">Проверить</string>
+
     <string name="name_hint">Имя</string>
     <string name="email_hint">Почта</string>
     <string name="password_hint">Пароль</string>

@@ -18,6 +18,8 @@ data class TaskResponse(
   val options: List<OptionResponse>? = null,
   @SerializedName("gaps")
   val gaps: List<GapResponse>? = null,
+  @SerializedName("code")
+  val code: List<CodeResponse>? = null,
   @SerializedName("hint")
   val hint: String? = null
 ) {
@@ -30,8 +32,13 @@ data class TaskResponse(
 
   data class GapResponse(
     @SerializedName("template")
-    val template: String,
-    @SerializedName("answer")
-    val answer: String
+    val template: String
+  )
+
+  data class CodeResponse(
+    @SerializedName("id")
+    val id: Int,
+    @SerializedName("language")
+    val language: String
   )
 }

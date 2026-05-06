@@ -131,7 +131,6 @@ fun LoginScreen(
             errorMessage = currentState.passwordErrorMessage
           )
           WSpacer()
-          //VSpacer(40.dp)
           PrimaryButton(
             modifier = Modifier
               .fillMaxWidth()

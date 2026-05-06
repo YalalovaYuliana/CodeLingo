@@ -11,7 +11,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.yi_555555555.codelingo.CodeLingoApp
+import com.yi_555555555.codelingo.presentation.ui.theme.CodeLingoTheme
 
 @Composable
 fun PrimaryButton(
@@ -50,3 +53,15 @@ fun PrimaryButton(
     }
   }
 }
+
+@Preview
+@Composable
+private fun PrimaryButtonPreview() {
+  CodeLingoTheme {
+    PrimaryButton(
+      text = "Текст на кнопке",
+      onClick = {}
+    )
+  }
+}
+

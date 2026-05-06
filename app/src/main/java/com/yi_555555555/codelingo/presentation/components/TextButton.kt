@@ -6,6 +6,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.tooling.preview.Preview
+import com.yi_555555555.codelingo.presentation.ui.theme.CodeLingoTheme
 
 @Composable
 fun TextButton(
@@ -24,5 +26,16 @@ fun TextButton(
         color = MaterialTheme.colorScheme.secondaryContainer
       )
     }
+  }
+}
+
+@Preview
+@Composable
+private fun TextButtonPreview() {
+  CodeLingoTheme {
+    TextButton(
+      text = "Текст на текстовой кнопке",
+      onClick = {}
+    )
   }
 }

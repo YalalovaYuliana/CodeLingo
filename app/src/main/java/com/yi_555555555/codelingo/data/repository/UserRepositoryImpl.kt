@@ -2,6 +2,7 @@ package com.yi_555555555.codelingo.data.repository
 
 import com.yi.myapplication.data.entity.codelingo.LoginRequest
 import com.yi.myapplication.data.entity.codelingo.RegisterRequest
+import com.yi.myapplication.data.entity.codelingo.SubmitCodeRequest
 import com.yi.myapplication.data.entity.codelingo.SubmitRequest
 import com.yi_555555555.codelingo.data.mappers.toAccessTokenDb
 import com.yi_555555555.codelingo.data.mappers.toAccessTokenDomain
@@ -181,6 +182,20 @@ class UserRepositoryImpl(
         authToken = accessToken,
         taskId = taskId,
         submitRequest = SubmitRequest(answers = answers)
+      ).toDomainModel()
+    } ?: throw Exception("missing access token")
+  }
+
+  override suspend fun submitCodeTask(
+    taskId: Int,
+    answers: String
+  ): SubmitAnswer {
+    val accessToken = _cacheFlow.value.accessToken?.accessTokenWithType
+    return accessToken?.let {
+      userApi.submitCodeTask(
+        authToken = accessToken,
+        taskId = taskId,
+        submitRequest = SubmitCodeRequest(answers = answers)
       ).toDomainModel()
     } ?: throw Exception("missing access token")
   }

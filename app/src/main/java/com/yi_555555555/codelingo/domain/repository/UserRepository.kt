@@ -32,6 +32,11 @@ interface UserRepository {
     taskId: Int,
     answers: List<Any>
   ): SubmitAnswer
+
+  suspend fun submitCodeTask(
+    taskId: Int,
+    answers: String
+  ): SubmitAnswer
 }
 
 data class Cache(

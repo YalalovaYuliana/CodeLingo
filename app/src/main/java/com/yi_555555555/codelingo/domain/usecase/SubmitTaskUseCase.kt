@@ -9,11 +9,19 @@ class SubmitTaskUseCase @Inject constructor(
 ) {
   suspend operator fun invoke(
     taskId: Int,
-    answers: List<Any>
+    answers: List<Any>,
+    codeAnswer: String?
   ): SubmitAnswer {
-    return userRepository.submitTask(
-      taskId = taskId,
-      answers = answers
-    )
+    return if (codeAnswer != null) {
+      userRepository.submitCodeTask(
+        taskId = taskId,
+        answers = codeAnswer
+      )
+    } else {
+      userRepository.submitTask(
+        taskId = taskId,
+        answers = answers
+      )
+    }
   }
 }

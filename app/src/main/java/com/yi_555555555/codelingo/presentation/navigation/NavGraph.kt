@@ -1,16 +1,12 @@
 package com.yi_555555555.codelingo.presentation.navigation
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
@@ -21,13 +17,13 @@ import com.yi_555555555.codelingo.presentation.components.LoadingState
 import com.yi_555555555.codelingo.presentation.components.NavigationAppBar
 import com.yi_555555555.codelingo.presentation.components.ScreenScaffold
 import com.yi_555555555.codelingo.presentation.screens.courses.CoursesScreen
+import com.yi_555555555.codelingo.presentation.screens.level.LevelScreen
 import com.yi_555555555.codelingo.presentation.screens.login.LoginScreen
 import com.yi_555555555.codelingo.presentation.screens.main.MainScreen
 import com.yi_555555555.codelingo.presentation.screens.onboarding.OnboardingScreen
 import com.yi_555555555.codelingo.presentation.screens.profile.ProfileScreen
 import com.yi_555555555.codelingo.presentation.screens.register.RegisterScreen
 import com.yi_555555555.codelingo.presentation.screens.settings.SettingsScreen
-import com.yi_555555555.codelingo.presentation.screens.tasks.LevelScreen
 import kotlinx.serialization.Serializable
 
 @Composable
@@ -43,15 +39,11 @@ fun NavGraph(
     return
   }
 
-  //val startDestination = Screen.HomeScreen
-
   val startDestination = if (state.hasAccessToken == true) {
     if (state.hasSelectedCourseId == true) {
       Screen.HomeScreen
     } else Screen.CoursesScreen
   } else Screen.OnboardingScreen
-
-  println("yuliana start destination: $startDestination")
 
   var selectedBottomBarDestination by rememberSaveable { mutableStateOf(BottomBarDestination.Main) }
 
@@ -140,14 +132,12 @@ fun NavGraph(
           }
 
           HomeScreenContent.Achievements -> {
-            Box(
-              modifier = Modifier.fillMaxSize(),
-              contentAlignment = Alignment.Center
-            ) {
-              Text(
-                text = "Achievements"
-              )
-            }
+            MainScreen(
+              modifier = Modifier.padding(innerPadding),
+              onLevelClick = { level ->
+                navController.navigate(Screen.LevelScreen(level.id, level.title))
+              }
+            )
           }
         }
       }

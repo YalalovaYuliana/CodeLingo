@@ -93,6 +93,7 @@ fun TaskResponse.toDomainModel(): Task {
     numInOrder = numInOrder,
     options = options?.map { it.toDomainModel() },
     gaps = gaps?.map { it.toDomainModel() },
+    code = code?.firstOrNull()?.toDomainModel(),
     hint = hint
   )
 }
@@ -104,10 +105,16 @@ private fun TaskResponse.OptionResponse.toDomainModel(): Task.Option {
   )
 }
 
+private fun TaskResponse.CodeResponse.toDomainModel(): Task.Code {
+  return Task.Code(
+    id = id,
+    language = language
+  )
+}
+
 private fun TaskResponse.GapResponse.toDomainModel(): Task.Gap {
   return Task.Gap(
-    template = template,
-    answer = answer
+    template = template
   )
 }
 

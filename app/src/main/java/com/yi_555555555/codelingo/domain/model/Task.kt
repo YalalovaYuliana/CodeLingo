@@ -1,5 +1,7 @@
 package com.yi_555555555.codelingo.domain.model
 
+import dev.snipme.highlights.model.SyntaxLanguage
+
 
 data class Task(
   val id: Int,
@@ -28,7 +30,7 @@ data class Task(
   data class Code(
     val id: Int,
     val userAnswer: String = "",
-    val language: String,
+    val language: SyntaxLanguage,
     val isError: Boolean = false
   )
 }

@@ -54,6 +54,8 @@ dependencies {
 
   implementation("com.colintheshots:twain:0.3.2")
 
+  implementation("dev.snipme:kodeview:0.9.0")
+
   implementation(libs.logging.interceptor)
   implementation(libs.okhttp)
   implementation(libs.retrofit)

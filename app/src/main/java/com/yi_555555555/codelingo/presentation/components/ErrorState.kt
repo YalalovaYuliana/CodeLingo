@@ -38,6 +38,7 @@ fun ErrorState(
     Header(text = errorMessage)
     VSpacer(16.dp)
     PrimaryButton(
+      modifier = Modifier.padding(horizontal = 40.dp),
       text = stringResource(R.string.retry),
       onClick = onRetryClick
     )

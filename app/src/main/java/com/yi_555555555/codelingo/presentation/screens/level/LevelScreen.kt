@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
@@ -31,6 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.colintheshots.twain.MarkdownText
@@ -45,6 +47,11 @@ import com.yi_555555555.codelingo.presentation.components.ScreenScaffold
 import com.yi_555555555.codelingo.presentation.components.TopAppBar
 import com.yi_555555555.codelingo.presentation.components.VSpacer
 import com.yi_555555555.codelingo.presentation.components.WSpacer
+import dev.snipme.highlights.Highlights
+import dev.snipme.highlights.model.SyntaxLanguage
+import dev.snipme.highlights.model.SyntaxTheme
+import dev.snipme.highlights.model.SyntaxThemes
+import dev.snipme.kodeview.view.material3.CodeEditText
 
 @Composable
 fun LevelScreen(
@@ -149,6 +156,9 @@ fun LevelScreen(
               task = currentState.currentTask,
               onOptionClick = { optionId ->
                 viewModel.processCommand(Command.SelectOption(optionId))
+              },
+              onCodeChange = { newValue ->
+                viewModel.processCommand(Command.InputCode(newValue))
               }
             )
           }
@@ -202,11 +212,14 @@ fun LevelScreen(
 @Composable
 private fun TaskContent(
   task: Task,
-  onOptionClick: (Int) -> Unit
+  onOptionClick: (Int) -> Unit,
+  onCodeChange: (String) -> Unit
 ) {
   Text(
+    modifier = Modifier.fillMaxWidth(),
     text = task.title,
-    style = MaterialTheme.typography.titleMedium
+    style = MaterialTheme.typography.titleMedium,
+    textAlign = TextAlign.Start
   )
   VSpacer(80.dp)
   Text(
@@ -234,11 +247,33 @@ private fun TaskContent(
     }
 
     TaskType.Gap -> {
-
     }
 
     TaskType.Code -> {
-
+      val code = task.code
+      val highlights = remember(code?.isError, code?.userAnswer) {
+        mutableStateOf(
+          Highlights
+            .Builder(code = code?.userAnswer.orEmpty())
+            .language(code?.language ?: SyntaxLanguage.DEFAULT)
+            .theme(
+              if (code?.isError == true) errorTheme else SyntaxThemes.default()
+            )
+            .build()
+        )
+      }
+      CodeEditText(
+        modifier = Modifier
+          .heightIn(min = 360.dp),
+        isError = code?.isError == true,
+        highlights = highlights.value,
+        onValueChange = { newValue ->
+          highlights.value = highlights.value.getBuilder()
+            .code(newValue)
+            .build()
+          onCodeChange(newValue)
+        }
+      )
     }
   }
 }
@@ -290,3 +325,16 @@ private fun XpCard(
     }
   }
 }
+
+private val errorTheme = SyntaxTheme(
+  key = "error_theme",
+  code = 0xFF4B4B,
+  keyword = 0xFF4B4B,
+  string = 0xFF4B4B,
+  literal = 0xFF4B4B,
+  comment = 0xFF4B4B,
+  metadata = 0xFF4B4B,
+  multilineComment = 0xFF4B4B,
+  punctuation = 0xFF4B4B,
+  mark = 0xFF4B4B
+)

@@ -16,6 +16,7 @@ import com.yi_555555555.codelingo.domain.model.SubmitAnswer
 import com.yi_555555555.codelingo.domain.model.Task
 import com.yi_555555555.codelingo.domain.model.TaskType
 import com.yi_555555555.codelingo.domain.model.User
+import dev.snipme.highlights.model.SyntaxLanguage
 
 fun UserResponse.toUser(): User {
   return User(
@@ -106,9 +107,14 @@ private fun TaskResponse.OptionResponse.toDomainModel(): Task.Option {
 }
 
 private fun TaskResponse.CodeResponse.toDomainModel(): Task.Code {
+  val language = SyntaxLanguage.getByName(language) ?: SyntaxLanguage.DEFAULT
   return Task.Code(
     id = id,
-    language = language
+    language = language,
+    userAnswer = when (language) {
+      SyntaxLanguage.PYTHON -> "# start here"
+      else -> "// start here"
+    }
   )
 }
 

@@ -75,6 +75,19 @@ class LevelViewModel @Inject constructor(
         }
       }
 
+      is Command.InputCode -> {
+        _state.update {
+          currentState.copy(
+            currentTask = currentState.currentTask.copy(
+              code = currentState.currentTask.code?.copy(
+                userAnswer = command.newValue,
+                isError = false
+              )
+            )
+          )
+        }
+      }
+
       else -> {}
     }
   }
@@ -112,7 +125,7 @@ class LevelViewModel @Inject constructor(
 
               else -> emptyList()
             },
-            codeAnswer = currentTask.code?.userAnswer
+            codeAnswer = currentTask.code?.userAnswer?.trim()
           )
 
           val completeTask =
@@ -259,8 +272,8 @@ sealed interface ViewState {
 }
 
 sealed interface Command {
-  data class InputCode(val code: String) : Command
-  data class InputGap(val gap: String) : Command
+  data class InputCode(val newValue: String) : Command
+  data class InputGap(val newValue: String) : Command
   data class SelectOption(val optionId: Int) : Command
   data object Submit : Command
 }

@@ -37,6 +37,8 @@ interface UserRepository {
     taskId: Int,
     answers: String
   ): SubmitAnswer
+
+  suspend fun completeTask(levelId: Int): Int
 }
 
 data class Cache(

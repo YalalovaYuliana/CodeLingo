@@ -5,6 +5,7 @@ import com.yi.myapplication.data.entity.codelingo.RegisterRequest
 import com.yi.myapplication.data.entity.codelingo.SubmitCodeRequest
 import com.yi.myapplication.data.entity.codelingo.SubmitRequest
 import com.yi_555555555.codelingo.data.retrofit.entity.AccessTokenData
+import com.yi_555555555.codelingo.data.retrofit.entity.CompleteTaskResponse
 import com.yi_555555555.codelingo.data.retrofit.entity.CourseDetailsResponse
 import com.yi_555555555.codelingo.data.retrofit.entity.CourseResponse
 import com.yi_555555555.codelingo.data.retrofit.entity.SubmitResponse
@@ -75,4 +76,10 @@ interface UserApi {
     @Path("task_id") taskId: Int,
     @Body submitRequest: SubmitCodeRequest
   ): SubmitResponse
+
+  @POST("levels/{level_id}/complete")
+  suspend fun completeTask(
+    @Header("Authorization") authToken: String,
+    @Path("level_id") levelId: Int
+  ): CompleteTaskResponse
 }

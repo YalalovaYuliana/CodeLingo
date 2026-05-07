@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.yi_555555555.codelingo.domain.model.Task
 import com.yi_555555555.codelingo.domain.model.TaskType
+import com.yi_555555555.codelingo.domain.usecase.CompleteTaskUseCase
 import com.yi_555555555.codelingo.domain.usecase.GetLevelDetailsUseCase
 import com.yi_555555555.codelingo.domain.usecase.SubmitTaskUseCase
 import com.yi_555555555.codelingo.presentation.navigation.Screen
@@ -27,6 +28,7 @@ class LevelViewModel @Inject constructor(
   savedStateHandle: SavedStateHandle,
   private val getLevelDetailsUseCase: GetLevelDetailsUseCase,
   private val submitTaskUseCase: SubmitTaskUseCase,
+  private val completeTaskUseCase: CompleteTaskUseCase,
   @ApplicationContext private val context: Context
 ) : ViewModel() {
 
@@ -44,7 +46,7 @@ class LevelViewModel @Inject constructor(
 
     when (command) {
       is Command.Submit -> {
-        
+
         if (currentState.showTheory) {
           _state.update {
             currentState.copy(
@@ -56,6 +58,23 @@ class LevelViewModel @Inject constructor(
         }
       }
 
+      is Command.SelectOption -> {
+        _state.update {
+          currentState.copy(
+            currentTask = currentState.currentTask.copy(
+              options = currentState.currentTask.options?.map { option ->
+                if (option.id == command.optionId) {
+                  option.copy(
+                    isChosen = !option.isChosen,
+                    isError = false
+                  )
+                } else option
+              }
+            )
+          )
+        }
+      }
+
       else -> {}
     }
   }
@@ -63,6 +82,13 @@ class LevelViewModel @Inject constructor(
   fun submitTask() {
     val currentState = _state.value
     if (currentState !is ViewState.Input) return
+
+    if (
+      currentState.currentTask.code?.userAnswer.isNullOrEmpty() &&
+      currentState.currentTask.options?.find { it.isChosen } == null &&
+      currentState.currentTask.gaps?.find { it.userAnswer.isNotBlank() } == null
+    ) return
+
     _state.update {
       currentState.copy(
         isLoading = true
@@ -88,16 +114,25 @@ class LevelViewModel @Inject constructor(
             },
             codeAnswer = currentTask.code?.userAnswer
           )
+
+          val completeTask =
+            submitAnswer.isCorrect && currentTask.numInOrder == currentState.tasks.size
+
+          if (completeTask) {
+            val xpAdded = completeTaskUseCase(transferLevelData.levelId)
+            withContext(Dispatchers.Main) {
+              _state.update { ViewState.SuccessSubmitLevel(xpAdded) }
+            }
+            return@safeFetch
+          }
+
           withContext(Dispatchers.Main) {
-            val currentTask = currentState.currentTask
-            if (submitAnswer.isCorrect && currentTask.numInOrder < currentState.tasks.size) {
+            if (submitAnswer.isCorrect) {
               _state.update {
                 currentState.copy(
-                  currentTask = currentState.tasks[currentTask.numInOrder + 1]
+                  currentTask = currentState.tasks[currentTask.numInOrder]
                 )
               }
-            } else if (submitAnswer.isCorrect) {
-              _state.update { ViewState.SuccessSubmitLevel }
             } else {
               when (currentTask.type) {
                 TaskType.Choice -> {
@@ -106,7 +141,7 @@ class LevelViewModel @Inject constructor(
                       currentTask = currentTask.copy(
                         options = currentTask.options?.map { option ->
                           option.copy(
-                            isError = submitAnswer.correctOptions?.find { it == option.id } == null
+                            isError = submitAnswer.correctOptions?.find { it == option.id } == null && option.isChosen
                           )
                         }
                       )
@@ -217,12 +252,14 @@ sealed interface ViewState {
     val isError: Boolean = false
   ) : ViewState
 
-  data object SuccessSubmitLevel : ViewState
+  data class SuccessSubmitLevel(
+    val xpAdded: Int
+  ) : ViewState
 }
 
 sealed interface Command {
   data class InputCode(val code: String) : Command
   data class InputGap(val gap: String) : Command
-  data class SelectOption(val option: Task.Option) : Command
+  data class SelectOption(val optionId: Int) : Command
   data object Submit : Command
 }

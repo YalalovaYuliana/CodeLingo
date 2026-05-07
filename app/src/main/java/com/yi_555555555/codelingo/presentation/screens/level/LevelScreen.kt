@@ -1,22 +1,34 @@
 package com.yi_555555555.codelingo.presentation.screens.level
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -25,7 +37,9 @@ import com.colintheshots.twain.MarkdownText
 import com.yi_555555555.codelingo.R
 import com.yi_555555555.codelingo.domain.model.Task
 import com.yi_555555555.codelingo.domain.model.TaskType
+import com.yi_555555555.codelingo.presentation.components.HSpacer
 import com.yi_555555555.codelingo.presentation.components.Header
+import com.yi_555555555.codelingo.presentation.components.OptionCheckbox
 import com.yi_555555555.codelingo.presentation.components.PrimaryButton
 import com.yi_555555555.codelingo.presentation.components.ScreenScaffold
 import com.yi_555555555.codelingo.presentation.components.TopAppBar
@@ -34,7 +48,6 @@ import com.yi_555555555.codelingo.presentation.components.WSpacer
 
 @Composable
 fun LevelScreen(
-  onSuccessSubmit: () -> Unit,
   onBackClick: () -> Unit,
   viewModel: LevelViewModel = hiltViewModel()
 ) {
@@ -42,13 +55,48 @@ fun LevelScreen(
   val state by viewModel.state.collectAsState()
   val snackbarHostState by viewModel.snackbarHostState.collectAsState()
 
+  var showCloseDialog by remember { mutableStateOf(false) }
+
+  if (showCloseDialog) {
+    AlertDialog(
+      onDismissRequest = { showCloseDialog = false },
+      text = { Text(stringResource(R.string.close_level)) },
+      confirmButton = {
+        Button(
+          colors = ButtonDefaults.buttonColors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer,
+            disabledContainerColor = MaterialTheme.colorScheme.primaryContainer
+          ),
+          onClick = {
+            showCloseDialog = false
+            onBackClick()
+          }
+        ) {
+          Text(stringResource(R.string.yes))
+        }
+      },
+      dismissButton = {
+        Button(
+          colors = ButtonDefaults.buttonColors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer,
+            disabledContainerColor = MaterialTheme.colorScheme.primaryContainer
+          ),
+          onClick = { showCloseDialog = false }
+        ) {
+          Text(stringResource(R.string.no))
+        }
+      }
+    )
+  }
+
   ScreenScaffold(
     topBar = {
-      if (state is ViewState.Start) {
-        TopAppBar(
-          onBackClick = onBackClick
-        )
-      }
+      TopAppBar(
+        onBackClick = if (state is ViewState.Start) onBackClick else null,
+        onCloseClick = if (state is ViewState.Input) {
+          { showCloseDialog = true }
+        } else null
+      )
     },
     snackbarHostState = snackbarHostState
   ) { innerPadding ->
@@ -89,13 +137,20 @@ fun LevelScreen(
         }
 
         is ViewState.Input -> {
+          BackHandler { }
+
           if (currentState.showTheory) {
             VSpacer(16.dp)
             MarkdownText(
               markdown = currentState.theory
             )
           } else {
-            TaskContent(task = currentState.currentTask)
+            TaskContent(
+              task = currentState.currentTask,
+              onOptionClick = { optionId ->
+                viewModel.processCommand(Command.SelectOption(optionId))
+              }
+            )
           }
           WSpacer()
           VSpacer(32.dp)
@@ -113,10 +168,31 @@ fun LevelScreen(
           )
         }
 
-        ViewState.SuccessSubmitLevel -> {
-          LaunchedEffect(Unit) {
-            onSuccessSubmit()
-          }
+        is ViewState.SuccessSubmitLevel -> {
+          WSpacer()
+          Image(
+            modifier = Modifier.padding(horizontal = 50.dp),
+            painter = painterResource(R.drawable.welcome_cat),
+            contentDescription = null
+          )
+          VSpacer(56.dp)
+          Text(
+            text = stringResource(R.string.level_completed).uppercase(),
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.primaryContainer
+          )
+          VSpacer(40.dp)
+          XpCard(
+            value = currentState.xpAdded.toString()
+          )
+          WSpacer()
+          PrimaryButton(
+            modifier = Modifier
+              .fillMaxWidth()
+              .padding(horizontal = 26.dp),
+            text = stringResource(R.string.great).uppercase(),
+            onClick = onBackClick
+          )
         }
       }
     }
@@ -125,11 +201,36 @@ fun LevelScreen(
 
 @Composable
 private fun TaskContent(
-  task: Task
+  task: Task,
+  onOptionClick: (Int) -> Unit
 ) {
+  Text(
+    text = task.title,
+    style = MaterialTheme.typography.titleMedium
+  )
+  VSpacer(80.dp)
+  Text(
+    text = task.description,
+    style = MaterialTheme.typography.labelMedium
+  )
+  VSpacer(32.dp)
   when (task.type) {
     TaskType.Choice -> {
-
+      val options = task.options
+      Column(
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+      ) {
+        options?.forEach { option ->
+          OptionCheckbox(
+            text = option.text,
+            isError = option.isError,
+            selected = option.isChosen,
+            onCheckedChange = {
+              onOptionClick(option.id)
+            }
+          )
+        }
+      }
     }
 
     TaskType.Gap -> {
@@ -138,6 +239,54 @@ private fun TaskContent(
 
     TaskType.Code -> {
 
+    }
+  }
+}
+
+@Composable
+private fun XpCard(
+  value: String,
+  modifier: Modifier = Modifier
+) {
+  Column(
+    modifier = modifier
+      .widthIn(max = 120.dp)
+      .background(
+        shape = RoundedCornerShape(24.dp),
+        color = MaterialTheme.colorScheme.primaryContainer
+      ),
+    horizontalAlignment = Alignment.CenterHorizontally
+  ) {
+    Text(
+      text = stringResource(R.string.xp).lowercase(),
+      style = MaterialTheme.typography.bodyMedium,
+      color = MaterialTheme.colorScheme.onPrimaryContainer
+    )
+    Row(
+      modifier = Modifier
+        .fillMaxWidth()
+        .padding(4.dp)
+        .background(
+          shape = RoundedCornerShape(24.dp),
+          color = MaterialTheme.colorScheme.onPrimaryContainer
+        )
+        .padding(
+          vertical = 20.dp,
+          horizontal = 26.dp
+        ),
+      horizontalArrangement = Arrangement.Center
+    ) {
+      Icon(
+        painter = painterResource(R.drawable.ic_lightning),
+        contentDescription = "xp",
+        tint = Color.Unspecified
+      )
+      HSpacer(8.dp)
+      Text(
+        text = value,
+        style = MaterialTheme.typography.titleSmall,
+        color = MaterialTheme.colorScheme.outline
+      )
     }
   }
 }

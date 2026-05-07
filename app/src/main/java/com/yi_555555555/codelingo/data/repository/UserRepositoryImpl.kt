@@ -172,6 +172,34 @@ class UserRepositoryImpl(
     return userApi.getTasks(levelId).map { it.toDomainModel() }
   }
 
+  override suspend fun completeTask(levelId: Int): Int {
+    val accessToken = _cacheFlow.value.accessToken?.accessTokenWithType
+    return accessToken?.let {
+      val response = userApi.completeTask(
+        authToken = accessToken,
+        levelId = levelId
+      )
+
+      _cacheFlow.update { cache ->
+        cache.copy(
+          user = cache.user?.copy(
+            streak = response.streak,
+            xp = response.totalXp
+          ),
+          levels = cache.levels?.map { level ->
+            if (levelId == level.id) {
+              level.copy(
+                isComplete = true
+              )
+            } else level
+          }
+        )
+      }
+
+      response.xpAdded
+    } ?: throw Exception("missing access token")
+  }
+
   override suspend fun submitTask(
     taskId: Int,
     answers: List<Any>

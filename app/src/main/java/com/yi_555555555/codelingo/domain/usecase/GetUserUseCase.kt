@@ -2,11 +2,21 @@ package com.yi_555555555.codelingo.domain.usecase
 
 import com.yi_555555555.codelingo.domain.model.User
 import com.yi_555555555.codelingo.domain.repository.UserRepository
+import kotlinx.coroutines.flow.mapNotNull
 import javax.inject.Inject
 
 class GetUserUseCase @Inject constructor(
   private val userRepository: UserRepository
 ) {
+
+  val user = userRepository.cacheFlow.mapNotNull {
+    it.user
+  }
+
+  val courses = userRepository.cacheFlow.mapNotNull {
+    it.courses
+  }
+
   suspend operator fun invoke(): User {
     val cache = userRepository.cacheFlow.value
     val user = cache.user

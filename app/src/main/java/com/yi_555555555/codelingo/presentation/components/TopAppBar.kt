@@ -17,19 +17,35 @@ import com.yi_555555555.codelingo.R
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopAppBar(
-  onBackClick: () -> Unit
+  onBackClick: (() -> Unit)? = null,
+  onCloseClick: (() -> Unit)? = null,
 ) {
   TopAppBar(
     title = { },
     navigationIcon = {
-      IconButton(
-        onClick = onBackClick
-      ) {
-        Icon(
-          modifier = Modifier.widthIn(max = 32.dp),
-          painter = painterResource(R.drawable.arrow_left),
-          contentDescription = "Back"
-        )
+      onBackClick?.let {
+        IconButton(
+          onClick = onBackClick
+        ) {
+          Icon(
+            modifier = Modifier.widthIn(max = 32.dp),
+            painter = painterResource(R.drawable.arrow_left),
+            contentDescription = "Back"
+          )
+        }
+      }
+    },
+    actions = {
+      onCloseClick?.let {
+        IconButton(
+          onClick = onCloseClick
+        ) {
+          Icon(
+            modifier = Modifier.widthIn(max = 32.dp),
+            painter = painterResource(R.drawable.ic_close),
+            contentDescription = "Close"
+          )
+        }
       }
     },
     colors = TopAppBarDefaults.topAppBarColors(

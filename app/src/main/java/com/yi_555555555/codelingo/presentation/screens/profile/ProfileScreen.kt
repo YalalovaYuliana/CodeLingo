@@ -184,7 +184,6 @@ private fun StatsCard(
         color = MaterialTheme.colorScheme.secondaryContainer
       )
     }
-
   }
 }
 

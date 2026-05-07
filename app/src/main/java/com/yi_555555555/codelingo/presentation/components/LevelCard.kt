@@ -13,7 +13,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.yi_555555555.codelingo.domain.model.Level
@@ -35,7 +34,9 @@ fun LevelCard(
       text = level.title,
       textAlign = TextAlign.Center,
       style = MaterialTheme.typography.labelMedium,
-      color = MaterialTheme.colorScheme.secondary
+      color = if (level.isComplete) {
+        MaterialTheme.colorScheme.inversePrimary
+      } else MaterialTheme.colorScheme.secondary
     )
     VSpacer(8.dp)
     Box(
@@ -52,7 +53,7 @@ fun LevelCard(
         text = index.toString(),
         textAlign = TextAlign.Center,
         style = MaterialTheme.typography.titleLarge,
-        color = if (level.isComplete) Color.Unspecified else MaterialTheme.colorScheme.tertiary
+        color = if (level.isComplete) MaterialTheme.colorScheme.inversePrimary else MaterialTheme.colorScheme.tertiary
       )
 //      Icon(
 //        painter = painterResource(R.drawable.ic_education_cap),

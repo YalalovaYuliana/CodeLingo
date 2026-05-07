@@ -155,7 +155,6 @@ fun NavGraph(
     }
     composable<Screen.LevelScreen> {
       LevelScreen(
-        onSuccessSubmit = {},
         onBackClick = {
           navController.navigateUp()
         }

@@ -18,6 +18,7 @@ private val DarkColorScheme = darkColorScheme(
   surface = White,
   background = White,
   outline = Yellow,
+  inversePrimary = Orange,
   outlineVariant = LightGrey2
 )
 
@@ -33,6 +34,7 @@ private val LightColorScheme = lightColorScheme(
   surface = White,
   background = White,
   outline = Yellow,
+  inversePrimary = Orange,
   outlineVariant = LightGrey2
 )
 

@@ -141,7 +141,8 @@ class LevelViewModel @Inject constructor(
                       currentTask = currentTask.copy(
                         options = currentTask.options?.map { option ->
                           option.copy(
-                            isError = submitAnswer.correctOptions?.find { it == option.id } == null && option.isChosen
+                            isError = (submitAnswer.correctOptions?.find { it == option.id } == null && option.isChosen) ||
+                              (submitAnswer.correctOptions?.find { it == option.id } != null && !option.isChosen)
                           )
                         }
                       )

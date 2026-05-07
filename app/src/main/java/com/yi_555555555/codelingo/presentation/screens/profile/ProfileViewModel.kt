@@ -33,6 +33,18 @@ class ProfileViewModel @Inject constructor(
 
   init {
     getUser()
+    viewModelScope.launch {
+      getUserUseCase.user.collect { user ->
+        val currentState = _state.value
+        if (currentState is ViewState.Profile) {
+          _state.update {
+            currentState.copy(
+              user = user
+            )
+          }
+        }
+      }
+    }
   }
 
   fun getUser() {

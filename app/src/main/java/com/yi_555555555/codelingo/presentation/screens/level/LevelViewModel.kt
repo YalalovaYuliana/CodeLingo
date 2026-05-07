@@ -151,7 +151,7 @@ class LevelViewModel @Inject constructor(
           if (completeTask) {
             val xpAdded = completeTaskUseCase(transferLevelData.levelId)
             withContext(Dispatchers.Main) {
-              _state.update { ViewState.SuccessSubmitLevel(xpAdded) }
+              _state.update { ViewState.SuccessSubmitLevel(xpAdded, transferLevelData.isComplete) }
             }
             return@safeFetch
           }
@@ -284,7 +284,8 @@ sealed interface ViewState {
   ) : ViewState
 
   data class SuccessSubmitLevel(
-    val xpAdded: Int
+    val xpAdded: Int,
+    val isBeforeCompleted: Boolean
   ) : ViewState
 }
 

@@ -1,12 +1,16 @@
 package com.yi_555555555.codelingo.presentation.navigation
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
@@ -118,7 +122,7 @@ fun NavGraph(
             MainScreen(
               modifier = Modifier.padding(innerPadding),
               onLevelClick = { level ->
-                navController.navigate(Screen.LevelScreen(level.id, level.title))
+                navController.navigate(Screen.LevelScreen(level.id, level.title, level.isComplete))
               }
             )
           }
@@ -133,12 +137,12 @@ fun NavGraph(
           }
 
           HomeScreenContent.Achievements -> {
-            MainScreen(
-              modifier = Modifier.padding(innerPadding),
-              onLevelClick = { level ->
-                navController.navigate(Screen.LevelScreen(level.id, level.title))
-              }
-            )
+            Box(
+              modifier = Modifier.fillMaxSize(),
+              contentAlignment = Alignment.Center
+            ) {
+              Text(text = "Achievements")
+            }
           }
         }
       }
@@ -202,6 +206,7 @@ sealed interface Screen {
   data class LevelScreen(
     val levelId: Int,
     val title: String,
+    val isComplete: Boolean
   ) : Screen
 }
 

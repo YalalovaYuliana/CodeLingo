@@ -13,10 +13,6 @@ class GetUserUseCase @Inject constructor(
     it.user
   }
 
-  val courses = userRepository.cacheFlow.mapNotNull {
-    it.courses
-  }
-
   suspend operator fun invoke(): User {
     val cache = userRepository.cacheFlow.value
     val user = cache.user

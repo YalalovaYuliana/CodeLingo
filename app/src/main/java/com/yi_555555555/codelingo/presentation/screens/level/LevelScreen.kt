@@ -211,10 +211,12 @@ fun LevelScreen(
             style = MaterialTheme.typography.titleMedium,
             color = MaterialTheme.colorScheme.primaryContainer
           )
-          VSpacer(40.dp)
-          XpCard(
-            value = currentState.xpAdded.toString()
-          )
+          if (!currentState.isBeforeCompleted) {
+            VSpacer(40.dp)
+            XpCard(
+              value = currentState.xpAdded.toString()
+            )
+          }
           WSpacer()
           PrimaryButton(
             modifier = Modifier

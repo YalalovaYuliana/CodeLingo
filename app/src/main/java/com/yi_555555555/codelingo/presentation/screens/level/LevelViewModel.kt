@@ -10,6 +10,7 @@ import com.yi_555555555.codelingo.domain.model.Task
 import com.yi_555555555.codelingo.domain.model.TaskType
 import com.yi_555555555.codelingo.domain.usecase.CompleteTaskUseCase
 import com.yi_555555555.codelingo.domain.usecase.GetLevelDetailsUseCase
+import com.yi_555555555.codelingo.domain.usecase.GetMyAchievmentsUseCase
 import com.yi_555555555.codelingo.domain.usecase.SubmitTaskUseCase
 import com.yi_555555555.codelingo.presentation.navigation.Screen
 import com.yi_555555555.codelingo.utils.safeFetch
@@ -29,6 +30,7 @@ class LevelViewModel @Inject constructor(
   private val getLevelDetailsUseCase: GetLevelDetailsUseCase,
   private val submitTaskUseCase: SubmitTaskUseCase,
   private val completeTaskUseCase: CompleteTaskUseCase,
+  private val getMyAchievmentsUseCase: GetMyAchievmentsUseCase,
   @ApplicationContext private val context: Context
 ) : ViewModel() {
 
@@ -70,7 +72,8 @@ class LevelViewModel @Inject constructor(
                   )
                 } else option
               }
-            )
+            ),
+            isError = false
           )
         }
       }
@@ -83,7 +86,8 @@ class LevelViewModel @Inject constructor(
                 userAnswer = command.newValue,
                 isError = false
               )
-            )
+            ),
+            isError = false
           )
         }
       }
@@ -100,7 +104,8 @@ class LevelViewModel @Inject constructor(
                   )
                 } else gap
               }
-            )
+            ),
+            isError = false
           )
         }
       }
@@ -150,6 +155,7 @@ class LevelViewModel @Inject constructor(
 
           if (completeTask) {
             val xpAdded = completeTaskUseCase(transferLevelData.levelId)
+            getMyAchievmentsUseCase()
             withContext(Dispatchers.Main) {
               _state.update { ViewState.SuccessSubmitLevel(xpAdded, transferLevelData.isComplete) }
             }
@@ -171,11 +177,11 @@ class LevelViewModel @Inject constructor(
                       currentTask = currentTask.copy(
                         options = currentTask.options?.map { option ->
                           option.copy(
-                            isError = (submitAnswer.correctOptions?.find { it == option.id } == null && option.isChosen) ||
-                              (submitAnswer.correctOptions?.find { it == option.id } != null && !option.isChosen)
+                            isError = submitAnswer.correctOptions?.find { it == option.id } == null && option.isChosen
                           )
                         }
-                      )
+                      ),
+                      isError = true
                     )
                   }
                 }
@@ -189,7 +195,8 @@ class LevelViewModel @Inject constructor(
                             isError = submitAnswer.correctAnswers?.find { it == gap.userAnswer } == null
                           )
                         }
-                      )
+                      ),
+                      isError = true
                     )
                   }
                 }
@@ -201,7 +208,8 @@ class LevelViewModel @Inject constructor(
                         code = currentTask.code?.copy(
                           isError = true
                         )
-                      )
+                      ),
+                      isError = true
                     )
                   }
                 }

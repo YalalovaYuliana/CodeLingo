@@ -8,10 +8,11 @@ import com.yi_555555555.codelingo.data.mappers.toAccessTokenDb
 import com.yi_555555555.codelingo.data.mappers.toAccessTokenDomain
 import com.yi_555555555.codelingo.data.mappers.toDomainModel
 import com.yi_555555555.codelingo.data.mappers.toUser
-import com.yi_555555555.codelingo.data.retrofit.UserApi
+import com.yi_555555555.codelingo.data.retrofit.CodeLingoApi
 import com.yi_555555555.codelingo.data.room.UserDataBase
 import com.yi_555555555.codelingo.data.room.entity.CourseDbModel
 import com.yi_555555555.codelingo.domain.model.AccessToken
+import com.yi_555555555.codelingo.domain.model.Achievment
 import com.yi_555555555.codelingo.domain.model.Course
 import com.yi_555555555.codelingo.domain.model.CourseDetails
 import com.yi_555555555.codelingo.domain.model.Level
@@ -27,7 +28,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
 class UserRepositoryImpl(
-  private val userApi: UserApi,
+  private val codeLingoApi: CodeLingoApi,
   private val userDataBase: UserDataBase,
 ) : UserRepository {
 
@@ -35,7 +36,7 @@ class UserRepositoryImpl(
   override val cacheFlow = _cacheFlow.asStateFlow()
 
   override suspend fun register(registerCredentials: RegisterCredentials): AccessToken {
-    return userApi.register(
+    return codeLingoApi.register(
       RegisterRequest(
         username = registerCredentials.username,
         email = registerCredentials.email,
@@ -45,7 +46,7 @@ class UserRepositoryImpl(
   }
 
   override suspend fun login(loginCredentials: LoginCredentials): AccessToken {
-    return userApi.login(
+    return codeLingoApi.login(
       LoginRequest(
         email = loginCredentials.email,
         password = loginCredentials.password
@@ -56,7 +57,7 @@ class UserRepositoryImpl(
   override suspend fun getUser(): User {
     val accessToken = _cacheFlow.value.accessToken?.accessTokenWithType
     return accessToken?.let {
-      val user = userApi.getUser(accessToken).toUser()
+      val user = this@UserRepositoryImpl.codeLingoApi.getUser(accessToken).toUser()
       _cacheFlow.update {
         it.copy(
           user = user
@@ -69,7 +70,7 @@ class UserRepositoryImpl(
   override suspend fun getUserCourseId(): Int? {
     val accessToken = _cacheFlow.value.accessToken?.accessTokenWithType
     if (accessToken != null) {
-      val courseId = userApi.getUserCourseId(accessToken).courseId
+      val courseId = codeLingoApi.getUserCourseId(accessToken).courseId
       _cacheFlow.update {
         it.copy(
           selectedCourseId = courseId
@@ -129,7 +130,7 @@ class UserRepositoryImpl(
   }
 
   override suspend fun getCourses(): List<Course> {
-    return userApi.getCourses().map {
+    return codeLingoApi.getCourses().map {
       it.toDomainModel()
     }.also {
       _cacheFlow.update { cache ->
@@ -143,7 +144,7 @@ class UserRepositoryImpl(
   override suspend fun startCourse(courseId: Int) {
     val accessToken = _cacheFlow.value.accessToken?.accessTokenWithType
     accessToken?.let {
-      userApi.startCourse(
+      codeLingoApi.startCourse(
         authToken = accessToken,
         courseId = courseId
       )
@@ -156,7 +157,7 @@ class UserRepositoryImpl(
   }
 
   override suspend fun getCourseDetails(courseId: Int): CourseDetails {
-    return userApi.getCourseDetails(courseId).toDomainModel().also {
+    return codeLingoApi.getCourseDetails(courseId).toDomainModel().also {
       _cacheFlow.update { cache ->
         cache.copy(
           courseDetails = it
@@ -166,17 +167,17 @@ class UserRepositoryImpl(
   }
 
   override suspend fun getLevelTheory(levelId: Int): String {
-    return userApi.getLevelTheory(levelId).theory
+    return codeLingoApi.getLevelTheory(levelId).theory
   }
 
   override suspend fun getLevelTasks(levelId: Int): List<Task> {
-    return userApi.getTasks(levelId).map { it.toDomainModel() }
+    return codeLingoApi.getTasks(levelId).map { it.toDomainModel() }
   }
 
   override suspend fun completeTask(levelId: Int): Int {
     val accessToken = _cacheFlow.value.accessToken?.accessTokenWithType
     return accessToken?.let {
-      val response = userApi.completeTask(
+      val response = codeLingoApi.completeTask(
         authToken = accessToken,
         levelId = levelId
       )
@@ -207,7 +208,7 @@ class UserRepositoryImpl(
   ): SubmitAnswer {
     val accessToken = _cacheFlow.value.accessToken?.accessTokenWithType
     return accessToken?.let {
-      userApi.submitTask(
+      codeLingoApi.submitTask(
         authToken = accessToken,
         taskId = taskId,
         submitRequest = SubmitRequest(answers = answers)
@@ -221,7 +222,7 @@ class UserRepositoryImpl(
   ): SubmitAnswer {
     val accessToken = _cacheFlow.value.accessToken?.accessTokenWithType
     return accessToken?.let {
-      userApi.submitCodeTask(
+      codeLingoApi.submitCodeTask(
         authToken = accessToken,
         taskId = taskId,
         submitRequest = SubmitCodeRequest(answers = answers)
@@ -232,13 +233,28 @@ class UserRepositoryImpl(
   override suspend fun getUserCourseLevels(courseId: Int): List<Level> {
     val accessToken = _cacheFlow.value.accessToken?.accessTokenWithType
     return accessToken?.let {
-      userApi.getLevels(
+      codeLingoApi.getLevels(
         authToken = accessToken,
         courseId = courseId
       ).map { it.toDomainModel() }.also {
         _cacheFlow.update { cache ->
           cache.copy(
             levels = it
+          )
+        }
+      }
+    } ?: throw Exception("missing access token")
+  }
+
+  override suspend fun getMyAchievments(): List<Achievment> {
+    val accessToken = _cacheFlow.value.accessToken?.accessTokenWithType
+    return accessToken?.let {
+      codeLingoApi.getMyAchievments(
+        authToken = accessToken
+      ).map { it.toDomainModel() }.also {
+        _cacheFlow.update { cache ->
+          cache.copy(
+            achievments = it
           )
         }
       }

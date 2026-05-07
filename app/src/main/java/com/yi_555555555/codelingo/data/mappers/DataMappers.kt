@@ -1,6 +1,7 @@
 package com.yi_555555555.codelingo.data.mappers
 
 import com.yi_555555555.codelingo.data.retrofit.entity.AccessTokenData
+import com.yi_555555555.codelingo.data.retrofit.entity.AchievmentResponse
 import com.yi_555555555.codelingo.data.retrofit.entity.CourseDetailsResponse
 import com.yi_555555555.codelingo.data.retrofit.entity.CourseResponse
 import com.yi_555555555.codelingo.data.retrofit.entity.SubmitResponse
@@ -9,6 +10,7 @@ import com.yi_555555555.codelingo.data.retrofit.entity.UserLevelResponse
 import com.yi_555555555.codelingo.data.retrofit.entity.UserResponse
 import com.yi_555555555.codelingo.data.room.entity.AccessTokenDbModel
 import com.yi_555555555.codelingo.domain.model.AccessToken
+import com.yi_555555555.codelingo.domain.model.Achievment
 import com.yi_555555555.codelingo.domain.model.Course
 import com.yi_555555555.codelingo.domain.model.CourseDetails
 import com.yi_555555555.codelingo.domain.model.Level
@@ -63,6 +65,16 @@ fun UserLevelResponse.toDomainModel(): Level {
     id = id,
     title = title,
     isComplete = isComplete
+  )
+}
+
+fun AchievmentResponse.toDomainModel(): Achievment {
+  return Achievment(
+    id = id,
+    title = title,
+    description = description,
+    iconUrl = iconUrl,
+    received = received
   )
 }
 

@@ -9,6 +9,7 @@
     <string name="logout">Выйти из аккаунта</string>
     <string name="login_title">Авторизация</string>
     <string name="account_title">Аккаунт</string>
+    <string name="achievments_title">Достижения</string>
     <string name="already_have_an_account_login">Уже есть аккаунт? Войти</string>
 
     <string name="select_course">Выберите курс</string>
@@ -16,12 +17,15 @@
     <string name="next">Далее</string>
     <string name="check">Проверить</string>
 
-    <string name="yes">Да</string>
-    <string name="no">Нет</string>
+    <string name="leave">Выйти</string>
+    <string name="stay">Остаться</string>
+
     <string name="great">Отлично</string>
     <string name="level_completed">Урок пройден!</string>
 
-    <string name="close_level">"Вы уверены, что хотите выйти?\nПрогресс будет сброшен</string>
+
+    <string name="close_level_dialog_description">Весь прогресс в этом уроке будет потерян</string>
+    <string name="close_level_dialog_title">Уже уходишь?</string>
 
     <string name="name_hint">Имя</string>
     <string name="email_hint">Почта</string>
@@ -32,6 +36,8 @@
     <string name="streak">Серия</string>
     <string name="xp">xp</string>
     <string name="courses">Курсы</string>
+
+    <string name="available">Доступные:</string>
 
     <string name="learn">изучай</string>
     <string name="practice">практикуйся</string>

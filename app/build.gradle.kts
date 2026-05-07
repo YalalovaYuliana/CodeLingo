@@ -54,6 +54,10 @@ dependencies {
 
   implementation("com.colintheshots:twain:0.3.2")
 
+  implementation("io.coil-kt.coil3:coil-compose:3.4.0")
+  implementation("io.coil-kt.coil3:coil-svg:3.4.0")
+  implementation("io.coil-kt.coil3:coil-network-okhttp:3.4.0")
+
   implementation("dev.snipme:kodeview:0.9.0")
 
   implementation(libs.logging.interceptor)

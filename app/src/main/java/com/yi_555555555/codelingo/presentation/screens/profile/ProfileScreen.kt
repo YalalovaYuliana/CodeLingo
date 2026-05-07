@@ -15,6 +15,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -27,12 +28,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import coil3.compose.SubcomposeAsyncImage
 import com.yi_555555555.codelingo.R
 import com.yi_555555555.codelingo.presentation.components.CourseCard
 import com.yi_555555555.codelingo.presentation.components.ErrorState
@@ -86,13 +87,31 @@ fun ProfileScreen(
             contentDescription = "settings"
           )
         }
-        Image(
-          painter = painterResource(R.drawable.cat_temp),
+        SubcomposeAsyncImage(
           modifier = Modifier
             .size(130.dp)
             .clip(CircleShape)
             .align(Alignment.CenterHorizontally),
-          contentScale = ContentScale.Crop,
+          model = user.pictureLink,
+          loading = {
+            Box(
+              modifier = Modifier.fillMaxSize(),
+              contentAlignment = Alignment.Center
+            ) {
+              CircularProgressIndicator(
+                modifier = Modifier.size(40.dp),
+                color = MaterialTheme.colorScheme.primaryContainer,
+                strokeWidth = 3.dp
+              )
+            }
+          },
+          error = {
+            Image(
+              modifier = Modifier.size(60.dp),
+              painter = painterResource(R.drawable.profile_placeholder_head),
+              contentDescription = "profile photo error"
+            )
+          },
           contentDescription = "profile photo"
         )
         VSpacer(16.dp)

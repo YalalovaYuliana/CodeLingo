@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.yi_555555555.codelingo.presentation.ui.theme.CodeLingoTheme
 
@@ -25,12 +26,17 @@ fun PrimaryButton(
   modifier: Modifier = Modifier,
   text: String,
   onClick: () -> Unit,
-  isLoading: Boolean = false
+  isError: Boolean = false,
+  isLoading: Boolean = false,
+  minHeight: Dp = 50.dp
 ) {
   Column(
     modifier = modifier
       .clip(RoundedCornerShape(13.dp))
-      .background(MaterialTheme.colorScheme.tertiary)
+      .background(
+        if (isError) MaterialTheme.colorScheme.onError
+        else MaterialTheme.colorScheme.tertiary
+      )
       .clickable(
         enabled = !isLoading,
         onClick = onClick
@@ -39,12 +45,12 @@ fun PrimaryButton(
     Button(
       modifier = Modifier
         .fillMaxWidth()
-        .heightIn(min = 50.dp),
+        .heightIn(min = minHeight),
       onClick = onClick,
       shape = RoundedCornerShape(13.dp),
       colors = ButtonDefaults.buttonColors(
-        containerColor = MaterialTheme.colorScheme.primaryContainer,
-        disabledContainerColor = MaterialTheme.colorScheme.primaryContainer
+        containerColor = if (isError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primaryContainer,
+        disabledContainerColor = if (isError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primaryContainer
       )
     ) {
       if (isLoading) {

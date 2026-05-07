@@ -1,6 +1,7 @@
 package com.yi_555555555.codelingo.domain.repository
 
 import com.yi_555555555.codelingo.domain.model.AccessToken
+import com.yi_555555555.codelingo.domain.model.Achievment
 import com.yi_555555555.codelingo.domain.model.Course
 import com.yi_555555555.codelingo.domain.model.CourseDetails
 import com.yi_555555555.codelingo.domain.model.Level
@@ -39,6 +40,7 @@ interface UserRepository {
   ): SubmitAnswer
 
   suspend fun completeTask(levelId: Int): Int
+  suspend fun getMyAchievments(): List<Achievment>
 }
 
 data class Cache(
@@ -47,5 +49,6 @@ data class Cache(
   val selectedCourseId: Int? = null,
   val courseDetails: CourseDetails? = null,
   val courses: List<Course>? = null,
-  val levels: List<Level>? = null
+  val levels: List<Level>? = null,
+  val achievments: List<Achievment>? = null
 )

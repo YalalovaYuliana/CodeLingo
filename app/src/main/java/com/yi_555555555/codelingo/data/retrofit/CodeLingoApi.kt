@@ -5,6 +5,7 @@ import com.yi.myapplication.data.entity.codelingo.RegisterRequest
 import com.yi.myapplication.data.entity.codelingo.SubmitCodeRequest
 import com.yi.myapplication.data.entity.codelingo.SubmitRequest
 import com.yi_555555555.codelingo.data.retrofit.entity.AccessTokenData
+import com.yi_555555555.codelingo.data.retrofit.entity.AchievmentResponse
 import com.yi_555555555.codelingo.data.retrofit.entity.CompleteTaskResponse
 import com.yi_555555555.codelingo.data.retrofit.entity.CourseDetailsResponse
 import com.yi_555555555.codelingo.data.retrofit.entity.CourseResponse
@@ -20,7 +21,7 @@ import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.Path
 
-interface UserApi {
+interface CodeLingoApi {
   @POST("auth/register")
   suspend fun register(@Body registerRequest: RegisterRequest): AccessTokenData
 
@@ -29,6 +30,11 @@ interface UserApi {
 
   @GET("users/me")
   suspend fun getUser(@Header("Authorization") authToken: String): UserResponse
+
+  @POST("users/change")
+  suspend fun changeUserData(
+    @Header("Authorization") authToken: String
+  ): CompleteTaskResponse
 
   @GET("users/course")
   suspend fun getUserCourseId(@Header("Authorization") authToken: String): UserCourseResponse
@@ -82,4 +88,9 @@ interface UserApi {
     @Header("Authorization") authToken: String,
     @Path("level_id") levelId: Int
   ): CompleteTaskResponse
+
+  @GET("achievments/my")
+  suspend fun getMyAchievments(
+    @Header("Authorization") authToken: String
+  ): List<AchievmentResponse>
 }

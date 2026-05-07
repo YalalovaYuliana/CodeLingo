@@ -18,8 +18,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -71,31 +69,32 @@ fun LevelScreen(
   if (showCloseDialog) {
     AlertDialog(
       onDismissRequest = { showCloseDialog = false },
-      text = { Text(stringResource(R.string.close_level)) },
+      title = {
+        Text(
+          text = stringResource(R.string.close_level_dialog_title),
+          style = MaterialTheme.typography.titleSmall
+        )
+      },
+      text = { Text(stringResource(R.string.close_level_dialog_description)) },
       confirmButton = {
-        Button(
-          colors = ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer,
-            disabledContainerColor = MaterialTheme.colorScheme.primaryContainer
-          ),
+        PrimaryButton(
+          text = stringResource(R.string.leave),
+          isError = true,
           onClick = {
             showCloseDialog = false
             onBackClick()
-          }
-        ) {
-          Text(stringResource(R.string.yes))
-        }
+          },
+          minHeight = 0.dp
+        )
       },
       dismissButton = {
-        Button(
-          colors = ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer,
-            disabledContainerColor = MaterialTheme.colorScheme.primaryContainer
-          ),
-          onClick = { showCloseDialog = false }
-        ) {
-          Text(stringResource(R.string.no))
-        }
+        PrimaryButton(
+          text = stringResource(R.string.stay),
+          onClick = {
+            showCloseDialog = false
+          },
+          minHeight = 0.dp
+        )
       }
     )
   }
@@ -165,8 +164,10 @@ fun LevelScreen(
             )
             VSpacer(80.dp)
             Text(
+              modifier = Modifier.fillMaxWidth(),
               text = task.description,
-              style = MaterialTheme.typography.displayMedium
+              style = MaterialTheme.typography.displayMedium,
+              textAlign = TextAlign.Start
             )
             VSpacer(32.dp)
             TaskContent(
@@ -185,6 +186,7 @@ fun LevelScreen(
           WSpacer()
           VSpacer(32.dp)
           PrimaryButton(
+            isError = currentState.isError,
             modifier = Modifier
               .fillMaxWidth()
               .padding(horizontal = 26.dp),
@@ -313,17 +315,16 @@ private fun GapTemplate(
     modifier = modifier
       .fillMaxWidth()
       .padding(12.dp),
-    verticalAlignment = Alignment.CenterVertically
+    verticalAlignment = Alignment.CenterVertically,
+    horizontalArrangement = Arrangement.spacedBy(8.dp)
   ) {
     separateGaps.forEachIndexed { index, text ->
-      VSpacer(2.dp)
       Text(
         textAlign = TextAlign.Start,
         text = text,
         style = MaterialTheme.typography.displaySmall
       )
       if (index != separateGaps.size - 1) {
-        VSpacer(2.dp)
         TextField(
           modifier = Modifier
             .wrapContentWidth()
@@ -333,7 +334,7 @@ private fun GapTemplate(
           singleLine = true,
           isError = gap.isError,
           onValueChange = onGapValueChange,
-          textStyle = MaterialTheme.typography.displayMedium,
+          textStyle = MaterialTheme.typography.displaySmall,
           colors = TextFieldDefaults.colors(
             errorTextColor = MaterialTheme.colorScheme.error
           ),

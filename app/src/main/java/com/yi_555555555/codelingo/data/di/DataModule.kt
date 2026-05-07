@@ -3,7 +3,7 @@ package com.yi_555555555.codelingo.data.di
 import android.content.Context
 import androidx.room.Room
 import com.yi_555555555.codelingo.data.repository.UserRepositoryImpl
-import com.yi_555555555.codelingo.data.retrofit.UserApi
+import com.yi_555555555.codelingo.data.retrofit.CodeLingoApi
 import com.yi_555555555.codelingo.data.room.UserDataBase
 import com.yi_555555555.codelingo.domain.repository.UserRepository
 import dagger.Module
@@ -35,10 +35,10 @@ class DataModule {
   @Provides
   @Singleton
   fun providesUserRepository(
-    userApi: UserApi,
+    codeLingoApi: CodeLingoApi,
     userDataBase: UserDataBase
   ): UserRepository {
-    return UserRepositoryImpl(userApi, userDataBase)
+    return UserRepositoryImpl(codeLingoApi, userDataBase)
   }
 
   @Provides
@@ -67,8 +67,8 @@ class DataModule {
 
   @Provides
   @Singleton
-  fun providesUserApi(retrofit: Retrofit): UserApi {
-    return retrofit.create(UserApi::class.java)
+  fun providesUserApi(retrofit: Retrofit): CodeLingoApi {
+    return retrofit.create(CodeLingoApi::class.java)
   }
 }
 

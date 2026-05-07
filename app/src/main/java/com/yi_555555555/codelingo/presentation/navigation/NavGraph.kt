@@ -1,16 +1,12 @@
 package com.yi_555555555.codelingo.presentation.navigation
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
@@ -20,6 +16,7 @@ import com.yi_555555555.codelingo.presentation.components.BottomBarDestination
 import com.yi_555555555.codelingo.presentation.components.LoadingState
 import com.yi_555555555.codelingo.presentation.components.NavigationAppBar
 import com.yi_555555555.codelingo.presentation.components.ScreenScaffold
+import com.yi_555555555.codelingo.presentation.screens.achievments.AchievmentsScreen
 import com.yi_555555555.codelingo.presentation.screens.courses.CoursesScreen
 import com.yi_555555555.codelingo.presentation.screens.level.LevelScreen
 import com.yi_555555555.codelingo.presentation.screens.login.LoginScreen
@@ -137,12 +134,9 @@ fun NavGraph(
           }
 
           HomeScreenContent.Achievements -> {
-            Box(
-              modifier = Modifier.fillMaxSize(),
-              contentAlignment = Alignment.Center
-            ) {
-              Text(text = "Achievements")
-            }
+            AchievmentsScreen(
+              modifier = Modifier.padding(innerPadding)
+            )
           }
         }
       }

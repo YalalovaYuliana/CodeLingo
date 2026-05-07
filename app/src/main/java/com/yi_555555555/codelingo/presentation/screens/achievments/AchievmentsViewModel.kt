@@ -1,13 +1,10 @@
-package com.yi_555555555.codelingo.presentation.screens.main
+package com.yi_555555555.codelingo.presentation.screens.achievments
 
 import android.content.Context
-import androidx.compose.material3.SnackbarHostState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.yi_555555555.codelingo.domain.model.Level
-import com.yi_555555555.codelingo.domain.usecase.GetCourseDetailsUseCase
-import com.yi_555555555.codelingo.domain.usecase.GetLevelsUseCase
-import com.yi_555555555.codelingo.domain.usecase.GetUserCourseUseCase
+import com.yi_555555555.codelingo.domain.model.Achievment
+import com.yi_555555555.codelingo.domain.usecase.GetMyAchievmentsUseCase
 import com.yi_555555555.codelingo.utils.safeFetch
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -20,10 +17,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 @HiltViewModel
-class MainViewModel @Inject constructor(
-  private val getLevelsUseCase: GetLevelsUseCase,
-  private val getUserCourseUseCase: GetUserCourseUseCase,
-  private val getCourseDetailsUseCase: GetCourseDetailsUseCase,
+class AchievmentsViewModel @Inject constructor(
+  private val getMyAchievmentsUseCase: GetMyAchievmentsUseCase,
   @ApplicationContext private val context: Context
 ) : ViewModel() {
 
@@ -31,17 +26,16 @@ class MainViewModel @Inject constructor(
   val state = _state.asStateFlow()
 
   init {
-    getLevels()
+    getAchievments()
 
     viewModelScope.launch {
-      getLevelsUseCase.levels.collect { levels ->
+      getMyAchievmentsUseCase.achievments.collect { achievments ->
         val currentState = _state.value
-        val currentLevel = levels.find { !it.isComplete } ?: levels.last()
         if (currentState is ViewState.Input) {
           _state.update {
             currentState.copy(
-              levels = levels,
-              currentLevel = currentLevel
+              userAchievments = achievments.filter { it.received },
+              availableAchievments = achievments.filter { !it.received }
             )
           }
         }
@@ -49,22 +43,18 @@ class MainViewModel @Inject constructor(
     }
   }
 
-  fun getLevels() {
+  fun getAchievments() {
     _state.update { ViewState.Loading }
     viewModelScope.launch {
       safeFetch(
         context = context,
         onSuccess = {
-          val courseId = getUserCourseUseCase() ?: error("missing user course")
-          val levels = getLevelsUseCase(courseId)
-          val courseDetails = getCourseDetailsUseCase(courseId)
-          val currentLevel = levels.find { !it.isComplete } ?: levels.last()
+          val achievments = getMyAchievmentsUseCase()
           withContext(Dispatchers.Main) {
             _state.update {
               ViewState.Input(
-                courseName = courseDetails.course.title,
-                currentLevel = currentLevel,
-                levels = levels
+                userAchievments = achievments.filter { it.received },
+                availableAchievments = achievments.filter { !it.received }
               )
             }
           }
@@ -84,9 +74,8 @@ class MainViewModel @Inject constructor(
 
 sealed interface ViewState {
   data class Input(
-    val courseName: String = "",
-    val currentLevel: Level? = null,
-    val levels: List<Level> = emptyList()
+    val userAchievments: List<Achievment> = emptyList(),
+    val availableAchievments: List<Achievment> = emptyList()
   ) : ViewState
 
   data object Loading : ViewState

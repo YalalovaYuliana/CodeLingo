@@ -41,7 +41,7 @@ import com.yi_555555555.codelingo.presentation.components.WSpacer
 
 @Composable
 fun LoginScreen(
-  onSuccessLogin: () -> Unit,
+  onSuccessLogin: (Boolean) -> Unit,
   onBackClick: () -> Unit,
   viewModel: LoginViewModel = hiltViewModel()
 ) {
@@ -141,9 +141,9 @@ fun LoginScreen(
           )
         }
 
-        ViewState.Success -> {
+        is ViewState.Success -> {
           LaunchedEffect(Unit) {
-            onSuccessLogin()
+            onSuccessLogin(currentState.hasSelectedCourseId)
           }
         }
       }

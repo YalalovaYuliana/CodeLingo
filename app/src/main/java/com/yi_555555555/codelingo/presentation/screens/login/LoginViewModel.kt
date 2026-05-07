@@ -76,9 +76,9 @@ class LoginViewModel @Inject constructor(
                 email = currentState.email,
                 password = currentState.password
               )
-              getUserCourseUseCase()
+              val selectedCourseId = getUserCourseUseCase()
               withContext(Dispatchers.Main) {
-                _state.update { ViewState.Success }
+                _state.update { ViewState.Success(selectedCourseId != null) }
               }
             },
             onFailure = { errorMessage ->
@@ -134,7 +134,7 @@ sealed interface ViewState {
     val isLoading: Boolean = false
   ) : ViewState
 
-  data object Success : ViewState
+  data class Success(val hasSelectedCourseId: Boolean) : ViewState
 }
 
 sealed interface Command {

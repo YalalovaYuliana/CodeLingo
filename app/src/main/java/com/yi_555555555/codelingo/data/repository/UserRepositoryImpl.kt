@@ -75,6 +75,7 @@ class UserRepositoryImpl(
           selectedCourseId = courseId
         )
       }
+      println("yuliana rep courseId: $courseId")
       return courseId
     } else throw Exception("missing access token")
   }

@@ -33,6 +33,21 @@ class MainViewModel @Inject constructor(
 
   init {
     getLevels()
+
+    viewModelScope.launch {
+      getLevelsUseCase.levels.collect { levels ->
+        val currentState = _state.value
+        val currentLevel = levels.find { !it.isComplete } ?: levels.last()
+        if (currentState is ViewState.Input) {
+          _state.update {
+            currentState.copy(
+              levels = levels,
+              currentLevel = currentLevel
+            )
+          }
+        }
+      }
+    }
   }
 
   fun getLevels() {
@@ -44,10 +59,12 @@ class MainViewModel @Inject constructor(
           val courseId = getUserCourseUseCase() ?: error("missing user course")
           val levels = getLevelsUseCase(courseId)
           val courseDetails = getCourseDetailsUseCase(courseId)
+          val currentLevel = levels.find { !it.isComplete } ?: levels.last()
           withContext(Dispatchers.Main) {
             _state.update {
               ViewState.Input(
                 courseName = courseDetails.course.title,
+                currentLevel = currentLevel,
                 levels = levels
               )
             }
@@ -69,6 +86,7 @@ class MainViewModel @Inject constructor(
 sealed interface ViewState {
   data class Input(
     val courseName: String = "",
+    val currentLevel: Level? = null,
     val levels: List<Level> = emptyList(),
     val isLoading: Boolean = false
   ) : ViewState

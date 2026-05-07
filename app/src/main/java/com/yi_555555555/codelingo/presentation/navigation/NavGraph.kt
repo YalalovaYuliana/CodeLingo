@@ -80,8 +80,9 @@ fun NavGraph(
     }
     composable<Screen.LoginScreen> {
       LoginScreen(
-        onSuccessLogin = {
-          if (state.hasSelectedCourseId == true) {
+        onSuccessLogin = { hasSelectedCourseId ->
+          selectedBottomBarDestination = BottomBarDestination.Main
+          if (hasSelectedCourseId) {
             navController.navigate(Screen.HomeScreen) {
               popUpTo(0) {
                 inclusive = true

@@ -1,5 +1,9 @@
 package com.yi_555555555.codelingo.presentation.components
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -11,9 +15,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.yi_555555555.codelingo.CodeLingoApp
 import com.yi_555555555.codelingo.presentation.ui.theme.CodeLingoTheme
 
 @Composable
@@ -23,34 +27,43 @@ fun PrimaryButton(
   onClick: () -> Unit,
   isLoading: Boolean = false
 ) {
-  Button(
-    modifier = modifier.heightIn(min = 50.dp),
-    onClick = onClick,
-    enabled = !isLoading,
-    shape = RoundedCornerShape(13.dp),
-    elevation = ButtonDefaults.buttonElevation(
-      3.dp
-    ),
-    colors = ButtonDefaults.buttonColors(
-      containerColor = MaterialTheme.colorScheme.primaryContainer,
-      disabledContainerColor = MaterialTheme.colorScheme.primaryContainer
-    )
+  Column(
+    modifier = modifier
+      .clip(RoundedCornerShape(13.dp))
+      .background(MaterialTheme.colorScheme.tertiary)
+      .clickable(
+        enabled = !isLoading,
+        onClick = onClick
+      )
   ) {
-    if (isLoading) {
-      CircularProgressIndicator(
-        modifier = Modifier.size(20.dp),
-        strokeWidth = 3.dp,
-        color = MaterialTheme.colorScheme.onPrimary
+    Button(
+      modifier = Modifier
+        .fillMaxWidth()
+        .heightIn(min = 50.dp),
+      onClick = onClick,
+      shape = RoundedCornerShape(13.dp),
+      colors = ButtonDefaults.buttonColors(
+        containerColor = MaterialTheme.colorScheme.primaryContainer,
+        disabledContainerColor = MaterialTheme.colorScheme.primaryContainer
       )
-    } else {
-      Text(
-        modifier = Modifier
-          .padding(vertical = 8.dp),
-        text = text,
-        style = MaterialTheme.typography.bodyLarge,
-        color = MaterialTheme.colorScheme.onPrimary
-      )
+    ) {
+      if (isLoading) {
+        CircularProgressIndicator(
+          modifier = Modifier.size(20.dp),
+          strokeWidth = 3.dp,
+          color = MaterialTheme.colorScheme.onPrimary
+        )
+      } else {
+        Text(
+          modifier = Modifier
+            .padding(vertical = 8.dp),
+          text = text,
+          style = MaterialTheme.typography.bodyLarge,
+          color = MaterialTheme.colorScheme.onPrimary
+        )
+      }
     }
+    VSpacer(4.dp)
   }
 }
 

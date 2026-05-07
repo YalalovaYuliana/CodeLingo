@@ -23,6 +23,20 @@ class NavViewModel @Inject constructor(
   @ApplicationContext context: Context
 ) : ViewModel() {
 
+//  val state: StateFlow<ViewState?> = userRepository.cacheFlow
+//    .map { cache ->
+//      println("yuliana cache courseId: ${cache.selectedCourseId} accessToken: ${cache.accessToken}")
+//      ViewState(
+//        hasAccessToken = cache.accessToken != null,
+//        hasSelectedCourseId = cache.selectedCourseId != null
+//      )
+//    }
+//    .stateIn(
+//      scope = viewModelScope,
+//      started = SharingStarted.Eagerly,
+//      initialValue = null
+//    )
+
   private val _state = MutableStateFlow<ViewState?>(null)
   val state = _state.asStateFlow()
 

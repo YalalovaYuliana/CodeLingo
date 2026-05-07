@@ -15,10 +15,17 @@ import com.yi_555555555.codelingo.data.retrofit.entity.TheoryResponse
 import com.yi_555555555.codelingo.data.retrofit.entity.UserCourseResponse
 import com.yi_555555555.codelingo.data.retrofit.entity.UserLevelResponse
 import com.yi_555555555.codelingo.data.retrofit.entity.UserResponse
+import com.yi_555555555.codelingo.data.retrofit.entity.UserUpdateResponse
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Header
+import retrofit2.http.Multipart
+import retrofit2.http.PATCH
 import retrofit2.http.POST
+import retrofit2.http.Part
 import retrofit2.http.Path
 
 interface CodeLingoApi {
@@ -31,10 +38,19 @@ interface CodeLingoApi {
   @GET("users/me")
   suspend fun getUser(@Header("Authorization") authToken: String): UserResponse
 
-  @POST("users/change")
+  @Multipart
+  @PATCH("users/change-me")
   suspend fun changeUserData(
+    @Header("Authorization") authToken: String,
+    @Part("username") username: RequestBody?,
+    @Part file: MultipartBody.Part?
+  ): UserUpdateResponse
+
+
+  @DELETE("users/delete-me")
+  suspend fun deleteUser(
     @Header("Authorization") authToken: String
-  ): CompleteTaskResponse
+  )
 
   @GET("users/course")
   suspend fun getUserCourseId(@Header("Authorization") authToken: String): UserCourseResponse

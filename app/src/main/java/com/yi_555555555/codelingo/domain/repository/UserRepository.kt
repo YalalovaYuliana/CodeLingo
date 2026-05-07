@@ -11,12 +11,19 @@ import com.yi_555555555.codelingo.domain.model.SubmitAnswer
 import com.yi_555555555.codelingo.domain.model.Task
 import com.yi_555555555.codelingo.domain.model.User
 import kotlinx.coroutines.flow.StateFlow
+import java.io.File
 
 interface UserRepository {
   val cacheFlow: StateFlow<Cache>
   suspend fun register(registerCredentials: RegisterCredentials): AccessToken
   suspend fun login(loginCredentials: LoginCredentials): AccessToken
   suspend fun getUser(): User
+  suspend fun changeProfile(
+    username: String?,
+    file: File?,
+    mimeType: String
+  )
+
   suspend fun getUserCourseId(): Int?
   suspend fun readAccessToken(): AccessToken?
   suspend fun writeAccessToken(accessToken: AccessToken)

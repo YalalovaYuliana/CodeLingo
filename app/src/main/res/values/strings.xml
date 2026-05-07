@@ -14,6 +14,9 @@
 
     <string name="select_course">Выберите курс</string>
 
+    <string name="profile_photo">Фото профиля</string>
+    <string name="choose_file">Выбрать файл</string>
+
     <string name="next">Далее</string>
     <string name="check">Проверить</string>
 
@@ -22,6 +25,9 @@
 
     <string name="great">Отлично</string>
     <string name="level_completed">Урок пройден!</string>
+
+
+    <string name="save">Сохранить</string>
 
 
     <string name="close_level_dialog_description">Весь прогресс в этом уроке будет потерян</string>

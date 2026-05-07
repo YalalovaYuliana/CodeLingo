@@ -26,6 +26,11 @@ import com.yi_555555555.codelingo.domain.repository.UserRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
+import java.io.File
 
 class UserRepositoryImpl(
   private val codeLingoApi: CodeLingoApi,
@@ -65,6 +70,39 @@ class UserRepositoryImpl(
       }
       user
     } ?: throw Exception("missing access token")
+  }
+
+  override suspend fun changeProfile(
+    username: String?,
+    file: File?,
+    mimeType: String
+  ) {
+    val accessToken = _cacheFlow.value.accessToken?.accessTokenWithType
+    if (accessToken != null) {
+      val updatedUserData = codeLingoApi.changeUserData(
+        authToken = accessToken,
+        username = username?.toRequestBody("text/plain".toMediaTypeOrNull()),
+        file = file?.let {
+          val requestFile = RequestBody.create(
+            mimeType.toMediaTypeOrNull(),
+            it
+          )
+          MultipartBody.Part.createFormData(
+            "file",
+            it.name,
+            requestFile
+          )
+        }
+      )
+      _cacheFlow.update { cache ->
+        cache.copy(
+          user = cache.user?.copy(
+            username = updatedUserData.username,
+            pictureLink = updatedUserData.pictureLink
+          )
+        )
+      }
+    } else throw Exception("missing access token")
   }
 
   override suspend fun getUserCourseId(): Int? {

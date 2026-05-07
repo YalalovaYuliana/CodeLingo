@@ -12,11 +12,16 @@ import com.yi_555555555.codelingo.R
 
 val monserratFamily = FontFamily(
   Font(R.font.montserrat_regular, FontWeight.Normal),
-  Font(R.font.montserrat_bold, FontWeight.Bold)
+  Font(R.font.montserrat_bold, FontWeight.Bold),
+  Font(R.font.montserrat_semibold, FontWeight.SemiBold),
 )
 
 val robotoFamily = FontFamily(
   Font(R.font.roboto_medium, FontWeight.Medium)
+)
+
+val sansCodeFamily = FontFamily(
+  Font(R.font.google_sans_code_regular, FontWeight.Normal)
 )
 
 val Typography = Typography(
@@ -67,6 +72,18 @@ val Typography = Typography(
   labelMedium = TextStyle(
     fontFamily = monserratFamily,
     fontWeight = FontWeight.Bold,
+    fontSize = 20.sp
+  ),
+
+  displaySmall = TextStyle(
+    fontFamily = sansCodeFamily,
+    fontWeight = FontWeight.Normal,
+    fontSize = 19.sp
+  ),
+
+  displayMedium = TextStyle(
+    fontFamily = monserratFamily,
+    fontWeight = FontWeight.SemiBold,
     fontSize = 20.sp
   )
 )

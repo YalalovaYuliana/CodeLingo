@@ -6,12 +6,14 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -21,6 +23,8 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -152,6 +156,19 @@ fun LevelScreen(
               markdown = currentState.theory
             )
           } else {
+            val task = currentState.currentTask
+            Text(
+              modifier = Modifier.fillMaxWidth(),
+              text = task.title,
+              style = MaterialTheme.typography.titleMedium,
+              textAlign = TextAlign.Start
+            )
+            VSpacer(80.dp)
+            Text(
+              text = task.description,
+              style = MaterialTheme.typography.displayMedium
+            )
+            VSpacer(32.dp)
             TaskContent(
               task = currentState.currentTask,
               onOptionClick = { optionId ->
@@ -159,6 +176,9 @@ fun LevelScreen(
               },
               onCodeChange = { newValue ->
                 viewModel.processCommand(Command.InputCode(newValue))
+              },
+              onGapValueChange = { gap, newValue ->
+                viewModel.processCommand(Command.InputGap(gap, newValue))
               }
             )
           }
@@ -213,20 +233,10 @@ fun LevelScreen(
 private fun TaskContent(
   task: Task,
   onOptionClick: (Int) -> Unit,
-  onCodeChange: (String) -> Unit
+  onCodeChange: (String) -> Unit,
+  onGapValueChange: (Task.Gap, String) -> Unit,
+  modifier: Modifier = Modifier
 ) {
-  Text(
-    modifier = Modifier.fillMaxWidth(),
-    text = task.title,
-    style = MaterialTheme.typography.titleMedium,
-    textAlign = TextAlign.Start
-  )
-  VSpacer(80.dp)
-  Text(
-    text = task.description,
-    style = MaterialTheme.typography.labelMedium
-  )
-  VSpacer(32.dp)
   when (task.type) {
     TaskType.Choice -> {
       val options = task.options
@@ -247,6 +257,18 @@ private fun TaskContent(
     }
 
     TaskType.Gap -> {
+      VSpacer(16.dp)
+      val gaps = task.gaps
+      gaps?.forEach { gap ->
+        VSpacer(4.dp)
+        GapTemplate(
+          modifier = modifier,
+          gap = gap,
+          onGapValueChange = { newValue ->
+            onGapValueChange(gap, newValue)
+          }
+        )
+      }
     }
 
     TaskType.Code -> {
@@ -274,6 +296,47 @@ private fun TaskContent(
           onCodeChange(newValue)
         }
       )
+    }
+  }
+}
+
+@Composable
+private fun GapTemplate(
+  gap: Task.Gap,
+  onGapValueChange: (String) -> Unit,
+  modifier: Modifier = Modifier
+) {
+  val separateGaps = gap.template.split(GAP_SEPARATOR)
+  Row(
+    modifier = modifier
+      .fillMaxWidth()
+      .padding(12.dp),
+    verticalAlignment = Alignment.CenterVertically
+  ) {
+    separateGaps.forEachIndexed { index, text ->
+      VSpacer(2.dp)
+      Text(
+        textAlign = TextAlign.Start,
+        text = text,
+        style = MaterialTheme.typography.displaySmall
+      )
+      if (index != separateGaps.size - 1) {
+        VSpacer(2.dp)
+        TextField(
+          modifier = Modifier
+            .wrapContentWidth()
+            .defaultMinSize(minWidth = 60.dp, minHeight = 40.dp)
+            .widthIn(max = 120.dp),
+          value = gap.userAnswer,
+          singleLine = true,
+          isError = gap.isError,
+          onValueChange = onGapValueChange,
+          textStyle = MaterialTheme.typography.displayMedium,
+          colors = TextFieldDefaults.colors(
+            errorTextColor = MaterialTheme.colorScheme.error
+          ),
+        )
+      }
     }
   }
 }
@@ -338,3 +401,5 @@ private val errorTheme = SyntaxTheme(
   punctuation = 0xFF4B4B,
   mark = 0xFF4B4B
 )
+
+private const val GAP_SEPARATOR = "%g%"

@@ -88,6 +88,23 @@ class LevelViewModel @Inject constructor(
         }
       }
 
+      is Command.InputGap -> {
+        _state.update {
+          currentState.copy(
+            currentTask = currentState.currentTask.copy(
+              gaps = currentState.currentTask.gaps?.map { gap ->
+                if (gap == command.gap) {
+                  gap.copy(
+                    userAnswer = command.newValue,
+                    isError = false
+                  )
+                } else gap
+              }
+            )
+          )
+        }
+      }
+
       else -> {}
     }
   }
@@ -120,7 +137,7 @@ class LevelViewModel @Inject constructor(
               }
 
               TaskType.Gap -> {
-                currentTask.gaps?.map { it.userAnswer }.orEmpty()
+                currentTask.gaps?.map { it.userAnswer.trim() }.orEmpty()
               }
 
               else -> emptyList()
@@ -273,7 +290,7 @@ sealed interface ViewState {
 
 sealed interface Command {
   data class InputCode(val newValue: String) : Command
-  data class InputGap(val newValue: String) : Command
+  data class InputGap(val gap: Task.Gap, val newValue: String) : Command
   data class SelectOption(val optionId: Int) : Command
   data object Submit : Command
 }

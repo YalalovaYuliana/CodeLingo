@@ -120,7 +120,7 @@ private fun TaskResponse.CodeResponse.toDomainModel(): Task.Code {
 
 private fun TaskResponse.GapResponse.toDomainModel(): Task.Gap {
   return Task.Gap(
-    template = template
+    template = template // "%g% constanta = \"Я не изменю своё значение!\""
   )
 }
 

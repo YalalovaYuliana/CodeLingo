@@ -1,7 +1,6 @@
 package com.yi_555555555.codelingo.presentation.screens.main
 
 import android.content.Context
-import androidx.compose.material3.SnackbarHostState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.yi_555555555.codelingo.domain.model.Level

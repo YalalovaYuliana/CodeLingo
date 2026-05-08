@@ -69,12 +69,12 @@ fun RegisterScreen(
         .fillMaxSize()
         .verticalScroll(state = rememberScrollState())
         .background(MaterialTheme.colorScheme.onPrimaryContainer)
-        .padding(innerPadding)
         .imePadding()
+        .padding(innerPadding)
         .padding(
           start = 24.dp,
           end = 24.dp,
-          bottom = 32.dp
+          bottom = 16.dp
         ),
       verticalArrangement = Arrangement.Center,
       horizontalAlignment = Alignment.CenterHorizontally
@@ -148,7 +148,7 @@ fun RegisterScreen(
             errorMessage = currentState.passwordErrorMessage
           )
           WSpacer()
-          //VSpacer(40.dp)
+          VSpacer(16.dp)
           PrimaryButton(
             modifier = Modifier
               .fillMaxWidth()

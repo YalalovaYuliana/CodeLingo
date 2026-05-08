@@ -2,11 +2,17 @@ package com.yi_555555555.codelingo.domain.usecase
 
 import com.yi_555555555.codelingo.domain.model.CourseDetails
 import com.yi_555555555.codelingo.domain.repository.UserRepository
+import kotlinx.coroutines.flow.mapNotNull
 import javax.inject.Inject
 
 class GetCourseDetailsUseCase @Inject constructor(
   private val userRepository: UserRepository
 ) {
+
+  val courseProgress = userRepository.cacheFlow.mapNotNull {
+    it.courseDetails?.progress
+  }
+
   suspend operator fun invoke(courseId: Int): CourseDetails {
     val cache = userRepository.cacheFlow.value
     val courseDetails = cache.courseDetails

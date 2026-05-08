@@ -56,7 +56,8 @@ fun CourseResponse.toDomainModel(): Course {
   return Course(
     id = id,
     title = title,
-    description = description
+    description = description,
+    iconUrl = iconUrl
   )
 }
 
@@ -86,14 +87,22 @@ private fun CourseDetailsResponse.CourseLevelResponse.toDomainModel(): CourseDet
   )
 }
 
-fun CourseDetailsResponse.toDomainModel(): CourseDetails {
+fun CourseDetailsResponse.toDomainModel(
+  progress: Double,
+  isComplete: Boolean,
+  startedAt: String
+): CourseDetails {
   return CourseDetails(
     course = Course(
       id = id,
       title = title,
-      description = description
+      description = description,
+      iconUrl = iconUrl
     ),
-    levels = levels.map { it.toDomainModel() }
+    levels = levels.map { it.toDomainModel() },
+    progress = progress,
+    isComplete = isComplete,
+    startedAt = startedAt
   )
 }
 

@@ -9,12 +9,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -35,6 +31,7 @@ import com.yi_555555555.codelingo.presentation.components.HSpacer
 import com.yi_555555555.codelingo.presentation.components.Header
 import com.yi_555555555.codelingo.presentation.components.InputTextField
 import com.yi_555555555.codelingo.presentation.components.OutlinedButton
+import com.yi_555555555.codelingo.presentation.components.PrimaryAlertDialog
 import com.yi_555555555.codelingo.presentation.components.PrimaryButton
 import com.yi_555555555.codelingo.presentation.components.ScreenScaffold
 import com.yi_555555555.codelingo.presentation.components.TextButton
@@ -62,71 +59,35 @@ fun SettingsScreen(
   var showLogoutDialog by remember { mutableStateOf(false) }
   var showDeleteAccountDialog by remember { mutableStateOf(false) }
 
-  if (showLogoutDialog) {
-    AlertDialog(
-      onDismissRequest = { showLogoutDialog = false },
-      title = {
-        Text(
-          text = stringResource(R.string.leave_account),
-          style = MaterialTheme.typography.titleSmall
-        )
-      },
-      //text = { Text(stringResource(R.string.close_level_dialog_description)) },
-      confirmButton = {
-        PrimaryButton(
-          text = stringResource(R.string.yes_leave),
-          isError = true,
-          onClick = {
-            showLogoutDialog = false
-            viewModel.processCommand(Command.Logout)
-          },
-          minHeight = 0.dp
-        )
-      },
-      dismissButton = {
-        PrimaryButton(
-          text = stringResource(R.string.cancel),
-          onClick = {
-            showLogoutDialog = false
-          },
-          minHeight = 0.dp
-        )
-      }
-    )
-  }
+  PrimaryAlertDialog(
+    visible = showLogoutDialog,
+    title = stringResource(R.string.leave_account),
+    description = null,
+    confirmText = stringResource(R.string.yes_leave),
+    dismissText = stringResource(R.string.cancel),
+    onDismissClick = {
+      showLogoutDialog = false
+    },
+    onConfirmClick = {
+      showLogoutDialog = false
+      viewModel.processCommand(Command.Logout)
+    }
+  )
 
-  if (showDeleteAccountDialog) {
-    AlertDialog(
-      onDismissRequest = { showDeleteAccountDialog = false },
-      title = {
-        Text(
-          text = stringResource(R.string.delete_account_dialog_title),
-          style = MaterialTheme.typography.titleSmall
-        )
-      },
-      //text = { Text(stringResource(R.string.close_level_dialog_description)) },
-      confirmButton = {
-        PrimaryButton(
-          text = stringResource(R.string.yes_delete),
-          isError = true,
-          onClick = {
-            showDeleteAccountDialog = false
-            viewModel.processCommand(Command.DeleteAccount)
-          },
-          minHeight = 0.dp
-        )
-      },
-      dismissButton = {
-        PrimaryButton(
-          text = stringResource(R.string.cancel),
-          onClick = {
-            showDeleteAccountDialog = false
-          },
-          minHeight = 0.dp
-        )
-      }
-    )
-  }
+  PrimaryAlertDialog(
+    visible = showDeleteAccountDialog,
+    title = stringResource(R.string.delete_account_dialog_title),
+    description = null,
+    confirmText = stringResource(R.string.yes_delete),
+    dismissText = stringResource(R.string.cancel),
+    onDismissClick = {
+      showDeleteAccountDialog = false
+    },
+    onConfirmClick = {
+      showDeleteAccountDialog = false
+      viewModel.processCommand(Command.DeleteAccount)
+    }
+  )
 
   ScreenScaffold(
     topBar = {
@@ -139,10 +100,8 @@ fun SettingsScreen(
     Column(
       modifier = Modifier
         .fillMaxSize()
-        .verticalScroll(state = rememberScrollState())
         .background(MaterialTheme.colorScheme.onPrimaryContainer)
         .padding(innerPadding)
-        .imePadding()
         .padding(
           start = 24.dp,
           end = 24.dp,
@@ -164,12 +123,12 @@ fun SettingsScreen(
           ) {
             Text(
               text = stringResource(R.string.profile_photo),
-              style = MaterialTheme.typography.labelMedium,
+              style = MaterialTheme.typography.bodyMedium,
               color = MaterialTheme.colorScheme.secondary
             )
             HSpacer(8.dp)
             OutlinedButton(
-              modifier = Modifier.widthIn(max = 200.dp),
+              modifier = Modifier.widthIn(max = 180.dp),
               text = currentState.newProfilePhoto?.name ?: stringResource(R.string.choose_file),
               onClick = {
                 galleryLauncher.launch("image/*")
@@ -184,13 +143,13 @@ fun SettingsScreen(
           ) {
             Text(
               text = stringResource(R.string.name_hint),
-              style = MaterialTheme.typography.labelMedium,
+              style = MaterialTheme.typography.bodyMedium,
               color = MaterialTheme.colorScheme.secondary,
               textAlign = TextAlign.Center
             )
             HSpacer(8.dp)
             InputTextField(
-              modifier = Modifier.widthIn(max = 200.dp),
+              modifier = Modifier.widthIn(max = 180.dp),
               value = currentState.newUserName ?: currentState.currentUsername,
               onValueChange = { newValue ->
                 viewModel.processCommand(Command.ChangeProfileName(newValue))

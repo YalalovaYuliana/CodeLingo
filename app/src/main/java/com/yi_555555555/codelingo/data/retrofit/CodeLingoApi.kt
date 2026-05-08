@@ -13,6 +13,7 @@ import com.yi_555555555.codelingo.data.retrofit.entity.SubmitResponse
 import com.yi_555555555.codelingo.data.retrofit.entity.TaskResponse
 import com.yi_555555555.codelingo.data.retrofit.entity.TheoryResponse
 import com.yi_555555555.codelingo.data.retrofit.entity.UserCourseResponse
+import com.yi_555555555.codelingo.data.retrofit.entity.UserCourseStatsResponse
 import com.yi_555555555.codelingo.data.retrofit.entity.UserLevelResponse
 import com.yi_555555555.codelingo.data.retrofit.entity.UserResponse
 import com.yi_555555555.codelingo.data.retrofit.entity.UserUpdateResponse
@@ -54,6 +55,9 @@ interface CodeLingoApi {
 
   @GET("users/course")
   suspend fun getUserCourseId(@Header("Authorization") authToken: String): UserCourseResponse
+
+  @GET("users/course-stat")
+  suspend fun getUserCourseStats(@Header("Authorization") authToken: String): List<UserCourseStatsResponse>
 
   @GET("courses")
   suspend fun getCourses(): List<CourseResponse>

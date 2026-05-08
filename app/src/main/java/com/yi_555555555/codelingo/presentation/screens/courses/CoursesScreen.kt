@@ -79,9 +79,10 @@ fun CoursesScreen(
           ) {
             items(currentState.courses) { course ->
               CourseCard(
-                course = course,
+                title = course.title,
+                description = course.description,
+                iconUrl = course.iconUrl,
                 selected = course.id == currentState.selectedCourseId,
-                showDescription = true,
                 onClick = {
                   viewModel.processCommand(Command.SelectCourse(course.id))
                 }

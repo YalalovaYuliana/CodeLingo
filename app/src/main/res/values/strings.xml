@@ -51,6 +51,8 @@
     <string name="xp">xp</string>
     <string name="courses">Курсы</string>
 
+    <string name="x_progress">%d%% прогресс</string>
+
     <string name="available">Доступные:</string>
 
     <string name="learn">изучай</string>

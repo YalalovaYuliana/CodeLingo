@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -44,6 +43,7 @@ import com.yi_555555555.codelingo.domain.model.TaskType
 import com.yi_555555555.codelingo.presentation.components.HSpacer
 import com.yi_555555555.codelingo.presentation.components.Header
 import com.yi_555555555.codelingo.presentation.components.OptionCheckbox
+import com.yi_555555555.codelingo.presentation.components.PrimaryAlertDialog
 import com.yi_555555555.codelingo.presentation.components.PrimaryButton
 import com.yi_555555555.codelingo.presentation.components.ScreenScaffold
 import com.yi_555555555.codelingo.presentation.components.TopAppBar
@@ -66,38 +66,20 @@ fun LevelScreen(
 
   var showCloseDialog by remember { mutableStateOf(false) }
 
-  if (showCloseDialog) {
-    AlertDialog(
-      onDismissRequest = { showCloseDialog = false },
-      title = {
-        Text(
-          text = stringResource(R.string.close_level_dialog_title),
-          style = MaterialTheme.typography.titleSmall
-        )
-      },
-      text = { Text(stringResource(R.string.close_level_dialog_description)) },
-      confirmButton = {
-        PrimaryButton(
-          text = stringResource(R.string.leave),
-          isError = true,
-          onClick = {
-            showCloseDialog = false
-            onBackClick()
-          },
-          minHeight = 0.dp
-        )
-      },
-      dismissButton = {
-        PrimaryButton(
-          text = stringResource(R.string.stay),
-          onClick = {
-            showCloseDialog = false
-          },
-          minHeight = 0.dp
-        )
-      }
-    )
-  }
+  PrimaryAlertDialog(
+    visible = showCloseDialog,
+    title = stringResource(R.string.close_level_dialog_title),
+    description = stringResource(R.string.close_level_dialog_description),
+    confirmText = stringResource(R.string.leave),
+    dismissText = stringResource(R.string.stay),
+    onDismissClick = {
+      showCloseDialog = false
+    },
+    onConfirmClick = {
+      showCloseDialog = false
+      onBackClick()
+    }
+  )
 
   ScreenScaffold(
     topBar = {
@@ -115,12 +97,12 @@ fun LevelScreen(
         .fillMaxSize()
         .verticalScroll(state = rememberScrollState())
         .background(MaterialTheme.colorScheme.onPrimaryContainer)
-        .padding(innerPadding)
         .imePadding()
+        .padding(innerPadding)
         .padding(
           start = 24.dp,
           end = 24.dp,
-          bottom = 32.dp
+          bottom = 16.dp
         ),
       verticalArrangement = Arrangement.Center,
       horizontalAlignment = Alignment.CenterHorizontally
@@ -129,7 +111,7 @@ fun LevelScreen(
         is ViewState.Start -> {
           WSpacer()
           Header(text = currentState.title)
-          VSpacer(40.dp)
+          VSpacer(32.dp)
           Image(
             modifier = Modifier.padding(horizontal = 50.dp),
             painter = painterResource(R.drawable.onboarding_screen),
@@ -220,6 +202,7 @@ fun LevelScreen(
             )
           }
           WSpacer()
+          VSpacer(16.dp)
           PrimaryButton(
             modifier = Modifier
               .fillMaxWidth()
@@ -290,7 +273,7 @@ private fun TaskContent(
       }
       CodeEditText(
         modifier = Modifier
-          .heightIn(min = 360.dp),
+          .heightIn(min = 240.dp),
         isError = code?.isError == true,
         highlights = highlights.value,
         onValueChange = { newValue ->

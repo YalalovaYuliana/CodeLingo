@@ -62,12 +62,12 @@ fun LoginScreen(
         .fillMaxSize()
         .verticalScroll(state = rememberScrollState())
         .background(MaterialTheme.colorScheme.onPrimaryContainer)
-        .padding(innerPadding)
         .imePadding()
+        .padding(innerPadding)
         .padding(
           start = 24.dp,
           end = 24.dp,
-          bottom = 64.dp
+          bottom = 16.dp
         ),
       verticalArrangement = Arrangement.Center,
       horizontalAlignment = Alignment.CenterHorizontally
@@ -131,6 +131,7 @@ fun LoginScreen(
             errorMessage = currentState.passwordErrorMessage
           )
           WSpacer()
+          VSpacer(16.dp)
           PrimaryButton(
             modifier = Modifier
               .fillMaxWidth()

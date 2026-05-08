@@ -84,6 +84,6 @@ val Typography = Typography(
   displayMedium = TextStyle(
     fontFamily = monserratFamily,
     fontWeight = FontWeight.SemiBold,
-    fontSize = 20.sp
+    fontSize = 16.sp
   )
 )

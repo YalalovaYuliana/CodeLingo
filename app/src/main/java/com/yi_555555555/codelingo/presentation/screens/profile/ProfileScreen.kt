@@ -11,8 +11,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
@@ -28,8 +26,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -41,6 +41,7 @@ import com.yi_555555555.codelingo.presentation.components.Header
 import com.yi_555555555.codelingo.presentation.components.LoadingState
 import com.yi_555555555.codelingo.presentation.components.VSpacer
 import com.yi_555555555.codelingo.presentation.ui.theme.CodeLingoTheme
+import kotlin.math.roundToInt
 
 @Composable
 fun ProfileScreen(
@@ -57,8 +58,7 @@ fun ProfileScreen(
       .padding(
         start = 24.dp,
         end = 24.dp,
-        top = 16.dp,
-        bottom = 16.dp
+        top = 16.dp
       ),
     verticalArrangement = Arrangement.Top
   ) {
@@ -89,7 +89,7 @@ fun ProfileScreen(
         }
         SubcomposeAsyncImage(
           modifier = Modifier
-            .size(130.dp)
+            .size(120.dp)
             .clip(CircleShape)
             .align(Alignment.CenterHorizontally),
           model = user.pictureLink,
@@ -99,25 +99,34 @@ fun ProfileScreen(
               contentAlignment = Alignment.Center
             ) {
               CircularProgressIndicator(
-                modifier = Modifier.size(40.dp),
-                color = MaterialTheme.colorScheme.primaryContainer,
-                strokeWidth = 3.dp
+                modifier = Modifier.size(20.dp),
+                strokeWidth = 2.dp
               )
             }
           },
           error = {
             Image(
-              modifier = Modifier.size(60.dp),
+              modifier = Modifier.size(120.dp),
               painter = painterResource(R.drawable.profile_placeholder_head),
-              contentDescription = "profile photo error"
+              contentDescription = "profile photo error",
+              contentScale = ContentScale.Crop
             )
           },
-          contentDescription = "profile photo"
+          contentDescription = "profile photo",
+          contentScale = ContentScale.Crop
         )
         VSpacer(16.dp)
         Header(
           modifier = Modifier.fillMaxWidth(),
           text = user.username
+        )
+        VSpacer(12.dp)
+        Text(
+          modifier = Modifier.fillMaxWidth(),
+          text = user.email,
+          textAlign = TextAlign.Center,
+          style = MaterialTheme.typography.labelSmall,
+          color = MaterialTheme.colorScheme.tertiaryContainer
         )
         VSpacer(40.dp)
         Row(
@@ -144,16 +153,16 @@ fun ProfileScreen(
           style = MaterialTheme.typography.titleSmall,
           color = MaterialTheme.colorScheme.secondary
         )
-        VSpacer(16.dp)
-        LazyColumn(
-          verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-          items(currentState.courses) { course ->
-            CourseCard(
-              course = course
-            )
-          }
-        }
+        VSpacer(8.dp)
+        CourseCard(
+          title = currentState.courseName,
+          description = stringResource(
+            R.string.x_progress,
+            currentState.courseProgress.roundToInt()
+          ),
+          iconUrl = currentState.courseIconUrl
+        )
+        VSpacer(8.dp)
       }
     }
   }

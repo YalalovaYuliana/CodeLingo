@@ -119,6 +119,20 @@ class UserRepositoryImpl(
     } else throw Exception("missing access token")
   }
 
+  override suspend fun getUserCourseStats(): Int? {
+    val accessToken = _cacheFlow.value.accessToken?.accessTokenWithType
+    if (accessToken != null) {
+      val courseId = codeLingoApi.getUserCourseId(accessToken).courseId
+      _cacheFlow.update {
+        it.copy(
+          selectedCourseId = courseId
+        )
+      }
+      println("yuliana rep courseId: $courseId")
+      return courseId
+    } else throw Exception("missing access token")
+  }
+
   override suspend fun readAccessToken(): AccessToken? {
     val accessToken = userDataBase.userDao().getToken()?.toAccessTokenDomain()
     _cacheFlow.update {
@@ -207,13 +221,21 @@ class UserRepositoryImpl(
   }
 
   override suspend fun getCourseDetails(courseId: Int): CourseDetails {
-    return codeLingoApi.getCourseDetails(courseId).toDomainModel().also {
-      _cacheFlow.update { cache ->
-        cache.copy(
-          courseDetails = it
-        )
+    val accessToken = _cacheFlow.value.accessToken?.accessTokenWithType
+    return accessToken?.let {
+      val courseStats = codeLingoApi.getUserCourseStats(accessToken).first()
+      codeLingoApi.getCourseDetails(courseId).toDomainModel(
+        progress = courseStats.progress,
+        isComplete = courseStats.isComplete,
+        startedAt = courseStats.startedAt
+      ).also {
+        _cacheFlow.update { cache ->
+          cache.copy(
+            courseDetails = it
+          )
+        }
       }
-    }
+    } ?: throw Exception("missing access token")
   }
 
   override suspend fun getLevelTheory(levelId: Int): String {
@@ -244,7 +266,10 @@ class UserRepositoryImpl(
                 isComplete = true
               )
             } else level
-          }
+          },
+          courseDetails = cache.courseDetails?.copy(
+            progress = response.courseProgress
+          )
         )
       }
 

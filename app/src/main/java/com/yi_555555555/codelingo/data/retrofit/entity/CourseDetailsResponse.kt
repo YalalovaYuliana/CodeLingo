@@ -10,6 +10,8 @@ data class CourseDetailsResponse(
   val title: String,
   @SerializedName("description")
   val description: String?,
+  @SerializedName("icon")
+  val iconUrl: String?,
   @SerializedName("levels")
   val levels: List<CourseLevelResponse>
 ) {

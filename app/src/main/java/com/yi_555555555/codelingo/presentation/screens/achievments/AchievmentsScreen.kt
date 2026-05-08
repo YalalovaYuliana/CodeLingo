@@ -72,6 +72,7 @@ fun AchievmentsScreen(
         Header(
           text = stringResource(R.string.achievments_title)
         )
+        VSpacer(8.dp)
         LazyColumn(
           modifier = Modifier
             .fillMaxSize()
@@ -129,9 +130,15 @@ private fun AchievmentCard(
         model = achievment.iconUrl,
         imageLoader = rememberImageLoader(),
         loading = {
-          CircularProgressIndicator(
-            modifier = Modifier.size(20.dp)
-          )
+          Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+          ) {
+            CircularProgressIndicator(
+              modifier = Modifier.size(20.dp),
+              strokeWidth = 2.dp
+            )
+          }
         },
         error = {
           Image(

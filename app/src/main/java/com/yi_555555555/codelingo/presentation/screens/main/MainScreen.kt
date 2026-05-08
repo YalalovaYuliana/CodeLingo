@@ -57,6 +57,7 @@ fun MainScreen(
       }
 
       is ViewState.Input -> {
+        VSpacer(12.dp)
         Column(
           modifier = Modifier
             .fillMaxWidth()

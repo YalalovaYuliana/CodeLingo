@@ -32,6 +32,7 @@ fun PrimaryButton(
   text: String,
   onClick: () -> Unit,
   isError: Boolean = false,
+  isSecondaryButton: Boolean = false,
   isLoading: Boolean = false,
   minHeight: Dp = 50.dp
 ) {
@@ -39,14 +40,22 @@ fun PrimaryButton(
     modifier = modifier
       .clip(RoundedCornerShape(13.dp))
       .background(
-        if (isError) MaterialTheme.colorScheme.onError
-        else MaterialTheme.colorScheme.tertiary
+        when {
+          isError -> MaterialTheme.colorScheme.onError
+          isSecondaryButton -> MaterialTheme.colorScheme.tertiaryContainer
+          else -> MaterialTheme.colorScheme.tertiary
+        }
       )
       .clickable(
         enabled = !isLoading,
         onClick = onClick
       )
   ) {
+    val backgroundColor = when {
+      isError -> MaterialTheme.colorScheme.error
+      isSecondaryButton -> MaterialTheme.colorScheme.secondaryContainer
+      else -> MaterialTheme.colorScheme.primaryContainer
+    }
     Button(
       modifier = Modifier
         .fillMaxWidth()
@@ -54,8 +63,8 @@ fun PrimaryButton(
       onClick = onClick,
       shape = RoundedCornerShape(13.dp),
       colors = ButtonDefaults.buttonColors(
-        containerColor = if (isError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primaryContainer,
-        disabledContainerColor = if (isError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primaryContainer
+        containerColor = backgroundColor,
+        disabledContainerColor = backgroundColor
       )
     ) {
       if (isLoading) {

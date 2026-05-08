@@ -4,9 +4,9 @@ import android.content.Context
 import androidx.compose.material3.SnackbarHostState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.yi_555555555.codelingo.domain.model.Course
 import com.yi_555555555.codelingo.domain.model.User
-import com.yi_555555555.codelingo.domain.usecase.GetCoursesUseCase
+import com.yi_555555555.codelingo.domain.usecase.GetCourseDetailsUseCase
+import com.yi_555555555.codelingo.domain.usecase.GetUserCourseUseCase
 import com.yi_555555555.codelingo.domain.usecase.GetUserUseCase
 import com.yi_555555555.codelingo.utils.safeFetch
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,7 +22,8 @@ import kotlinx.coroutines.withContext
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
   private val getUserUseCase: GetUserUseCase,
-  private val getCoursesUseCase: GetCoursesUseCase,
+  private val getUserCourseUseCase: GetUserCourseUseCase,
+  private val getCourseDetailsUseCase: GetCourseDetailsUseCase,
   @ApplicationContext private val context: Context
 ) : ViewModel() {
 
@@ -45,6 +46,18 @@ class ProfileViewModel @Inject constructor(
         }
       }
     }
+    viewModelScope.launch {
+      getCourseDetailsUseCase.courseProgress.collect { courseProgress ->
+        val currentState = _state.value
+        if (currentState is ViewState.Profile) {
+          _state.update {
+            currentState.copy(
+              courseProgress = courseProgress
+            )
+          }
+        }
+      }
+    }
   }
 
   fun getUser() {
@@ -54,12 +67,15 @@ class ProfileViewModel @Inject constructor(
         context = context,
         onSuccess = {
           val user = getUserUseCase()
-          val courses = getCoursesUseCase()
+          val courseId = getUserCourseUseCase() ?: error("missing user course")
+          val courseDetails = getCourseDetailsUseCase(courseId)
           withContext(Dispatchers.Main) {
             _state.update {
               ViewState.Profile(
                 user = user,
-                courses = courses
+                courseName = courseDetails.course.title,
+                courseIconUrl = courseDetails.course.iconUrl,
+                courseProgress = courseDetails.progress
               )
             }
           }
@@ -81,7 +97,9 @@ sealed interface ViewState {
 
   data class Profile(
     val user: User,
-    val courses: List<Course>
+    val courseName: String,
+    val courseIconUrl: String?,
+    val courseProgress: Double
   ) : ViewState
 
   data class Error(

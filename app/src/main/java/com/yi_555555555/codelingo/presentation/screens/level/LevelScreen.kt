@@ -6,14 +6,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -246,11 +244,12 @@ private fun TaskContent(
     TaskType.Gap -> {
       VSpacer(16.dp)
       val gaps = task.gaps
-      gaps?.forEach { gap ->
+      gaps?.forEachIndexed { index, gap ->
         VSpacer(4.dp)
         GapTemplate(
           modifier = modifier,
           gap = gap,
+          index = index,
           onGapValueChange = { newValue ->
             onGapValueChange(gap, newValue)
           }
@@ -290,39 +289,42 @@ private fun TaskContent(
 @Composable
 private fun GapTemplate(
   gap: Task.Gap,
+  index: Int,
   onGapValueChange: (String) -> Unit,
   modifier: Modifier = Modifier
 ) {
-  val separateGaps = gap.template.split(GAP_SEPARATOR)
-  Row(
+  val template = "${index + 1}) " + gap.template.replace(GAP_SEPARATOR, " ... ")
+  Column(
     modifier = modifier
       .fillMaxWidth()
-      .padding(12.dp),
-    verticalAlignment = Alignment.CenterVertically,
-    horizontalArrangement = Arrangement.spacedBy(8.dp)
+      .padding(12.dp)
   ) {
-    separateGaps.forEachIndexed { index, text ->
-      Text(
-        textAlign = TextAlign.Start,
-        text = text,
-        style = MaterialTheme.typography.displaySmall
+    Text(
+      textAlign = TextAlign.Start,
+      text = template,
+      style = MaterialTheme.typography.displaySmall
+    )
+    VSpacer(12.dp)
+    Row(
+      verticalAlignment = Alignment.CenterVertically
+    ) {
+//      Text(
+//        textAlign = TextAlign.Start,
+//        text = "${index + 1}.",
+//        style = MaterialTheme.typography.displaySmall
+//      )
+      TextField(
+        modifier = Modifier
+          .fillMaxWidth(),
+        value = gap.userAnswer,
+        singleLine = true,
+        isError = gap.isError,
+        onValueChange = onGapValueChange,
+        textStyle = MaterialTheme.typography.displaySmall,
+        colors = TextFieldDefaults.colors(
+          errorTextColor = MaterialTheme.colorScheme.error
+        ),
       )
-      if (index != separateGaps.size - 1) {
-        TextField(
-          modifier = Modifier
-            .wrapContentWidth()
-            .defaultMinSize(minWidth = 60.dp, minHeight = 40.dp)
-            .widthIn(max = 120.dp),
-          value = gap.userAnswer,
-          singleLine = true,
-          isError = gap.isError,
-          onValueChange = onGapValueChange,
-          textStyle = MaterialTheme.typography.displaySmall,
-          colors = TextFieldDefaults.colors(
-            errorTextColor = MaterialTheme.colorScheme.error
-          ),
-        )
-      }
     }
   }
 }

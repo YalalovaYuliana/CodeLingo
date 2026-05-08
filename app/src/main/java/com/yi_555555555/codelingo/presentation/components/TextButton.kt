@@ -6,13 +6,15 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import com.yi_555555555.codelingo.presentation.ui.theme.CodeLingoTheme
 
 @Composable
 fun TextButton(
   text: String,
-  onClick: () -> Unit
+  onClick: () -> Unit,
+  color: Color = MaterialTheme.colorScheme.secondaryContainer
 ) {
   Column(
     horizontalAlignment = Alignment.CenterHorizontally
@@ -23,7 +25,7 @@ fun TextButton(
       Text(
         text = text,
         style = MaterialTheme.typography.bodyMedium,
-        color = MaterialTheme.colorScheme.secondaryContainer
+        color = color
       )
     }
   }

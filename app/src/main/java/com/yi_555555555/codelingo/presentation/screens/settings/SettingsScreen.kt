@@ -14,12 +14,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -40,7 +44,6 @@ import com.yi_555555555.codelingo.presentation.components.WSpacer
 
 @Composable
 fun SettingsScreen(
-  onLogout: () -> Unit,
   onBackClick: () -> Unit,
   viewModel: SettingsViewModel = hiltViewModel()
 ) {
@@ -54,6 +57,75 @@ fun SettingsScreen(
     uri?.let {
       viewModel.processCommand(Command.ChangeProfilePhoto(uri))
     }
+  }
+
+  var showLogoutDialog by remember { mutableStateOf(false) }
+  var showDeleteAccountDialog by remember { mutableStateOf(false) }
+
+  if (showLogoutDialog) {
+    AlertDialog(
+      onDismissRequest = { showLogoutDialog = false },
+      title = {
+        Text(
+          text = stringResource(R.string.leave_account),
+          style = MaterialTheme.typography.titleSmall
+        )
+      },
+      //text = { Text(stringResource(R.string.close_level_dialog_description)) },
+      confirmButton = {
+        PrimaryButton(
+          text = stringResource(R.string.yes_leave),
+          isError = true,
+          onClick = {
+            showLogoutDialog = false
+            viewModel.processCommand(Command.Logout)
+          },
+          minHeight = 0.dp
+        )
+      },
+      dismissButton = {
+        PrimaryButton(
+          text = stringResource(R.string.cancel),
+          onClick = {
+            showLogoutDialog = false
+          },
+          minHeight = 0.dp
+        )
+      }
+    )
+  }
+
+  if (showDeleteAccountDialog) {
+    AlertDialog(
+      onDismissRequest = { showDeleteAccountDialog = false },
+      title = {
+        Text(
+          text = stringResource(R.string.delete_account_dialog_title),
+          style = MaterialTheme.typography.titleSmall
+        )
+      },
+      //text = { Text(stringResource(R.string.close_level_dialog_description)) },
+      confirmButton = {
+        PrimaryButton(
+          text = stringResource(R.string.yes_delete),
+          isError = true,
+          onClick = {
+            showDeleteAccountDialog = false
+            viewModel.processCommand(Command.DeleteAccount)
+          },
+          minHeight = 0.dp
+        )
+      },
+      dismissButton = {
+        PrimaryButton(
+          text = stringResource(R.string.cancel),
+          onClick = {
+            showDeleteAccountDialog = false
+          },
+          minHeight = 0.dp
+        )
+      }
+    )
   }
 
   ScreenScaffold(
@@ -129,7 +201,14 @@ fun SettingsScreen(
           TextButton(
             text = stringResource(R.string.logout),
             onClick = {
-              viewModel.processCommand(Command.Logout)
+              showLogoutDialog = true
+            }
+          )
+          TextButton(
+            text = stringResource(R.string.delete_account),
+            color = MaterialTheme.colorScheme.error,
+            onClick = {
+              showDeleteAccountDialog = true
             }
           )
           VSpacer(40.dp)
@@ -149,11 +228,11 @@ fun SettingsScreen(
           }
         }
 
-        ViewState.Logout -> {
-          LaunchedEffect(Unit) {
-            onLogout()
-          }
-        }
+//        ViewState.Logout -> {
+//          LaunchedEffect(Unit) {
+//            onLogout()
+//          }
+//        }
       }
     }
   }

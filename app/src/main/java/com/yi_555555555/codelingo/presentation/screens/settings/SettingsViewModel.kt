@@ -7,6 +7,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.yi_555555555.codelingo.domain.usecase.ChangeProfileDataUseCase
+import com.yi_555555555.codelingo.domain.usecase.DeleteAccountUseCase
 import com.yi_555555555.codelingo.domain.usecase.GetUserUseCase
 import com.yi_555555555.codelingo.domain.usecase.LogoutUseCase
 import com.yi_555555555.codelingo.utils.safeFetch
@@ -27,6 +28,7 @@ class SettingsViewModel @Inject constructor(
   private val getUserUseCase: GetUserUseCase,
   private val logoutUseCase: LogoutUseCase,
   private val changeProfileDataUseCase: ChangeProfileDataUseCase,
+  private val deleteAccountUseCase: DeleteAccountUseCase,
   @ApplicationContext private val context: Context
 ) : ViewModel() {
 
@@ -60,6 +62,22 @@ class SettingsViewModel @Inject constructor(
             context = context,
             onSuccess = {
               logoutUseCase()
+            },
+            onFailure = { errorMessage ->
+              snackbarHostState.value.showSnackbar(
+                message = errorMessage
+              )
+            }
+          )
+        }
+      }
+
+      Command.DeleteAccount -> {
+        viewModelScope.launch {
+          safeFetch(
+            context = context,
+            onSuccess = {
+              deleteAccountUseCase()
             },
             onFailure = { errorMessage ->
               snackbarHostState.value.showSnackbar(
@@ -184,7 +202,7 @@ sealed interface ViewState {
 
   data object SuccessChangedProfileData : ViewState
 
-  data object Logout : ViewState
+  //data object Logout : ViewState
 }
 
 sealed interface Command {
@@ -193,4 +211,5 @@ sealed interface Command {
   data object ChangeAppTheme : Command
   data object SaveChanges : Command // todo think about change design
   data object Logout : Command
+  data object DeleteAccount : Command
 }

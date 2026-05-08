@@ -144,6 +144,18 @@ class UserRepositoryImpl(
     _cacheFlow.update { Cache() }
   }
 
+  override suspend fun deleteAccount() {
+    val accessToken = _cacheFlow.value.accessToken?.accessTokenWithType
+    accessToken?.let {
+      codeLingoApi.deleteUser(
+        authToken = accessToken
+      )
+      userDataBase.userDao().deleteToken()
+      userDataBase.userDao().deleteCourseId()
+      _cacheFlow.update { Cache() }
+    } ?: throw Exception("missing access token")
+  }
+
   override suspend fun readCourseId(): Int? {
     val courseId = userDataBase.userDao().getCourseId()?.selectedCourseId
     _cacheFlow.update {

@@ -144,6 +144,7 @@ fun NavGraph(
     composable<Screen.CoursesScreen> {
       CoursesScreen(
         onSuccessStart = {
+          selectedBottomBarDestination = BottomBarDestination.Main
           navController.navigate(Screen.HomeScreen) {
             popUpTo(0) {
               inclusive = true
@@ -161,13 +162,6 @@ fun NavGraph(
     }
     composable<Screen.SettingsScreen> {
       SettingsScreen(
-        onLogout = {
-          navController.navigate(Screen.OnboardingScreen) {
-            popUpTo(0) {
-              inclusive = true
-            }
-          }
-        },
         onBackClick = {
           navController.navigateUp()
         }

@@ -28,6 +28,7 @@ interface UserRepository {
   suspend fun readAccessToken(): AccessToken?
   suspend fun writeAccessToken(accessToken: AccessToken)
   suspend fun logout()
+  suspend fun deleteAccount()
   suspend fun readCourseId(): Int?
   suspend fun writeCourseId(courseId: Int)
   suspend fun getCourses(): List<Course>

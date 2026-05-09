@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
@@ -16,6 +17,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -82,10 +84,27 @@ fun LevelScreen(
   ScreenScaffold(
     topBar = {
       TopAppBar(
+        containerColor = MaterialTheme.colorScheme.background,
         onBackClick = if (state is ViewState.Start) onBackClick else null,
         onCloseClick = if (state is ViewState.Input) {
           { showCloseDialog = true }
-        } else null
+        } else null,
+        centerContent = {
+          val currentState = state
+          if (currentState !is ViewState.Input) return@TopAppBar
+          val numInOrder =
+            if (currentState.showTheory) 1f else (currentState.currentTask.numInOrder + 1).toFloat()
+          LinearProgressIndicator(
+            progress = { (numInOrder / (currentState.tasks.size + 1).toFloat()) },
+            modifier = Modifier
+              .fillMaxWidth()
+              .height(16.dp),
+            color = MaterialTheme.colorScheme.primaryContainer,
+            trackColor = MaterialTheme.colorScheme.outlineVariant,
+            gapSize = (-20).dp,
+            drawStopIndicator = {}
+          )
+        }
       )
     },
     snackbarHostState = snackbarHostState

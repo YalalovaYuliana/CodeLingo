@@ -287,6 +287,7 @@ sealed interface ViewState {
     val theory: String,
     val showTheory: Boolean,
     val currentTask: Task,
+    //val levelProgress: Float,
     val isLoading: Boolean = false,
     val isError: Boolean = false
   ) : ViewState

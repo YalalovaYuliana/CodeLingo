@@ -17,11 +17,13 @@ import com.yi_555555555.codelingo.R
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopAppBar(
+  centerContent: (@Composable () -> Unit)? = null,
+  containerColor: Color = Color.Transparent,
   onBackClick: (() -> Unit)? = null,
   onCloseClick: (() -> Unit)? = null,
 ) {
   TopAppBar(
-    title = { },
+    title = { centerContent?.invoke() },
     navigationIcon = {
       onBackClick?.let {
         IconButton(
@@ -49,7 +51,7 @@ fun TopAppBar(
       }
     },
     colors = TopAppBarDefaults.topAppBarColors(
-      containerColor = Color.Transparent,
+      containerColor = containerColor,
       navigationIconContentColor = MaterialTheme.colorScheme.tertiaryContainer
     )
   )

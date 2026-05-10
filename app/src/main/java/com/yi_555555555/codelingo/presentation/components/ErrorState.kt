@@ -18,10 +18,11 @@ import com.yi_555555555.codelingo.R
 @Composable
 fun ErrorState(
   errorMessage: String,
-  onRetryClick: () -> Unit
+  onRetryClick: () -> Unit,
+  modifier: Modifier = Modifier
 ) {
   Column(
-    modifier = Modifier
+    modifier = modifier
       .fillMaxSize()
       .systemBarsPadding(),
     verticalArrangement = Arrangement.Center,

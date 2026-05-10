@@ -62,7 +62,7 @@
     <string name="always">постоянно</string>
     <string name="anywhere">везде</string>
 
-    <string name="something_went_wrong">Что-то пошло не так</string>
+    <string name="something_went_wrong">Что-то пошло не так. Попробуйте ещё раз</string>
     <string name="check_internet_connection">Проверьте подключение к интернету</string>
     <string name="required_to_fill">Обязательно для заполнения</string>
     <string name="incorrect_format">Неправильный формат</string>

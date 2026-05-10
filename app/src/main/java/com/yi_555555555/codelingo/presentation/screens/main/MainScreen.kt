@@ -49,6 +49,7 @@ fun MainScreen(
 
       is ViewState.Error -> {
         ErrorState(
+          modifier = Modifier.padding(24.dp),
           errorMessage = currentState.errorMessage,
           onRetryClick = {
             viewModel.getLevels()

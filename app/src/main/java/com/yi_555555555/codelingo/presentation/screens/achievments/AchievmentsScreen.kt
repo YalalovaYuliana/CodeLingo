@@ -60,6 +60,7 @@ fun AchievmentsScreen(
 
       is ViewState.Error -> {
         ErrorState(
+          modifier = Modifier.padding(24.dp),
           errorMessage = currentState.errorMessage,
           onRetryClick = {
             viewModel.getAchievments()

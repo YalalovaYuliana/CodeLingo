@@ -32,7 +32,7 @@ fun PrimaryButton(
   text: String,
   onClick: () -> Unit,
   isError: Boolean = false,
-  isSecondaryButton: Boolean = false,
+  isSubtle: Boolean = false,
   isLoading: Boolean = false,
   minHeight: Dp = 50.dp
 ) {
@@ -42,7 +42,7 @@ fun PrimaryButton(
       .background(
         when {
           isError -> MaterialTheme.colorScheme.onError
-          isSecondaryButton -> MaterialTheme.colorScheme.tertiaryContainer
+          isSubtle -> MaterialTheme.colorScheme.tertiaryContainer
           else -> MaterialTheme.colorScheme.tertiary
         }
       )
@@ -53,7 +53,7 @@ fun PrimaryButton(
   ) {
     val backgroundColor = when {
       isError -> MaterialTheme.colorScheme.error
-      isSecondaryButton -> MaterialTheme.colorScheme.secondaryContainer
+      isSubtle -> MaterialTheme.colorScheme.secondaryContainer
       else -> MaterialTheme.colorScheme.primaryContainer
     }
     Button(
@@ -128,6 +128,42 @@ private fun PrimaryButtonPreview() {
     PrimaryButton(
       text = "Текст на кнопке",
       onClick = {}
+    )
+  }
+}
+
+@Preview
+@Composable
+private fun PrimaryButtonLoadingPreview() {
+  CodeLingoTheme {
+    PrimaryButton(
+      text = "Текст на кнопке",
+      onClick = {},
+      isLoading = true
+    )
+  }
+}
+
+@Preview
+@Composable
+private fun PrimaryButtonErrorPreview() {
+  CodeLingoTheme {
+    PrimaryButton(
+      text = "Текст на кнопке",
+      onClick = {},
+      isError = true
+    )
+  }
+}
+
+@Preview
+@Composable
+private fun PrimaryButtonSubtlePreview() {
+  CodeLingoTheme {
+    PrimaryButton(
+      text = "Текст на кнопке",
+      onClick = {},
+      isSubtle = true
     )
   }
 }

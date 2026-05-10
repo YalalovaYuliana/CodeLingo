@@ -4,7 +4,9 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.yi_555555555.codelingo.presentation.ui.theme.CodeLingoTheme
 
 @Composable
 fun PrimaryAlertDialog(
@@ -46,9 +48,25 @@ fun PrimaryAlertDialog(
           text = dismissText,
           onClick = onDismissClick,
           minHeight = 0.dp,
-          isSecondaryButton = true
+          isSubtle = true
         )
       }
+    )
+  }
+}
+
+@Preview
+@Composable
+private fun PrimaryAlertDialogPreview() {
+  CodeLingoTheme {
+    PrimaryAlertDialog(
+      visible = true,
+      title = "Заголовок",
+      description = "Описание",
+      confirmText = "Да",
+      dismissText = "Нет",
+      onDismissClick = {},
+      onConfirmClick = {},
     )
   }
 }

@@ -18,6 +18,9 @@ import com.yi_555555555.codelingo.presentation.components.NavigationAppBar
 import com.yi_555555555.codelingo.presentation.components.ScreenScaffold
 import com.yi_555555555.codelingo.presentation.screens.achievments.AchievmentsScreen
 import com.yi_555555555.codelingo.presentation.screens.courses.CoursesScreen
+import com.yi_555555555.codelingo.presentation.screens.forgot_password_screens.input_email.InputEmailScreen
+import com.yi_555555555.codelingo.presentation.screens.forgot_password_screens.reset_password.ResetPasswordScreen
+import com.yi_555555555.codelingo.presentation.screens.forgot_password_screens.verify_code.VerifyCodeScreen
 import com.yi_555555555.codelingo.presentation.screens.level.LevelScreen
 import com.yi_555555555.codelingo.presentation.screens.login.LoginScreen
 import com.yi_555555555.codelingo.presentation.screens.main.MainScreen
@@ -98,7 +101,53 @@ fun NavGraph(
           }
         },
         onBackClick = {
+          navController.navigate(Screen.OnboardingScreen) {
+            popUpTo(0) {
+              inclusive = true
+            }
+          }
+        },
+        onForgotPasswordClick = { email ->
+          navController.navigate(Screen.InputEmailScreen(email))
+        }
+      )
+    }
+    composable<Screen.InputEmailScreen> {
+      InputEmailScreen(
+        onStartVerifyCode = { email ->
+          navController.navigate(Screen.VerifyForgotPasswordScreen(email))
+        },
+        onBackClick = {
           navController.navigateUp()
+        }
+      )
+    }
+    composable<Screen.VerifyForgotPasswordScreen> {
+      VerifyCodeScreen(
+        onSuccessSendVerifyCode = { email, code ->
+          navController.navigate(
+            Screen.ResetPasswordScreen(
+              email = email,
+              code = code
+            )
+          )
+        },
+        onBackClick = {
+          navController.navigate(Screen.LoginScreen)
+        }
+      )
+    }
+    composable<Screen.ResetPasswordScreen> {
+      ResetPasswordScreen(
+        onSuccessReset = {
+          navController.navigate(Screen.LoginScreen)
+        },
+        onBackClick = {
+          navController.navigate(Screen.OnboardingScreen) {
+            popUpTo(0) {
+              inclusive = true
+            }
+          }
         }
       )
     }
@@ -195,6 +244,22 @@ sealed interface Screen {
     val levelId: Int,
     val title: String,
     val isComplete: Boolean
+  ) : Screen
+
+  @Serializable
+  data class InputEmailScreen(
+    val email: String
+  ) : Screen
+
+  @Serializable
+  data class VerifyForgotPasswordScreen(
+    val email: String
+  ) : Screen
+
+  @Serializable
+  data class ResetPasswordScreen(
+    val email: String,
+    val code: String
   ) : Screen
 }
 

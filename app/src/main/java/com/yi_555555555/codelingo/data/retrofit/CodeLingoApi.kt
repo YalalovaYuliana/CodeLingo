@@ -1,9 +1,12 @@
 package com.yi_555555555.codelingo.data.retrofit
 
+import com.yi.myapplication.data.entity.codelingo.ForgotPasswordRequest
 import com.yi.myapplication.data.entity.codelingo.LoginRequest
 import com.yi.myapplication.data.entity.codelingo.RegisterRequest
+import com.yi.myapplication.data.entity.codelingo.ResetPasswordRequest
 import com.yi.myapplication.data.entity.codelingo.SubmitCodeRequest
 import com.yi.myapplication.data.entity.codelingo.SubmitRequest
+import com.yi.myapplication.data.entity.codelingo.VerifyCodeRequest
 import com.yi_555555555.codelingo.data.retrofit.entity.AccessTokenData
 import com.yi_555555555.codelingo.data.retrofit.entity.AchievmentResponse
 import com.yi_555555555.codelingo.data.retrofit.entity.CompleteTaskResponse
@@ -35,6 +38,15 @@ interface CodeLingoApi {
 
   @POST("auth/login")
   suspend fun login(@Body loginRequest: LoginRequest): AccessTokenData
+
+  @POST("auth/forgot-password")
+  suspend fun forgotPassword(@Body forgotPasswordRequest: ForgotPasswordRequest)
+
+  @POST("auth/verify-code")
+  suspend fun verifyForgotPasswordCode(@Body verifyCodeRequest: VerifyCodeRequest)
+
+  @POST("auth/reset-password")
+  suspend fun resetPassword(@Body resetRequest: ResetPasswordRequest)
 
   @GET("users/me")
   suspend fun getUser(@Header("Authorization") authToken: String): UserResponse

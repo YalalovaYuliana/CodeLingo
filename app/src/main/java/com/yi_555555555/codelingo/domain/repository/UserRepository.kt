@@ -17,6 +17,18 @@ interface UserRepository {
   val cacheFlow: StateFlow<Cache>
   suspend fun register(registerCredentials: RegisterCredentials): AccessToken
   suspend fun login(loginCredentials: LoginCredentials): AccessToken
+  suspend fun forgotPassword(email: String)
+  suspend fun verifyForgotPasswordCode(
+    email: String,
+    code: String
+  )
+
+  suspend fun resetPassword(
+    email: String,
+    code: String,
+    newPassword: String
+  )
+
   suspend fun getUser(): User
   suspend fun changeProfile(
     username: String?,

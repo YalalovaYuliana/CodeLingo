@@ -9,9 +9,18 @@
     <string name="logout">Выйти из аккаунта</string>
     <string name="delete_account">Удалить аккаунт</string>
     <string name="login_title">Авторизация</string>
+    <string name="new_password">Новый пароль</string>
+    <string name="reset_password">Сбросить пароль</string>
+    <string name="reset_password_title">Восстановление пароля</string>
+    <string name="forgot_password">Забыли пароль?</string>
+    <string name="get_code">Получить код</string>
     <string name="account_title">Аккаунт</string>
     <string name="achievments_title">Достижения</string>
     <string name="already_have_an_account_login">Уже есть аккаунт? Войти</string>
+
+    <string name="code_input">Введите код</string>
+    <string name="code_send_to">Код подтверждения отправлен на %s</string>
+    <string name="confirm">Подтвердить</string>
 
     <string name="select_course">Выберите курс</string>
 

@@ -1,4 +1,4 @@
-package com.yi_555555555.codelingo.presentation.screens.login
+package com.yi_555555555.codelingo.presentation.screens.forgot_password_screens.reset_password
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
@@ -36,18 +36,16 @@ import com.yi_555555555.codelingo.presentation.components.Header
 import com.yi_555555555.codelingo.presentation.components.InputTextField
 import com.yi_555555555.codelingo.presentation.components.PrimaryButton
 import com.yi_555555555.codelingo.presentation.components.ScreenScaffold
-import com.yi_555555555.codelingo.presentation.components.TextButton
-import com.yi_555555555.codelingo.presentation.components.TopAppBar
 import com.yi_555555555.codelingo.presentation.components.VSpacer
 import com.yi_555555555.codelingo.presentation.components.WSpacer
 
 @Composable
-fun LoginScreen(
-  onSuccessLogin: (Boolean) -> Unit,
-  onForgotPasswordClick: (String) -> Unit,
+fun ResetPasswordScreen(
+  onSuccessReset: () -> Unit,
   onBackClick: () -> Unit,
-  viewModel: LoginViewModel = hiltViewModel()
+  viewModel: ResetPasswordViewModel = hiltViewModel()
 ) {
+
   BackHandler {
     onBackClick()
   }
@@ -56,11 +54,6 @@ fun LoginScreen(
   val snackbarHostState by viewModel.snackbarHostState.collectAsState()
 
   ScreenScaffold(
-    topBar = {
-      TopAppBar(
-        onBackClick = onBackClick
-      )
-    },
     snackbarHostState = snackbarHostState
   ) { innerPadding ->
     Column(
@@ -80,28 +73,20 @@ fun LoginScreen(
     ) {
       when (val currentState = state) {
         is ViewState.Input -> {
+          VSpacer(64.dp)
           Header(
-            text = stringResource(R.string.login_title)
+            text = stringResource(R.string.new_password)
           )
           Image(
             modifier = Modifier
-              .padding(vertical = 40.dp)
-              .widthIn(min = 120.dp, max = 180.dp),
-            painter = painterResource(R.drawable.welcome_cat),
-            contentDescription = "welcome cat"
+              .padding(vertical = 20.dp)
+              .widthIn(max = 120.dp),
+            painter = painterResource(R.drawable.forgot_password),
+            contentDescription = "forgot password"
           )
+          VSpacer(24.dp)
           InputTextField(
-            value = currentState.email,
-            readOnly = currentState.isLoading,
-            onValueChange = { newValue ->
-              viewModel.processCommand(Command.InputEmail(newValue))
-            },
-            placeholder = stringResource(R.string.email_hint),
-            errorMessage = currentState.emailErrorMessage
-          )
-          VSpacer(21.dp)
-          InputTextField(
-            value = currentState.password,
+            value = currentState.newPassword,
             readOnly = currentState.isLoading,
             onValueChange = { newValue ->
               viewModel.processCommand(Command.InputPassword(newValue))
@@ -115,7 +100,7 @@ fun LoginScreen(
             } else {
               PasswordVisualTransformation()
             },
-            placeholder = stringResource(R.string.password_hint),
+            placeholder = stringResource(R.string.new_password),
             trailingIcon = {
               IconButton(
                 modifier = Modifier.padding(end = 8.dp),
@@ -134,16 +119,7 @@ fun LoginScreen(
                 )
               }
             },
-            errorMessage = currentState.passwordErrorMessage,
-            bottomContent = {
-              TextButton(
-                modifier = Modifier.align(Alignment.End),
-                text = stringResource(R.string.forgot_password),
-                onClick = {
-                  onForgotPasswordClick(currentState.email)
-                }
-              )
-            }
+            errorMessage = currentState.newPasswordErrorMessage
           )
           WSpacer()
           VSpacer(16.dp)
@@ -151,15 +127,15 @@ fun LoginScreen(
             modifier = Modifier
               .fillMaxWidth()
               .padding(horizontal = 26.dp),
-            text = stringResource(R.string.login).uppercase(),
-            onClick = { viewModel.processCommand(Command.Login) },
+            text = stringResource(R.string.reset_password).uppercase(),
+            onClick = { viewModel.processCommand(Command.ResetPassword) },
             isLoading = currentState.isLoading
           )
         }
 
         is ViewState.Success -> {
           LaunchedEffect(Unit) {
-            onSuccessLogin(currentState.hasSelectedCourseId)
+            onSuccessReset()
           }
         }
       }

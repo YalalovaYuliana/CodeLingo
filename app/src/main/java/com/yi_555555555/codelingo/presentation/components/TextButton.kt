@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -18,21 +17,23 @@ import com.yi_555555555.codelingo.presentation.ui.theme.CodeLingoTheme
 fun TextButton(
   text: String,
   onClick: () -> Unit,
+  modifier: Modifier = Modifier,
   color: Color = MaterialTheme.colorScheme.secondaryContainer
 ) {
   Column(
+    modifier = modifier,
     horizontalAlignment = Alignment.CenterHorizontally
   ) {
-      Text(
-        modifier = Modifier
-          .padding(8.dp)
-          .clickable(
+    Text(
+      modifier = Modifier
+        .padding(8.dp)
+        .clickable(
           onClick = onClick
         ),
-        text = text,
-        style = MaterialTheme.typography.bodyMedium,
-        color = color
-      )
+      text = text,
+      style = MaterialTheme.typography.bodyMedium,
+      color = color
+    )
   }
 }
 

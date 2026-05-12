@@ -1,9 +1,12 @@
 package com.yi_555555555.codelingo.data.repository
 
+import com.yi.myapplication.data.entity.codelingo.ForgotPasswordRequest
 import com.yi.myapplication.data.entity.codelingo.LoginRequest
 import com.yi.myapplication.data.entity.codelingo.RegisterRequest
+import com.yi.myapplication.data.entity.codelingo.ResetPasswordRequest
 import com.yi.myapplication.data.entity.codelingo.SubmitCodeRequest
 import com.yi.myapplication.data.entity.codelingo.SubmitRequest
+import com.yi.myapplication.data.entity.codelingo.VerifyCodeRequest
 import com.yi_555555555.codelingo.data.mappers.toAccessTokenDb
 import com.yi_555555555.codelingo.data.mappers.toAccessTokenDomain
 import com.yi_555555555.codelingo.data.mappers.toDomainModel
@@ -57,6 +60,33 @@ class UserRepositoryImpl(
         password = loginCredentials.password
       )
     ).toAccessTokenDomain()
+  }
+
+  override suspend fun forgotPassword(email: String) {
+    codeLingoApi.forgotPassword(ForgotPasswordRequest(email))
+  }
+
+  override suspend fun verifyForgotPasswordCode(email: String, code: String) {
+    codeLingoApi.verifyForgotPasswordCode(
+      VerifyCodeRequest(
+        email = email,
+        code = code
+      )
+    )
+  }
+
+  override suspend fun resetPassword(
+    email: String,
+    code: String,
+    newPassword: String
+  ) {
+    codeLingoApi.resetPassword(
+      ResetPasswordRequest(
+        email = email,
+        code = code,
+        newPassword = newPassword
+      )
+    )
   }
 
   override suspend fun getUser(): User {
@@ -114,7 +144,6 @@ class UserRepositoryImpl(
           selectedCourseId = courseId
         )
       }
-      println("yuliana rep courseId: $courseId")
       return courseId
     } else throw Exception("missing access token")
   }
@@ -128,7 +157,6 @@ class UserRepositoryImpl(
           selectedCourseId = courseId
         )
       }
-      println("yuliana rep courseId: $courseId")
       return courseId
     } else throw Exception("missing access token")
   }

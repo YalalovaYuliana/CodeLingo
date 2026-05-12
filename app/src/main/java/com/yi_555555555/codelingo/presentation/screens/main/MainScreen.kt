@@ -16,6 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -97,10 +98,16 @@ fun MainScreen(
           horizontalAlignment = Alignment.CenterHorizontally,
           contentPadding = PaddingValues(top = 24.dp, bottom = 24.dp)
         ) {
-          itemsIndexed(currentState.levels) { index, level ->
-            val offsetX = if (index % 2 == 0) (-64).dp else 64.dp
+          itemsIndexed(currentState.levels + viewModel.fakeLevels) { index, level ->
+            val amplitude = 90.dp // амплитуда волны
+            val frequency = 0.8f  // частота (чем меньше, тем плавнее)
+
+            val offsetX = remember(index) {
+              val t = index.toFloat() / currentState.levels.size // позиция от 0 до 1
+              val sinValue = Math.sin(t * Math.PI * 2 * frequency).toFloat()
+              (amplitude * sinValue)
+            }
             LevelCard(
-              index = index,
               level = level,
               enabled = level.isComplete || level.id == currentState.currentLevel?.id,
               onClick = { onLevelClick(level) },

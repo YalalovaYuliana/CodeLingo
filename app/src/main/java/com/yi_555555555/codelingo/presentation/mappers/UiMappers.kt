@@ -1,8 +1,10 @@
 package com.yi_555555555.codelingo.presentation.mappers
 
+import androidx.annotation.DrawableRes
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import com.yi_555555555.codelingo.R
 import com.yi_555555555.codelingo.domain.model.Level
 
 @Composable
@@ -20,5 +22,14 @@ fun Level.getBackgroundShadowColor(enabled: Boolean): Color {
     this.isComplete -> MaterialTheme.colorScheme.inversePrimary
     !enabled -> MaterialTheme.colorScheme.tertiaryContainer
     else -> MaterialTheme.colorScheme.tertiary
+  }
+}
+
+@DrawableRes
+fun Level.getLevelIcon(enabled: Boolean): Int {
+  return when {
+    this.isComplete -> R.drawable.ic_education_cap
+    !enabled -> R.drawable.ic_code
+    else -> R.drawable.ic_geo
   }
 }

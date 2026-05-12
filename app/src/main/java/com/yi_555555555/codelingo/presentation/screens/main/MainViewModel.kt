@@ -29,6 +29,17 @@ class MainViewModel @Inject constructor(
   private val _state = MutableStateFlow<ViewState>(ViewState.Input())
   val state = _state.asStateFlow()
 
+  val fakeLevels = mutableListOf<Level>().apply {
+    val fakeLevel = Level(
+      id = 0,
+      isComplete = false,
+      title = ""
+    )
+    repeat(5) {
+      add(fakeLevel)
+    }
+  }
+
   init {
     getLevels()
 

@@ -53,19 +53,19 @@ fun CourseCard(
     contentAlignment = Alignment.Center
   ) {
     Row(
-      modifier = Modifier.padding(if (description != null) 16.dp else 4.dp),
+      modifier = Modifier.padding(4.dp),
       verticalAlignment = if (description != null) Alignment.Top else Alignment.CenterVertically
     ) {
       Column(
         modifier = Modifier
-          .weight(2f)
+          .padding(start = 8.dp)
+          .weight(1f)
           .padding(
             vertical = 16.dp
           ),
         horizontalAlignment = Alignment.Start
       ) {
         Text(
-          modifier = Modifier.padding(start = if (description != null) 0.dp else 8.dp),
           text = title,
           style = MaterialTheme.typography.labelMedium,
           color = MaterialTheme.colorScheme.secondary
@@ -81,7 +81,6 @@ fun CourseCard(
       }
       SubcomposeAsyncImage(
         modifier = Modifier
-          .weight(1f)
           .size(80.dp)
           .padding(vertical = 12.dp),
         model = iconUrl,

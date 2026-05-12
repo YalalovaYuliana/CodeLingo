@@ -48,8 +48,8 @@ fun CoursesScreen(
         .padding(innerPadding)
         .imePadding()
         .padding(
-          start = 24.dp,
-          end = 24.dp,
+          start = 16.dp,
+          end = 16.dp,
           bottom = 8.dp
         ),
       verticalArrangement = Arrangement.Center,

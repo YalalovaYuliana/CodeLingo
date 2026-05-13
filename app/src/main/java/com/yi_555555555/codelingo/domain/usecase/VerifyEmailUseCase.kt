@@ -1,18 +1,24 @@
 package com.yi_555555555.codelingo.domain.usecase
 
 import com.yi_555555555.codelingo.domain.repository.UserRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class VerifyForgotPasswordCodeUseCase @Inject constructor(
+class VerifyEmailUseCase @Inject constructor(
   private val userRepository: UserRepository
 ) {
   suspend operator fun invoke(
     email: String,
     code: String
   ) {
-    userRepository.verifyResetPasswordCode(
+    val accessToken = userRepository.verifyEmail(
       email = email,
       code = code
     )
+
+    withContext(Dispatchers.IO) {
+      userRepository.writeAccessToken(accessToken)
+    }
   }
 }

@@ -43,12 +43,21 @@ class UserRepositoryImpl(
   private val _cacheFlow = MutableStateFlow(Cache())
   override val cacheFlow = _cacheFlow.asStateFlow()
 
-  override suspend fun register(registerCredentials: RegisterCredentials): AccessToken {
+  override suspend fun register(registerCredentials: RegisterCredentials) {
     return codeLingoApi.register(
       RegisterRequest(
         username = registerCredentials.username,
         email = registerCredentials.email,
         password = registerCredentials.password
+      )
+    )
+  }
+
+  override suspend fun verifyEmail(email: String, code: String): AccessToken {
+    return codeLingoApi.verifyEmail(
+      VerifyCodeRequest(
+        email = email,
+        code = code
       )
     ).toAccessTokenDomain()
   }
@@ -66,8 +75,8 @@ class UserRepositoryImpl(
     codeLingoApi.forgotPassword(ForgotPasswordRequest(email))
   }
 
-  override suspend fun verifyForgotPasswordCode(email: String, code: String) {
-    codeLingoApi.verifyForgotPasswordCode(
+  override suspend fun verifyResetPasswordCode(email: String, code: String) {
+    codeLingoApi.verifyResetPasswordCode(
       VerifyCodeRequest(
         email = email,
         code = code

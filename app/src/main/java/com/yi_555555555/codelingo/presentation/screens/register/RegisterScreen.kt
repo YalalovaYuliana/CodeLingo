@@ -1,5 +1,6 @@
 package com.yi_555555555.codelingo.presentation.screens.register
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -47,11 +48,13 @@ import com.yi_555555555.codelingo.presentation.components.WSpacer
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegisterScreen(
-  onSuccessRegister: () -> Unit,
+  onSuccessRegister: (String) -> Unit,
   onAlreadyHaveAccountClick: () -> Unit,
   onBackClick: () -> Unit,
   viewModel: RegisterViewModel = hiltViewModel()
 ) {
+
+  BackHandler { onBackClick() }
 
   val state by viewModel.state.collectAsState()
   val snackbarHostState by viewModel.snackbarHostState.collectAsState()
@@ -173,9 +176,9 @@ fun RegisterScreen(
           }
         }
 
-        ViewState.Success -> {
+        is ViewState.Success -> {
           LaunchedEffect(Unit) {
-            onSuccessRegister()
+            onSuccessRegister(currentState.email)
           }
         }
       }

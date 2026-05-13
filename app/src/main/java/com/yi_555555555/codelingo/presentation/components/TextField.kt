@@ -3,6 +3,7 @@ package com.yi_555555555.codelingo.presentation.components
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -95,6 +96,7 @@ fun InputTextField(
     errorMessage?.let {
       VSpacer(4.dp)
       Text(
+        modifier = modifier.padding(start = 8.dp),
         text = errorMessage,
         style = MaterialTheme.typography.bodySmall,
         color = MaterialTheme.colorScheme.error
@@ -129,7 +131,7 @@ fun CodeDigitTextField(
             true
           } else false
         }
-        .widthIn(max = 46.dp)
+        .widthIn(max = 48.dp)
         .border(
           width = 3.dp,
           color = when {

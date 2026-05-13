@@ -1,4 +1,4 @@
-package com.yi_555555555.codelingo.presentation.screens.forgot_password_screens.verify_code
+package com.yi_555555555.codelingo.presentation.screens.verify_email
 
 import android.content.Context
 import androidx.compose.material3.SnackbarHostState
@@ -6,7 +6,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.yi_555555555.codelingo.domain.usecase.VerifyForgotPasswordCodeUseCase
+import com.yi_555555555.codelingo.domain.usecase.VerifyEmailUseCase
 import com.yi_555555555.codelingo.presentation.navigation.Screen
 import com.yi_555555555.codelingo.utils.safeFetch
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,12 +22,11 @@ import kotlinx.coroutines.withContext
 @HiltViewModel
 class VerifyCodeViewModel @Inject constructor(
   savedStateHandle: SavedStateHandle,
-  private val verifyForgotPasswordCodeUseCase: VerifyForgotPasswordCodeUseCase,
+  private val verifyEmailUseCase: VerifyEmailUseCase,
   @ApplicationContext private val context: Context
 ) : ViewModel() {
 
-  private val transferResetPasswordData =
-    savedStateHandle.toRoute<Screen.VerifyForgotPasswordScreen>()
+  private val transferResetPasswordData = savedStateHandle.toRoute<Screen.InputEmailScreen>()
 
   private val _state =
     MutableStateFlow<ViewState>(ViewState.Input(email = transferResetPasswordData.email.trim()))
@@ -71,16 +70,13 @@ class VerifyCodeViewModel @Inject constructor(
             context = context,
             onSuccess = {
               val codeStr = currentState.code.joinToString("")
-              verifyForgotPasswordCodeUseCase(
+              verifyEmailUseCase(
                 email = currentState.email,
                 code = codeStr
               )
               withContext(Dispatchers.Main) {
                 _state.update {
-                  ViewState.Success(
-                    email = currentState.email,
-                    code = codeStr
-                  )
+                  ViewState.Success
                 }
               }
             },
@@ -112,7 +108,7 @@ sealed interface ViewState {
     val isLoading: Boolean = false
   ) : ViewState
 
-  data class Success(val email: String, val code: String) : ViewState
+  data object Success : ViewState
 }
 
 sealed interface Command {

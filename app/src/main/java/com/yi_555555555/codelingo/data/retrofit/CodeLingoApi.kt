@@ -34,7 +34,10 @@ import retrofit2.http.Path
 
 interface CodeLingoApi {
   @POST("auth/register")
-  suspend fun register(@Body registerRequest: RegisterRequest): AccessTokenData
+  suspend fun register(@Body registerRequest: RegisterRequest)
+
+  @POST("auth/verify-email")
+  suspend fun verifyEmail(@Body verifyCodeRequest: VerifyCodeRequest): AccessTokenData
 
   @POST("auth/login")
   suspend fun login(@Body loginRequest: LoginRequest): AccessTokenData
@@ -43,7 +46,7 @@ interface CodeLingoApi {
   suspend fun forgotPassword(@Body forgotPasswordRequest: ForgotPasswordRequest)
 
   @POST("auth/verify-code")
-  suspend fun verifyForgotPasswordCode(@Body verifyCodeRequest: VerifyCodeRequest)
+  suspend fun verifyResetPasswordCode(@Body verifyCodeRequest: VerifyCodeRequest)
 
   @POST("auth/reset-password")
   suspend fun resetPassword(@Body resetRequest: ResetPasswordRequest)

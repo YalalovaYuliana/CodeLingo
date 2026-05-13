@@ -28,6 +28,7 @@ import com.yi_555555555.codelingo.presentation.screens.onboarding.OnboardingScre
 import com.yi_555555555.codelingo.presentation.screens.profile.ProfileScreen
 import com.yi_555555555.codelingo.presentation.screens.register.RegisterScreen
 import com.yi_555555555.codelingo.presentation.screens.settings.SettingsScreen
+import com.yi_555555555.codelingo.presentation.screens.verify_email.VerifyEmailScreen
 import kotlinx.serialization.Serializable
 
 @Composable
@@ -67,18 +68,32 @@ fun NavGraph(
     }
     composable<Screen.RegisterScreen> {
       RegisterScreen(
-        onSuccessRegister = {
+        onSuccessRegister = { email ->
+          navController.navigate(Screen.VerifyEmailScreen(email))
+        },
+        onAlreadyHaveAccountClick = {
+          navController.navigate(Screen.LoginScreen)
+        },
+        onBackClick = {
+          navController.navigate(Screen.OnboardingScreen) {
+            popUpTo(0) {
+              inclusive = true
+            }
+          }
+        }
+      )
+    }
+    composable<Screen.VerifyEmailScreen> {
+      VerifyEmailScreen(
+        onSuccessVerifyEmail = {
           navController.navigate(Screen.CoursesScreen) {
             popUpTo(0) {
               inclusive = true
             }
           }
         },
-        onAlreadyHaveAccountClick = {
-          navController.navigate(Screen.LoginScreen)
-        },
         onBackClick = {
-          navController.navigateUp()
+          navController.navigate(Screen.RegisterScreen)
         }
       )
     }
@@ -226,6 +241,11 @@ sealed interface Screen {
 
   @Serializable
   data object RegisterScreen : Screen
+
+  @Serializable
+  data class VerifyEmailScreen(
+    val email: String
+  ) : Screen
 
   @Serializable
   data object LoginScreen : Screen

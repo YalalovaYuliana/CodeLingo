@@ -9,6 +9,7 @@ import androidx.navigation.toRoute
 import com.yi_555555555.codelingo.R
 import com.yi_555555555.codelingo.domain.usecase.ResetPasswordUseCase
 import com.yi_555555555.codelingo.presentation.navigation.Screen
+import com.yi_555555555.codelingo.presentation.screens.validation.isValidPassword
 import com.yi_555555555.codelingo.utils.safeFetch
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -105,7 +106,7 @@ class ResetPasswordViewModel @Inject constructor(
     val currentState = _state.value
     if (currentState !is ViewState.Input) return false
 
-    val passwordErrorMessage = if (currentState.newPassword.isBlank()) {
+    val passwordErrorMessage = if (!currentState.newPassword.isValidPassword()) {
       context.getString(R.string.password_requirement)
     } else null
 

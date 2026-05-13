@@ -15,10 +15,15 @@ import java.io.File
 
 interface UserRepository {
   val cacheFlow: StateFlow<Cache>
-  suspend fun register(registerCredentials: RegisterCredentials): AccessToken
+  suspend fun register(registerCredentials: RegisterCredentials)
+  suspend fun verifyEmail(
+    email: String,
+    code: String
+  ): AccessToken
+
   suspend fun login(loginCredentials: LoginCredentials): AccessToken
   suspend fun forgotPassword(email: String)
-  suspend fun verifyForgotPasswordCode(
+  suspend fun verifyResetPasswordCode(
     email: String,
     code: String
   )

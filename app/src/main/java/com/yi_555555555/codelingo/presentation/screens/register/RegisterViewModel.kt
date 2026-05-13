@@ -85,7 +85,7 @@ class RegisterViewModel @Inject constructor(
                 password = currentState.password
               )
               withContext(Dispatchers.Main) {
-                _state.update { ViewState.Success }
+                _state.update { ViewState.Success(currentState.email) }
               }
             },
             onFailure = { errorMessage ->
@@ -148,7 +148,7 @@ sealed interface ViewState {
     val isLoading: Boolean = false
   ) : ViewState
 
-  data object Success : ViewState
+  data class Success(val email: String) : ViewState
 }
 
 sealed interface Command {

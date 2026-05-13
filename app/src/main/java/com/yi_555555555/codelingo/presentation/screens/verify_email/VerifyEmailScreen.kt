@@ -1,4 +1,4 @@
-package com.yi_555555555.codelingo.presentation.screens.forgot_password_screens.verify_code
+package com.yi_555555555.codelingo.presentation.screens.verify_email
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
@@ -37,8 +37,8 @@ import com.yi_555555555.codelingo.presentation.components.VSpacer
 import com.yi_555555555.codelingo.presentation.components.WSpacer
 
 @Composable
-fun VerifyCodeScreen(
-  onSuccessSendVerifyCode: (String, String) -> Unit,
+fun VerifyEmailScreen(
+  onSuccessVerifyEmail: () -> Unit,
   onBackClick: () -> Unit,
   viewModel: VerifyCodeViewModel = hiltViewModel()
 ) {
@@ -85,7 +85,7 @@ fun VerifyCodeScreen(
             modifier = Modifier
               .padding(vertical = 20.dp)
               .widthIn(max = 120.dp),
-            painter = painterResource(R.drawable.forgot_password),
+            painter = painterResource(R.drawable.letter),
             contentDescription = "forgot password"
           )
           VSpacer(8.dp)
@@ -142,7 +142,7 @@ fun VerifyCodeScreen(
 
         is ViewState.Success -> {
           LaunchedEffect(Unit) {
-            onSuccessSendVerifyCode(currentState.email, currentState.code)
+            onSuccessVerifyEmail()
           }
         }
       }

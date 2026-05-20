@@ -27,7 +27,7 @@ class VerifyCodeViewModel @Inject constructor(
 ) : ViewModel() {
 
   private val transferResetPasswordData =
-    savedStateHandle.toRoute<Screen.VerifyForgotPasswordScreen>()
+    savedStateHandle.toRoute<Screen.VerifyCodeScreen>()
 
   private val _state =
     MutableStateFlow<ViewState>(ViewState.Input(email = transferResetPasswordData.email.trim()))
@@ -84,7 +84,7 @@ class VerifyCodeViewModel @Inject constructor(
                 }
               }
             },
-            onFailure = { errorMessage ->
+            onFailure = { _ ->
               withContext(Dispatchers.Main) {
                 _state.update {
                   currentState.copy(
@@ -93,9 +93,6 @@ class VerifyCodeViewModel @Inject constructor(
                   )
                 }
               }
-              snackbarHostState.value.showSnackbar(
-                message = errorMessage
-              )
             }
           )
         }

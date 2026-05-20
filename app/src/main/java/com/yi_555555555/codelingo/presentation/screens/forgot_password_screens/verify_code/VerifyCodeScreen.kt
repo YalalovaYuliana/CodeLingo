@@ -122,11 +122,23 @@ fun VerifyCodeScreen(
                 isError = currentState.isCodeValidationError,
                 focusRequester = focusRequesters[index],
                 onDeleteEmpty = {
-                  focusRequesters[index - 1].requestFocus()
+                  if (index > 0) {
+                    focusRequesters[index - 1].requestFocus()
+                  }
                 }
               )
             }
             WSpacer()
+          }
+          if (currentState.isCodeValidationError) {
+            VSpacer(8.dp)
+            Text(
+              modifier = Modifier.fillMaxWidth(),
+              text = stringResource(R.string.incorrect_code),
+              textAlign = TextAlign.Center,
+              style = MaterialTheme.typography.bodyMedium,
+              color = MaterialTheme.colorScheme.error
+            )
           }
           WSpacer()
           VSpacer(16.dp)

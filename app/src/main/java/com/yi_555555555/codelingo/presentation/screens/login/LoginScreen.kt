@@ -155,6 +155,15 @@ fun LoginScreen(
             onClick = { viewModel.processCommand(Command.Login) },
             isLoading = currentState.isLoading
           )
+          VSpacer(16.dp)
+          PrimaryButton(
+            modifier = Modifier
+              .fillMaxWidth()
+              .padding(horizontal = 26.dp),
+            text = stringResource(R.string.login).uppercase(),
+            onClick = { viewModel.processCommand(Command.Login) },
+            isLoading = currentState.isLoading
+          )
         }
 
         is ViewState.Success -> {

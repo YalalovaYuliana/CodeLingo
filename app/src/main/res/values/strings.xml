@@ -6,6 +6,7 @@
 
     <string name="start">Начать</string>
     <string name="login">Войти</string>
+    <string name="login_by_google">Войти через Google</string>
     <string name="logout">Выйти из аккаунта</string>
     <string name="delete_account">Удалить аккаунт</string>
     <string name="login_title">Авторизация</string>
@@ -21,6 +22,7 @@
     <string name="code_input">Введите код</string>
     <string name="code_send_to">Код подтверждения отправлен на %s</string>
     <string name="confirm">Подтвердить</string>
+    <string name="incorrect_code">Неверный код</string>
 
     <string name="select_course">Выберите курс</string>
 

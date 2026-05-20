@@ -130,14 +130,14 @@ fun NavGraph(
     composable<Screen.InputEmailScreen> {
       InputEmailScreen(
         onStartVerifyCode = { email ->
-          navController.navigate(Screen.VerifyForgotPasswordScreen(email))
+          navController.navigate(Screen.VerifyCodeScreen(email))
         },
         onBackClick = {
           navController.navigateUp()
         }
       )
     }
-    composable<Screen.VerifyForgotPasswordScreen> {
+    composable<Screen.VerifyCodeScreen> {
       VerifyCodeScreen(
         onSuccessSendVerifyCode = { email, code ->
           navController.navigate(
@@ -272,7 +272,7 @@ sealed interface Screen {
   ) : Screen
 
   @Serializable
-  data class VerifyForgotPasswordScreen(
+  data class VerifyCodeScreen(
     val email: String
   ) : Screen
 

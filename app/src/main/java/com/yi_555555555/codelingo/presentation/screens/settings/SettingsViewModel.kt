@@ -92,7 +92,8 @@ class SettingsViewModel @Inject constructor(
       is Command.ChangeProfileName -> {
         _state.update {
           currentState.copy(
-            newUserName = command.newValue
+            newUserName = command.newValue,
+            saveButtonEnabled = checkSaveEnabledByNameChange(command.newValue)
           )
         }
       }
@@ -104,7 +105,8 @@ class SettingsViewModel @Inject constructor(
           _state.update {
             currentState.copy(
               newProfilePhoto = file,
-              mimeType = mimeType ?: currentState.mimeType
+              mimeType = mimeType ?: currentState.mimeType,
+              saveButtonEnabled = true
             )
           }
         } else {
@@ -117,14 +119,6 @@ class SettingsViewModel @Inject constructor(
       }
 
       Command.SaveChanges -> {
-        val usernameChanged =
-          currentState.currentUsername != currentState.newUserName?.trim() && !currentState.newUserName.isNullOrBlank()
-        val newUserName = if (usernameChanged) {
-          currentState.newUserName
-        } else null
-
-        if (newUserName == null && currentState.newProfilePhoto == null) return
-
         _state.update {
           currentState.copy(
             isLoading = true
@@ -136,9 +130,7 @@ class SettingsViewModel @Inject constructor(
             context = context,
             onSuccess = {
               changeProfileDataUseCase(
-                username = if (usernameChanged) {
-                  currentState.newUserName
-                } else null,
+                username = currentState.newUserName,
                 file = currentState.newProfilePhoto,
                 mimeType = currentState.mimeType
               )
@@ -164,6 +156,14 @@ class SettingsViewModel @Inject constructor(
         }
       }
     }
+  }
+
+  private fun checkSaveEnabledByNameChange(
+    newUserName: String?
+  ): Boolean {
+    val currentState = _state.value
+    if (currentState !is ViewState.Input) return false
+    return currentState.currentUsername != newUserName?.trim() && !newUserName.isNullOrBlank()
   }
 
   private fun getMimeTypeFromUri(context: Context, uri: Uri): String? {
@@ -197,7 +197,8 @@ sealed interface ViewState {
     val newUserName: String? = null,
     val newProfilePhoto: File? = null,
     val mimeType: String = "application/octet-stream",
-    val isLoading: Boolean = false
+    val isLoading: Boolean = false,
+    val saveButtonEnabled: Boolean = false
   ) : ViewState
 
   data object SuccessChangedProfileData : ViewState

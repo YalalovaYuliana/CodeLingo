@@ -40,7 +40,8 @@ fun InputTextField(
   keyboardOptions: KeyboardOptions = KeyboardOptions(),
   visualTransformation: VisualTransformation = VisualTransformation.None,
   trailingIcon: (@Composable () -> Unit)? = null,
-  bottomContent: (@Composable () -> Unit)? = null
+  bottomContent: (@Composable () -> Unit)? = null,
+  textAlign: TextAlign? = null
 ) {
   Column {
     OutlinedTextField(
@@ -70,7 +71,9 @@ fun InputTextField(
         }
       },
       isError = errorMessage != null,
-      textStyle = MaterialTheme.typography.labelMedium,
+      textStyle = MaterialTheme.typography.labelMedium.copy(
+        textAlign = textAlign ?: TextAlign.Unspecified
+      ),
       trailingIcon = trailingIcon,
       colors = OutlinedTextFieldDefaults.colors(
         unfocusedContainerColor = MaterialTheme.colorScheme.onPrimaryContainer,
@@ -125,7 +128,6 @@ fun CodeDigitTextField(
         .onPreviewKeyEvent { keyEvent ->
           if (keyEvent.nativeKeyEvent.keyCode == android.view.KeyEvent.KEYCODE_DEL
             && keyEvent.nativeKeyEvent.action == android.view.KeyEvent.ACTION_DOWN
-            && value.isEmpty()
           ) {
             onDeleteEmpty()
             true

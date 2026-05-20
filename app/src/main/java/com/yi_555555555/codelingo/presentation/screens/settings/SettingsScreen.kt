@@ -6,11 +6,9 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,7 +25,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.yi_555555555.codelingo.R
-import com.yi_555555555.codelingo.presentation.components.HSpacer
 import com.yi_555555555.codelingo.presentation.components.Header
 import com.yi_555555555.codelingo.presentation.components.InputTextField
 import com.yi_555555555.codelingo.presentation.components.OutlinedButton
@@ -116,46 +113,50 @@ fun SettingsScreen(
             text = stringResource(R.string.account_title)
           )
           VSpacer(64.dp)
-          Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-          ) {
-            Text(
-              text = stringResource(R.string.profile_photo),
-              style = MaterialTheme.typography.bodyMedium,
-              color = MaterialTheme.colorScheme.secondary
-            )
-            HSpacer(8.dp)
-            OutlinedButton(
-              modifier = Modifier.widthIn(max = 180.dp),
-              text = currentState.newProfilePhoto?.name ?: stringResource(R.string.choose_file),
-              onClick = {
-                galleryLauncher.launch("image/*")
-              }
-            )
-          }
-          VSpacer(40.dp)
-          Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-          ) {
-            Text(
-              text = stringResource(R.string.name_hint),
-              style = MaterialTheme.typography.bodyMedium,
-              color = MaterialTheme.colorScheme.secondary,
-              textAlign = TextAlign.Center
-            )
-            HSpacer(8.dp)
-            InputTextField(
-              modifier = Modifier.widthIn(max = 180.dp),
-              value = currentState.newUserName ?: currentState.currentUsername,
-              onValueChange = { newValue ->
-                viewModel.processCommand(Command.ChangeProfileName(newValue))
-              }
-            )
-          }
+          Text(
+            modifier = Modifier
+              .fillMaxWidth(),
+            text = stringResource(R.string.profile_photo),
+            style = MaterialTheme.typography.titleSmall,
+            color = MaterialTheme.colorScheme.secondary,
+            textAlign = TextAlign.Start
+          )
+          VSpacer(8.dp)
+          OutlinedButton(
+            modifier = Modifier,
+            text = currentState.newProfilePhoto?.name ?: stringResource(R.string.choose_file),
+            onClick = {
+              galleryLauncher.launch("image/*")
+            }
+          )
+          VSpacer(32.dp)
+          Text(
+            modifier = Modifier
+              .fillMaxWidth(),
+            text = stringResource(R.string.name_hint),
+            style = MaterialTheme.typography.titleSmall,
+            color = MaterialTheme.colorScheme.secondary,
+            textAlign = TextAlign.Start
+          )
+          VSpacer(8.dp)
+          InputTextField(
+            modifier = Modifier,
+            value = currentState.newUserName ?: currentState.currentUsername,
+            onValueChange = { newValue ->
+              viewModel.processCommand(Command.ChangeProfileName(newValue))
+            },
+            textAlign = TextAlign.Center
+          )
+          VSpacer(32.dp)
+          PrimaryButton(
+            modifier = Modifier
+              .fillMaxWidth()
+              .padding(horizontal = 26.dp),
+            text = stringResource(R.string.save).uppercase(),
+            onClick = { viewModel.processCommand(Command.SaveChanges) },
+            isLoading = currentState.isLoading,
+            enabled = currentState.saveButtonEnabled
+          )
           WSpacer()
           TextButton(
             text = stringResource(R.string.logout),
@@ -169,15 +170,6 @@ fun SettingsScreen(
             onClick = {
               showDeleteAccountDialog = true
             }
-          )
-          VSpacer(40.dp)
-          PrimaryButton(
-            modifier = Modifier
-              .fillMaxWidth()
-              .padding(horizontal = 26.dp),
-            text = stringResource(R.string.save).uppercase(),
-            onClick = { viewModel.processCommand(Command.SaveChanges) },
-            isLoading = currentState.isLoading
           )
         }
 

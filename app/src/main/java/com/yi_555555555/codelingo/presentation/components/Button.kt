@@ -34,6 +34,7 @@ fun PrimaryButton(
   isError: Boolean = false,
   isSubtle: Boolean = false,
   isLoading: Boolean = false,
+  enabled: Boolean = true,
   minHeight: Dp = 50.dp
 ) {
   Column(
@@ -42,18 +43,18 @@ fun PrimaryButton(
       .background(
         when {
           isError -> MaterialTheme.colorScheme.onError
-          isSubtle -> MaterialTheme.colorScheme.tertiaryContainer
+          isSubtle || !enabled -> MaterialTheme.colorScheme.tertiaryContainer
           else -> MaterialTheme.colorScheme.tertiary
         }
       )
       .clickable(
-        enabled = !isLoading,
+        enabled = !isLoading && enabled,
         onClick = onClick
       )
   ) {
     val backgroundColor = when {
       isError -> MaterialTheme.colorScheme.error
-      isSubtle -> MaterialTheme.colorScheme.secondaryContainer
+      isSubtle || !enabled -> MaterialTheme.colorScheme.secondaryContainer
       else -> MaterialTheme.colorScheme.primaryContainer
     }
     Button(
@@ -65,7 +66,8 @@ fun PrimaryButton(
       colors = ButtonDefaults.buttonColors(
         containerColor = backgroundColor,
         disabledContainerColor = backgroundColor
-      )
+      ),
+      enabled = !isLoading && enabled
     ) {
       if (isLoading) {
         CircularProgressIndicator(

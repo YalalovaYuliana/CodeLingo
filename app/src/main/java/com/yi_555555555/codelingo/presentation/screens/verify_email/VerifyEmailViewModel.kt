@@ -20,16 +20,16 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 @HiltViewModel
-class VerifyCodeViewModel @Inject constructor(
+class VerifyEmailViewModel @Inject constructor(
   savedStateHandle: SavedStateHandle,
   private val verifyEmailUseCase: VerifyEmailUseCase,
   @ApplicationContext private val context: Context
 ) : ViewModel() {
 
-  private val transferResetPasswordData = savedStateHandle.toRoute<Screen.InputEmailScreen>()
+  private val transferRegisterData = savedStateHandle.toRoute<Screen.VerifyEmailScreen>()
 
   private val _state =
-    MutableStateFlow<ViewState>(ViewState.Input(email = transferResetPasswordData.email.trim()))
+    MutableStateFlow<ViewState>(ViewState.Input(email = transferRegisterData.email.trim()))
   val state = _state.asStateFlow()
   val snackbarHostState = MutableStateFlow(SnackbarHostState())
 
@@ -89,9 +89,6 @@ class VerifyCodeViewModel @Inject constructor(
                   )
                 }
               }
-              snackbarHostState.value.showSnackbar(
-                message = errorMessage
-              )
             }
           )
         }

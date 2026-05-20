@@ -22,6 +22,8 @@ interface UserRepository {
   ): AccessToken
 
   suspend fun login(loginCredentials: LoginCredentials): AccessToken
+  suspend fun loginByGoogle()
+  suspend fun handleGoogleCallback(googleResponseCode: String)
   suspend fun forgotPassword(email: String)
   suspend fun verifyResetPasswordCode(
     email: String,

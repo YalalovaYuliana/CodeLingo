@@ -1,7 +1,6 @@
 package com.yi_555555555.codelingo.data.retrofit
 
 import com.yi.myapplication.data.entity.codelingo.ForgotPasswordRequest
-import com.yi.myapplication.data.entity.codelingo.LoginRequest
 import com.yi.myapplication.data.entity.codelingo.RegisterRequest
 import com.yi.myapplication.data.entity.codelingo.ResetPasswordRequest
 import com.yi.myapplication.data.entity.codelingo.SubmitCodeRequest
@@ -12,6 +11,8 @@ import com.yi_555555555.codelingo.data.retrofit.entity.AchievmentResponse
 import com.yi_555555555.codelingo.data.retrofit.entity.CompleteTaskResponse
 import com.yi_555555555.codelingo.data.retrofit.entity.CourseDetailsResponse
 import com.yi_555555555.codelingo.data.retrofit.entity.CourseResponse
+import com.yi_555555555.codelingo.data.retrofit.entity.HandleGoogleCallbackRequest
+import com.yi_555555555.codelingo.data.retrofit.entity.LoginRequest
 import com.yi_555555555.codelingo.data.retrofit.entity.SubmitResponse
 import com.yi_555555555.codelingo.data.retrofit.entity.TaskResponse
 import com.yi_555555555.codelingo.data.retrofit.entity.TheoryResponse
@@ -41,6 +42,12 @@ interface CodeLingoApi {
 
   @POST("auth/login")
   suspend fun login(@Body loginRequest: LoginRequest): AccessTokenData
+
+  @GET("auth/google/login")
+  suspend fun loginByGoogle()
+
+  @GET("auth/google/callback")
+  suspend fun handleGoogleCallback(@Body request: HandleGoogleCallbackRequest)
 
   @POST("auth/forgot-password")
   suspend fun forgotPassword(@Body forgotPasswordRequest: ForgotPasswordRequest)

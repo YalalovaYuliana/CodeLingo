@@ -43,7 +43,7 @@ import com.yi_555555555.codelingo.presentation.components.WSpacer
 
 @Composable
 fun LoginScreen(
-  onSuccessLogin: (Boolean) -> Unit,
+  onSuccessLogin: (hasSelectedCourseId: Boolean) -> Unit,
   onForgotPasswordClick: (String) -> Unit,
   onBackClick: () -> Unit,
   viewModel: LoginViewModel = hiltViewModel()
@@ -146,15 +146,6 @@ fun LoginScreen(
             }
           )
           WSpacer()
-          VSpacer(16.dp)
-          PrimaryButton(
-            modifier = Modifier
-              .fillMaxWidth()
-              .padding(horizontal = 26.dp),
-            text = stringResource(R.string.login).uppercase(),
-            onClick = { viewModel.processCommand(Command.Login) },
-            isLoading = currentState.isLoading
-          )
           VSpacer(16.dp)
           PrimaryButton(
             modifier = Modifier

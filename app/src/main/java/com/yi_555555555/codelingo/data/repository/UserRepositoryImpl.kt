@@ -1,7 +1,6 @@
 package com.yi_555555555.codelingo.data.repository
 
 import com.yi.myapplication.data.entity.codelingo.ForgotPasswordRequest
-import com.yi.myapplication.data.entity.codelingo.LoginRequest
 import com.yi.myapplication.data.entity.codelingo.RegisterRequest
 import com.yi.myapplication.data.entity.codelingo.ResetPasswordRequest
 import com.yi.myapplication.data.entity.codelingo.SubmitCodeRequest
@@ -12,6 +11,8 @@ import com.yi_555555555.codelingo.data.mappers.toAccessTokenDomain
 import com.yi_555555555.codelingo.data.mappers.toDomainModel
 import com.yi_555555555.codelingo.data.mappers.toUser
 import com.yi_555555555.codelingo.data.retrofit.CodeLingoApi
+import com.yi_555555555.codelingo.data.retrofit.entity.HandleGoogleCallbackRequest
+import com.yi_555555555.codelingo.data.retrofit.entity.LoginRequest
 import com.yi_555555555.codelingo.data.room.UserDataBase
 import com.yi_555555555.codelingo.data.room.entity.CourseDbModel
 import com.yi_555555555.codelingo.domain.model.AccessToken
@@ -69,6 +70,16 @@ class UserRepositoryImpl(
         password = loginCredentials.password
       )
     ).toAccessTokenDomain()
+  }
+
+  override suspend fun loginByGoogle() {
+    codeLingoApi.loginByGoogle()
+  }
+
+  override suspend fun handleGoogleCallback(googleResponseCode: String) {
+    codeLingoApi.handleGoogleCallback(
+      HandleGoogleCallbackRequest(googleResponseCode)
+    )
   }
 
   override suspend fun forgotPassword(email: String) {

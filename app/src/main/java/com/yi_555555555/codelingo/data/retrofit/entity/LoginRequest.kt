@@ -1,4 +1,4 @@
-package com.yi.myapplication.data.entity.codelingo
+package com.yi_555555555.codelingo.data.retrofit.entity
 
 
 import com.google.gson.annotations.SerializedName

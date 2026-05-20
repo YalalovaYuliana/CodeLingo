@@ -63,6 +63,23 @@ fun NavGraph(
         },
         onAlreadyHaveAccountClick = {
           navController.navigate(Screen.LoginScreen)
+        },
+        onGoogleLoginSuccess = { hasSelectedCourseId ->
+          selectedBottomBarDestination = BottomBarDestination.Main
+          if (hasSelectedCourseId) {
+            navController.navigate(Screen.HomeScreen) {
+              popUpTo(0) {
+                inclusive = true
+              }
+            }
+          } else {
+            navController.navigate(Screen.CoursesScreen) {
+              popUpTo(0) {
+                inclusive = true
+              }
+            }
+          }
+
         }
       )
     }
